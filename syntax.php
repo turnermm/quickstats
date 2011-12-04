@@ -13,7 +13,8 @@ if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
 define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once('GEOIP/ccArraysDat.php');
-
+//error_reporting(E_ALL);
+//ini_set('display_errors','1');
 /**
  * All DokuWiki plugins to extend the parser/rendering mechanism
  * need to inherit from this class
@@ -27,7 +28,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	private $ips;
 	private $misc_data;	
 	private $cc_arrays;
-	
+	private $use_titles;
 
 	function __construct() {
 
@@ -105,9 +106,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     *
     */
     function handle($match, $state, $pos, &$handler){
-		
-		
-		
+	
         switch ($state) {
           case DOKU_LEXER_SPECIAL :		 			
 		    $match =  trim(substr($match,13,-2));			
@@ -165,17 +164,26 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         if($mode == 'xhtml'){
 		
 		   list($which, $date_str) = $data;
-		   msg($which);
-		   $this->load_data($date_str);
+		   //msg($which);
+		   $this->load_data($date_str,$which);
 		   $renderer->doc .= "<div style='margin: auto;width: 820px;'>" ;          		
 		    switch ($which) {
 			   case 'basics':			   
 				$this->misc_data_xhtml($renderer);
 				$this->pages_xhtml($renderer);
-			     break;
-			case 'header_1':
-			   $renderer->doc .= '<p><h1>header 1</h1></p>';
-			   break;
+			    break;
+			case 'ip':              
+				$this->ip_xhtml($renderer);
+			   	break;
+			case 'pages':
+				$this->pages_xhtml($renderer,true);
+				break;
+			case 'misc':
+				$this->misc_data_xhtml($renderer,true,'misc');
+				break;
+			case 'countries':
+				$this->misc_data_xhtml($renderer,true,'country');
+				break;	
 			}
             
 	       $renderer->doc .= "</div>" ;          	
@@ -196,7 +204,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
        
     }	
 	
-	function load_data($date_str=null) {
+	function thead($titles) {	
+	   $name_title =$titles['name'];
+	   $val_title=$titles['val'];
+	   $num_title=isset($titles['val']) ? $titles['val'] : "&nbsp;";
+	    return "<tr><th>$num_title</th><th>$name_title</td><th>$val_title</th></tr>\n";
+       
+    }	
+	function load_data($date_str=null,$which) {
 		$today = getdate();
 		if($date_str) {
 		   list($mon,$yr) = explode('_',$date_str);
@@ -206,106 +221,160 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     	$ns_prefix = "quickstats:";
 		$ns =  $ns_prefix . $today['mon'] . '_'  . $today['year'] . ':'; 
 		
-		$this->page_file = metaFN($ns . 'pages' . '.ser');  
-		$this->ip_file = metaFN($ns . 'ip' . '.ser');  
-		$this->misc_data_file = metaFN($ns . 'misc_data' . '.ser');  
+		$this->page_file = metaFN($ns . 'pages' ,'.ser');  
+		$this->ip_file = metaFN($ns . 'ip' , '.ser');  
+		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
 	
-		
-		$this->pages = unserialize(io_readFile($this->page_file,false));
-		if(!$this->pages) $this->pages = array();
-		
-		$this->ips = unserialize(io_readFile($this->ip_file,false));
-		if(!$this->ips) $this->ips = array();
-		
-		$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
-		if(!$this->misc_data) $this->misc_data = array();
+		if($which == 'basics' || $which == 'pages') {
+			$this->pages = unserialize(io_readFile($this->page_file,false));
+			if(!$this->pages) $this->pages = array();
+		}
+		if($which == 'basics' || $which == 'ip') {
+			$this->ips = unserialize(io_readFile($this->ip_file,false));
+			if(!$this->ips) $this->ips = array();
+		}
+		if($which == 'basics' || $which == 'countries'  || $which == 'misc') {
+			$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
+			if(!$this->misc_data) $this->misc_data = array();
+		}
 		
 		//$this->page_totals_file = metaFN($ns_prefix . 'page_totals' . '.ser'); 
 	    //$this->totals = unserialize(io_readFile($this->page_totals_file,false));		
 
 	
 	}
+	
 	function table($data,&$renderer,$numbers=true) {
 	   
 	    if($numbers) 
 		   $num = 0;
 		 else  $num = "&nbsp;";
-		
+	 /*
+		if($header) {
+		    $this->thead($header);
+		}
+	*/
+	   $ttl = 0;
 	    $renderer->doc .= "<table cellspacing='4' >\n";
 		foreach($data as $item=>$count) {		
 		     if($numbers) $num++;
+			 $ttl += $count;
 			 $renderer->doc .= $this->row($item,$count,$num);
 			
 		}
 	   $renderer->doc .= "</table>\n";
-	   
+	   return $ttl;
 	}
 	
-	function pages_xhtml(&$renderer) {
-		 
+	function ip_xhtml(&$renderer) {
+	   $uniq = $this->ips['uniq'];
+	   unset($this->ips['uniq']);
+	   $this->sort($this->ips);
+	 //  $renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
+	   $renderer->doc .= '<div style="clear:left; float:left; overflow:auto; padding: 8px; width: 300px;">';
+	   $renderer->doc .= '<span style="font-size:125%;font-weight:bold;">Unique IP Addresses</span>';
+	   $total_acceses = $this->table($this->ips,$renderer);	
+	   $renderer->doc .= "Total accesses: $total_acceses</br>\n"; 
+	   $renderer->doc .= "Total unique ip addresses: $uniq</br>\n";  
+	   $renderer->doc .= "</div>\n";
+	}  
+	
+	function pages_xhtml(&$renderer, $no_align=false) {		 
 		
 		if(!$this->pages) return array();            
 	    
 			$this->sort($this->pages['page']);
-	
-		    $renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
-			$renderer->doc .= '<span style="font-size:110%;text-align:center">Page Accesses</span>';
+	        if($no_align) {
+					$renderer->doc .= '<div>';
+			}
+		    else {
+				$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
+				}
+		    $renderer->doc .= '<span style="font-size:110%;text-align:center">Page Accesses</span>';
             $this->table($this->pages['page'],$renderer);
-		   $renderer->doc .=  "Total: " . $this->pages['site_total'];
-		   $renderer->doc .= "</div>\n";
-		  
+		    $renderer->doc .=  "Total accesses: " . $this->pages['site_total'];
+		    $renderer->doc .= "</div>\n";
+		
 	}
-    function misc_data_xhtml(&$renderer) {
+    function misc_data_xhtml(&$renderer,$no_align=false,$which='all') {
     	
-	   $countries = $this->misc_data['country'];
+/*	   $countries = $this->misc_data['country'];
 	   $browsers = $this->misc_data['browser'];
 	   $platform = $this->misc_data['platform'];
 	   $version = $this->misc_data['version'];
 	   $this->sort($countries);
 	   $this->sort($browsers);
 	   $this->sort($platform);
-	   $this->sort($version);
+	   $this->sort($version);   
+	*/   
+	   $renderer->doc .= "\n";
+	   if($which == 'all' || $which == 'misc') {
 	   
-	    $renderer->doc .= "\n";
+			$browsers = $this->misc_data['browser'];
+			$platform = $this->misc_data['platform'];
+			$version = $this->misc_data['version'];
+			$this->sort($browsers);
+			$this->sort($platform);
+			$this->sort($version);   
+
+			   if($no_align) {
+					$renderer->doc .= '<div>';
+			   }
+			  else {
+					$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
+				}	
+				$renderer->doc .="\n\n";
+				$renderer->doc .= '<span style="font-size:110%;">Browsers</span>';
+				
+				$num=0;
+				$renderer->doc .= "<table border='0' >\n";
+				foreach($browsers as $browser=>$val) {           				  
+				   $num++;
+				   $renderer->doc .= $this->row($browser, $val,$num);
+				   $renderer->doc .= "<tr><td colspan='3' style='border-top: 1px solid black'>";
+				   $v = $this->get_subversions($browser,$version); 		        		   
+				   $this->table($v,$renderer, false,false);
+				   $renderer->doc .= '</td></tr>';
+				}
+			   $renderer->doc .= "</table>\n\n";	   
+        
+			$renderer->doc .= '<div>';		
+			$renderer->doc .= '<span style="font-size:110%;text-align:center">Platforms</span>';		
+			$this->table($platform,$renderer);		
+			$renderer->doc .= "</div>\n";
+			$renderer->doc .= "</div>\n";
+	   }
 	   
-		$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
-		$renderer->doc .="\n\n";
-		$renderer->doc .= '<span style="font-size:110%;text-align:center">Browsers</span>';
+	    if($which == 'misc') return;
 		
-		$num=0;
-		$renderer->doc .= "<table border='0' >\n";
-        foreach($browsers as $browser=>$val) {           				  
-		   $num++;
-		   $renderer->doc .= $this->row($browser, $val,$num);
-		   $renderer->doc .= "<tr><td colspan='3' style='border-top: 1px solid black'>";
-           $v = $this->get_subversions($browser,$version); 		   
-		   $this->table($v,$renderer, false);
-		   $renderer->doc .= '</td></tr>';
-        }
-	   $renderer->doc .= "</table>\n\n";
-	   
-	   
-		$renderer->doc .= '<div>';
-		$renderer->doc .= '<span style="font-size:110%;text-align:center">Platforms</span>';		
-		$this->table($platform,$renderer);		
-	    $renderer->doc .= "</div>\n";
-	    $renderer->doc .= "</div>\n";
-	   
-	   $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px;'>";
-	   $renderer->doc .= '<span style="font-size:110%;text-align:center">Countries</span>';
-	   
-	   		$renderer->doc .= "<table cellspacing='4'>\n";
-			$num = 0;
-		    foreach($countries as $cc=>$count) {		
-			    if(!$cc) continue;
-			     $num++;
-				 $cntry=$this->cc_arrays->get_country_name($cc) ;
-		         $renderer->doc .= $this->row($cntry,$count,$num);
+		$countries = $this->misc_data['country'];
+		$this->sort($countries);
+		
+			if($no_align) {
+					$renderer->doc .= '<div>';
+			}
+			else {
+		           $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px;'>";
 		    }
-		  $renderer->doc .= '</table>';		  
+		   $renderer->doc .= '<span style="font-size:110%;text-align:center">Countries</span>';
+		   
+				$renderer->doc .= "<table cellspacing='4'>\n";
+				$num = 0;
+				$total = 0;
+				foreach($countries as $cc=>$count) {		
+					if(!$cc) continue;
+					 $num++;
+					 $total+=$count;
+					 $cntry=$this->cc_arrays->get_country_name($cc) ;
+					 $renderer->doc .= $this->row($cntry,$count,$num);
+				}
+			  //$renderer->doc .= "<tr><td colspan='3'>Total accesses: $total</td><tr />";
+			  $renderer->doc .= '</table>';		  
+			  $renderer->doc .= "Total accesses: $total</br>";
+			  
 		  
-	  
-	     $renderer->doc .= "</div>\n";
+			 $renderer->doc .= "</div>\n";
+	    
     } 
 	
     function get_subversions($a,$b) {
