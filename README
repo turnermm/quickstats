@@ -1,0 +1,41 @@
+Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
+Its advantage for many users is that is does not require an sql database.
+
+Syntax:
+Stats for current month
+~~QUICKSTATS:~~    
+~~QUICKSTATS:ip~~
+~~QUICKSTATS:misc~~
+~~QUICKSTATS:countries~~
+~~QUICKSTATS:pages~~
+
+Stats for a previous month
+~~QUICKSTATS:<month_year>~~
+~~QUICKSTATS:<month_year>&ip~~
+~~QUICKSTATS:<month_year>&misc~~
+~~QUICKSTATS:<month_year>&countries~~
+~~QUICKSTATS:<month_year>&pages~~
+
+The months are numbered from 1 to 12
+1_2012 = January 2012
+12_2011 = December 2011
+
+~~QUICKSTATS:~~ is a snynonym for ~~QUICKSTATS:basics~~   
+~~QUICKSTATS:<month_year>~~ is a synonym for ~~QUICKSTATS:<month_year>&basics~~
+    Example: 
+     ~~QUICKSTATS:1_2011~~
+     outputs 'basics' for January 2011
+
+Output for diffferent paramaters
+basics:
+  Operating systems
+  Browsers
+  Countries
+misc:
+  Operating systems
+  Browsers
+countries:
+  Countries
+ip:
+ IP addresses
+      
