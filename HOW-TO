@@ -40,3 +40,9 @@ countries:
 ip:
  IP addresses
       
+Configuration Settings
+    There are two settings
+      1. excludes:  excludes IP addresses from stats, for instance if you don't want your own accesses to
+                    your site counted in the stats
+      2. aborts:    prevents IPs from accessing the site (for nuisance and spam accesses).
+       
