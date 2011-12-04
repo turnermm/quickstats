@@ -1,5 +1,6 @@
 Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
-Its advantage for many users is that is does not require an sql database.
+Its advantage for many users is that is does not require an sql database.  It outputs its statistics
+to a Dokuwiki page using the following syntaxes:
 
 Syntax:
 Stats for current month
