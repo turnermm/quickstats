@@ -1,0 +1,29 @@
+div.quickstats {
+color: black;
+}
+  
+div.quickstats.basics span.title, div.quickstats.ip span.title {
+color: black;
+font-weight:bold;
+font-size: 125%;
+}
+
+div.quickstats.ip {
+     padding:2px;  
+	clear:left;
+	padding: 8px;  
+}
+div.quickstats span.total {
+       font-size:115%;
+       	   
+	   color:blue; 
+}   
+
+div.quickstats.basics { padding:2px; }
+
+/* placeholders for individual css formatting */
+div.quickstats.misc span.title, div.quickstats.page span.title, div.quickstats.countrie span.title {}
+div.quickstats.misc { }
+div.quickstats.pages {}
+div.quickstats.countries { }
+

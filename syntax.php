@@ -1,8 +1,5 @@
 <?php
-/**
- * Plugin Skeleton: Displays "Hello World!"
- *
- * 
+/**  
  * 
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author    Myron Turner <turnermm02@shaw.ca>
@@ -166,7 +163,13 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		   list($which, $date_str) = $data;
 		   //msg($which);
 		   $this->load_data($date_str,$which);
-		   $renderer->doc .= "<div style='margin: auto;width: 820px;'>" ;          		
+		   if($which == 'basics') {
+				$renderer->doc .= "<div class='quickstats basics' style='margin: auto;width: 820px;'>" ;          		
+		   }
+		   else {
+		        $class = "quickstats $which";
+				$renderer->doc .= "<div class='$class'>";
+		   }
 		    switch ($which) {
 			   case 'basics':			   
 				$this->misc_data_xhtml($renderer);
@@ -200,7 +203,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }   
 
     function row($name,$val,$num="&nbsp;") {	
-	    return "<tr><td>$num&nbsp;&nbsp;</td><td  style='color: black; font-weight:normal'>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
+	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
     }	
 	
@@ -270,12 +273,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $uniq = $this->ips['uniq'];
 	   unset($this->ips['uniq']);
 	   $this->sort($this->ips);
+	   
 	 //  $renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
-	   $renderer->doc .= '<div style="clear:left; float:left; overflow:auto; padding: 8px; width: 300px;">';
-	   $renderer->doc .= '<span style="font-size:125%;font-weight:bold;">Unique IP Addresses</span>';
+	   //$renderer->doc .= '<div class="quickstats ip" style="clear:left; float:left; overflow:auto; padding: 8px; width: 300px;">';
+	   $renderer->doc .= '<div class="quickstats ip">';
+	   $renderer->doc .= '<span class="title">Unique IP Addresses</span>';
 	   $total_acceses = $this->table($this->ips,$renderer);	
-	   $renderer->doc .= "Total accesses: $total_acceses</br>\n"; 
-	   $renderer->doc .= "Total unique ip addresses: $uniq</br>\n";  
+	   $renderer->doc .= "<span class='total'>Total accesses: $total_acceses</span></br>\n"; 
+	   $renderer->doc .= "<span class='total'>Total unique ip addresses: $uniq</span></br>\n";  
 	   $renderer->doc .= "</div>\n";
 	}  
 	
@@ -290,24 +295,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		    else {
 				$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
 				}
-		    $renderer->doc .= '<span style="font-size:110%;text-align:center">Page Accesses</span>';
+		    $renderer->doc .= '<span class="title">Page Accesses</span>';
             $this->table($this->pages['page'],$renderer);
-		    $renderer->doc .=  "Total accesses: " . $this->pages['site_total'];
+		    $renderer->doc .=  "<span class='total'>Total accesses: " . $this->pages['site_total'] .'</span>';
 		    $renderer->doc .= "</div>\n";
 		
 	}
     function misc_data_xhtml(&$renderer,$no_align=false,$which='all') {
     	
-/*	   $countries = $this->misc_data['country'];
-	   $browsers = $this->misc_data['browser'];
-	   $platform = $this->misc_data['platform'];
-	   $version = $this->misc_data['version'];
-	   $this->sort($countries);
-	   $this->sort($browsers);
-	   $this->sort($platform);
-	   $this->sort($version);   
-	*/   
+
 	   $renderer->doc .= "\n";
+	
 	   if($which == 'all' || $which == 'misc') {
 	   
 			$browsers = $this->misc_data['browser'];
@@ -316,7 +314,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			$this->sort($browsers);
 			$this->sort($platform);
 			$this->sort($version);   
-
+			
+              $renderer->doc .= "\n\n<!-- start misc -->\n";
 			   if($no_align) {
 					$renderer->doc .= '<div>';
 			   }
@@ -324,7 +323,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
 				}	
 				$renderer->doc .="\n\n";
-				$renderer->doc .= '<span style="font-size:110%;">Browsers</span>';
+				$renderer->doc .= '<br /><span class="title">Browsers</span>';
 				
 				$num=0;
 				$renderer->doc .= "<table border='0' >\n";
@@ -338,11 +337,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				}
 			   $renderer->doc .= "</table>\n\n";	   
         
-			$renderer->doc .= '<div>';		
-			$renderer->doc .= '<span style="font-size:110%;text-align:center">Platforms</span>';		
-			$this->table($platform,$renderer);		
-			$renderer->doc .= "</div>\n";
-			$renderer->doc .= "</div>\n";
+		  
+			$renderer->doc .= '<span class="title">Platforms</span>';		
+			$this->table($platform,$renderer);				
+			$renderer->doc .= "</div>\n<!--end misc -->\n\n";
 	   }
 	   
 	    if($which == 'misc') return;
@@ -356,7 +354,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			else {
 		           $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px;'>";
 		    }
-		   $renderer->doc .= '<span style="font-size:110%;text-align:center">Countries</span>';
+		   $renderer->doc .= '<span class="title">Countries</span>';
 		   
 				$renderer->doc .= "<table cellspacing='4'>\n";
 				$num = 0;
@@ -370,10 +368,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				}
 			  //$renderer->doc .= "<tr><td colspan='3'>Total accesses: $total</td><tr />";
 			  $renderer->doc .= '</table>';		  
-			  $renderer->doc .= "Total accesses: $total</br>";
+			  $renderer->doc .= "<span class='total'>Total accesses: $total</span></br>";
 			  
 		  
 			 $renderer->doc .= "</div>\n";
+	     
 	    
     } 
 	
