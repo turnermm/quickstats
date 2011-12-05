@@ -14,6 +14,27 @@ from Maxmind: http://www.maxmind.com/app/geolitecity
 geoipcity.inc
 GeoLiteCity.dat
 
+from http://www.geoplugin.com/
+geoPlugin
+
+Quickstats uses either geoPlugin or GeoLiteCity.dat to identify the location of IP addresses.
+geoPlugin is a free web-based service, while Maxmind's GeoLiteCity.dat installs on your
+server.  Quickstats defaults to geoPlugin, which means that quickstats is ready to use
+upon installation into the Dokuwiki plugins directory.  GeoLiteCity must be installed
+in a directory on your server.
+
+There are benefits and downsides to both.  With GeoLiteCity, quickstats always
+has instant and secure access the the location data which it needs.
+However, it is recommended that you re-install updated copies
+every 6 weeks, in order to keep current with changing IP data.  On Linux servers
+this is simple enough to do with a cron job.  geoPlugin, on the other hand, is
+always current and does not have to be installed on your server. Its data is retrieved
+via an http access.  Responses from geoplugin.com tend to be fast, but there is always
+the question of delay and processing time.
+
+--------------------------------------------------
+GELITECITY
+
 GeoLiteCity.dat must be downloaded from Maxmind and stored in /usr/local/share/GeoIP/
 It is available as a tgz file:
 

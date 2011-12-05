@@ -136,8 +136,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         require_once("GEOIP/geoipcity.inc");
         require_once('db/php-local-browscap.php');       
 
-	    $ip = $_SERVER['REMOTE_ADDR'];	      
-		
+	    $ip = $_SERVER['REMOTE_ADDR'];	      	
+	
          if($this->is_excluded($ip)){		
 		     return;
          }		 
@@ -208,6 +208,11 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	function get_country($ip=null) {
 	    if(!$ip) return null;		
 		
+		if($this->getConf('geoplugin')) {		
+			$country_data = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip=' .$ip));		
+			return (array('code'=>$country_data['geoplugin_countryCode'],'name'=>$country_data['geoplugin_countryName']));
+		}
+		
 		if($this->getConf('geoip_local')) {
 		     $giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);		
 		}
@@ -217,7 +222,9 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		   //$giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
 		   $giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
 		}
-		$record = geoip_record_by_addr($giCity, $ip);        		
+		
+		$record = geoip_record_by_addr($giCity, $ip);     
+        
 		return (array('code'=>$record->country_code,'name'=>$record->country_name));
 	}
 	
