@@ -81,8 +81,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		$this->ips = unserialize(io_readFile($this->ip_file,false));
 		if(!$this->ips) $this->ips = array();
 		
-		$this->misc_data = unserialize(io_readFile($this->
-		misc_data_file,false));
+		$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
 		if(!$this->misc_data) $this->misc_data = array();
 	
 		$this->totals = unserialize(io_readFile($this->page_totals_file,false));
