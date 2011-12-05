@@ -16,21 +16,19 @@ GeoLiteCity.dat
 
 GeoLiteCity.dat must be downloaded from Maxmind and stored in /usr/local/share/GeoIP/
 It is available as a tgz file:
-   http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-Unpack the file and place it in /usr/local/share/GeoIP.
-For further installation instructions see http://www.maxmind.com/app/installation?city=1 
-  
-Unfortunately for the present this restricts quickstats to *nix systems.  This short-coming
-will be remedied as the plugin develops.  However,If you are prepared to make a small programming change,
-for Windows, you can enter the path to GeoLiteCity.dat in the function get_country() of action.php,
-where you will find the following lines:
-    $giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
-    //$giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);
-A simple way solution is to place GeoLiteCity.dat in quickstat/GEOIP, then comment out
-the first line and uncomment the second:
-    //$giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
-    $giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);    
 
+   http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+
+Unpack this file and place it in either in /usr/local/share/GeoIP  or quickstats/GEOIP.
+The default directory for GeoLiteCity.dat is /usr/local/share/GeoIP which you will
+find assigned in the Configuration Manager in the 'geop_dir' setting.  If you place it
+in quickstats/GEOIP, then you must check off the checkbox for 'geoip_local'.
+
+You do not have to put GeoLiteCity.dat in either of the two directories mentioned above.
+You can install it anywhere you choose; just replace the default path in 'geoip_dir' with
+the new one and make sure that 'geoip_local' is unchecked.
+
+For additional installation instructions see http://www.maxmind.com/app/installation?city=1.
 
 
 

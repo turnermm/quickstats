@@ -22,7 +22,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	private $is_edit_user=false;
 	private $year_month;
 	private $totals;
-	
+    private $NL = '/';	
 
 	function __construct() {
 	
@@ -40,6 +40,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
 		$this->page_totals_file = metaFN($ns_prefix . 'page_totals' , '.ser');  
 		$this->year_month = $today['mon'] . '_'  .$today['year'];
+		
+		if( preg_match('/WINNT/i',  PHP_OS) ) {    
+					$this->NL='\\';				
+		}
 		
 	}
 	
@@ -132,8 +136,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         require_once("GEOIP/geoipcity.inc");
         require_once('db/php-local-browscap.php');       
 
-	    $ip = $_SERVER['REMOTE_ADDR'];	  
-        
+	    $ip = $_SERVER['REMOTE_ADDR'];	      
+		
          if($this->is_excluded($ip)){		
 		     return;
          }		 
@@ -183,10 +187,9 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 
 	$this->set_browser_value($browser['browser']);	
 		
-    if(!isset($browser['platform'])) return;
+    if(!isset($browser['platform'])) return;	
 	$this->set_browser_value($browser['platform'],'platform');	
-
-	
+    	
 	if(!isset($browser['version'])) return;
     $this->set_browser_value($browser['parent'],'version');	
 	
@@ -204,9 +207,17 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
    
 	function get_country($ip=null) {
 	    if(!$ip) return null;		
-		$giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
-		//$giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);		
-		$record = geoip_record_by_addr($giCity, $ip);	
+		
+		if($this->getConf('geoip_local')) {
+		     $giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);		
+		}
+		else {
+		    $gcity_dir = $this->getConf('geoip_dir');	            
+            $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->NL  . 'GeoLiteCity.dat';						
+		   //$giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
+		   $giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
+		}
+		$record = geoip_record_by_addr($giCity, $ip);        		
 		return (array('code'=>$record->country_code,'name'=>$record->country_name));
 	}
 	
