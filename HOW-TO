@@ -1,6 +1,41 @@
 Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
-Its advantage for many users is that is does not require an sql database.  It outputs its statistics
-to a Dokuwiki page using the following syntaxes:
+Its advantage for many users is that is does not require an sql database.  
+
+Quickstats uses the following modules:
+from Gary Keith
+http://browsers.garykeith.com/downloads.asp
+http://browsers.garykeith.com/stream.asp?PHP_BrowsCapINI
+
+from Alexandre Alapetite 
+http://alexandre.alapetite.fr/doc-alex/php-local-browscap/index.en.html
+http://alexandre.alapetite.fr/doc-alex/php-local-browscap/php-local-browscap.php.txt
+
+from Maxmind: http://www.maxmind.com/app/geolitecity
+geoipcity.inc
+GeoLiteCity.dat
+
+GeoLiteCity.dat must be downloaded from Maxmind and stored in /usr/local/share/GeoIP/
+It is available as a tgz file:
+   http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+Unpack the file and place it in /usr/local/share/GeoIP.
+For further installation instructions see http://www.maxmind.com/app/installation?city=1 
+  
+Unfortunately for the present this restricts quickstats to *nix systems.  This short-coming
+will be remedied as the plugin develops.  However,If you are prepared to make a small programming change,
+for Windows, you can enter the path to GeoLiteCity.dat in the function get_country() of action.php,
+where you will find the following lines:
+    $giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
+    //$giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);
+A simple way solution is to place GeoLiteCity.dat in quickstat/GEOIP, then comment out
+the first line and uncomment the second:
+    //$giCity = geoip_open("/usr/local/share/GeoIP/GeoLiteCity.dat",GEOIP_STANDARD);
+    $giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);    
+
+
+
+
+---------------------------------------
+Quickstats outputs its statistics to a Dokuwiki page using the following syntaxes:
 
 Syntax:
 Stats for current month
