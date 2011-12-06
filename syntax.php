@@ -300,8 +300,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   //$renderer->doc .= '<div class="quickstats ip" style="clear:left; float:left; overflow:auto; padding: 8px; width: 300px;">';
 	   $renderer->doc .= '<div class="quickstats ip">';
 	   $renderer->doc .= '<span class="title">Unique IP Addresses</span>';
-	   $total_acceses = $this->table($this->ips,$renderer);	
-	   $renderer->doc .= "<span class='total'>Total accesses: $total_acceses</span></br>\n"; 
+	   $total_accesses = $this->table($this->ips,$renderer);	
+	   $renderer->doc .= "<span class='total'>Total accesses: $total_accesses</span></br>\n"; 
 	   $renderer->doc .= "<span class='total'>Total unique ip addresses: $uniq</span></br>\n";  
 	   $renderer->doc .= "</div>\n";
 	}  
@@ -318,8 +318,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
 				}
 		    $renderer->doc .= '<span class="title">Page Accesses</span>';
-            $this->table($this->pages['page'],$renderer);
-		    $renderer->doc .=  "<span class='total'>Total accesses: " . $this->pages['site_total'] .'</span>';
+            $page_count = $this->table($this->pages['page'],$renderer);
+			$renderer->doc .=  "<span class='total'>Number of pages accessed: " . count($this->pages['page']) . "</span><br />";
+		    $renderer->doc .=  "<span class='total'>Total accesses:  " . $this->pages['site_total'] .'</span>';
 		    $renderer->doc .= "</div>\n";
 		
 	}
@@ -397,7 +398,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					 }
 				}
 			  //$renderer->doc .= "<tr><td colspan='3'>Total accesses: $total</td><tr />";
-			  $renderer->doc .= '</table>';		  
+			  $renderer->doc .= '</table>';		 
+			  $renderer->doc .= "<span class='total'>Total number of countries: " . count($this->misc_data['country'])  . "</span></br>";
+			  
 			  $renderer->doc .= "<span class='total'>Total accesses: $total</span></br>";
 			  
 		  
