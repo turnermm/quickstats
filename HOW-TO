@@ -57,19 +57,26 @@ For additional installation instructions see http://www.maxmind.com/app/installa
 Quickstats outputs its statistics to a Dokuwiki page using the following syntaxes:
 
 Syntax:
+~~QUICKSTATS:<month_year>&<category><;;depth>~~
+The depth parameter limits the number of rows of output to depth number.
+
 Stats for current month
-~~QUICKSTATS:~~    
-~~QUICKSTATS:ip~~
-~~QUICKSTATS:misc~~
-~~QUICKSTATS:countries~~
-~~QUICKSTATS:pages~~
+~~QUICKSTATS:~~  
+~~QUICKSTATS:basics<;;depth>~~  
+~~QUICKSTATS:ip<;;depth>~~
+~~QUICKSTATS:misc<;;depth>~~
+~~QUICKSTATS:countries<;;depth>~~
+~~QUICKSTATS:pages<;;depth>~~
 
 Stats for a previous month
-~~QUICKSTATS:<month_year>~~
-~~QUICKSTATS:<month_year>&ip~~
-~~QUICKSTATS:<month_year>&misc~~
-~~QUICKSTATS:<month_year>&countries~~
-~~QUICKSTATS:<month_year>&pages~~
+~~QUICKSTATS:<month_year><;;depth>~~
+~~QUICKSTATS:<month_year>&basics<;;depth>~~
+~~QUICKSTATS:<month_year>&ip<;;depth>~~
+~~QUICKSTATS:<month_year>&misc<;;depth>~~
+~~QUICKSTATS:<month_year>&countries<;;depth>~~
+~~QUICKSTATS:<month_year>&pages<;;depth>~~
+
+
 
 The months are numbered from 1 to 12
 1_2012 = January 2012

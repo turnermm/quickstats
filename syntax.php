@@ -108,6 +108,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
           case DOKU_LEXER_SPECIAL :		 			
 		    $match =  trim(substr($match,13,-2));			
 			if($match) {
+			    $depth = false;
+				if(strpos($match,';;') !== false) {
+				      list($match,$depth) = explode(';;',$match);				
+				}
+				
 			     $date = "";
 			     if(strpos($match,'&') !== false) {		
 				 
@@ -118,9 +123,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					     if($match[strlen($match)-1] == '&'  || $match[0]  == '&') { 
 						     $match = trim($match,'&');
 							  if($this->is_date_string($match)) {
-							       return array('basics',$match);			       
+							       return array('basics',$match,$depth);			       
 							  }
-						     return array('basics',"");			       
+						     return array('basics',"",$depth);			       
 						 }
 						 
 						 /* process valid paramter string */
@@ -140,10 +145,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				 }
 			}
 			else {
-			       return array('basics',"");			       
+			       return array('basics',"",$depth);			       
             }			
 			 
-             return array(strtolower($match),$date);
+             return array(strtolower($match),$date,$depth);
              break;
         }
         return array();
@@ -159,8 +164,13 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     function render($mode, &$renderer, $data) {
 	 
         if($mode == 'xhtml'){
-		
-		   list($which, $date_str) = $data;
+		   
+		   list($which, $date_str,$depth) = $data;
+		   $this->row_depth('all');
+		   if($depth) {
+		       $this->row_depth($depth);
+			  }
+			  
 		   //msg($which);
 		   $this->load_data($date_str,$which);
 		   if($which == 'basics') {
@@ -206,7 +216,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
     }	
-	
+
+    function row_depth($new_depth=false) {
+	    STATIC $depth = false;
+		//msg("depth: $depth");
+		if($new_depth !== false) {
+			$depth = $new_depth;
+			return;
+		}
+		
+        return $depth;		
+	}
 	function thead($titles) {	
 	   $name_title =$titles['name'];
 	   $val_title=$titles['val'];
@@ -222,8 +242,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		   $today['year'] = $yr;
 		}
     	$ns_prefix = "quickstats:";
-		$ns =  $ns_prefix . $today['mon'] . '_'  . $today['year'] . ':'; 
-		
+		$ns =  $ns_prefix . $today['mon'] . '_'  . $today['year'] . ':'; 		
 		$this->page_file = metaFN($ns . 'pages' ,'.ser');  
 		$this->ip_file = metaFN($ns . 'ip' , '.ser');  
 		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
@@ -258,10 +277,13 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		}
 	*/
 	   $ttl = 0;
+	   $depth = $this->row_depth();
+	   if($depth == 'all') $depth = 0;
 	    $renderer->doc .= "<table cellspacing='4' >\n";
 		foreach($data as $item=>$count) {		
 		     if($numbers) $num++;
 			 $ttl += $count;
+			 if($depth  && $num > $depth) continue;
 			 $renderer->doc .= $this->row($item,$count,$num);
 			
 		}
@@ -270,7 +292,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	}
 	
 	function ip_xhtml(&$renderer) {
-	   $uniq = $this->ips['uniq'];
+	   $uniq = $this->ips['uniq'];	     
 	   unset($this->ips['uniq']);
 	   $this->sort($this->ips);
 	   
@@ -359,12 +381,20 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				$renderer->doc .= "<table cellspacing='4'>\n";
 				$num = 0;
 				$total = 0;
+				$depth = $this->row_depth();		
+                if($depth == 'all') $depth = false;
+			
 				foreach($countries as $cc=>$count) {		
 					if(!$cc) continue;
 					 $num++;
-					 $total+=$count;
+					 $total+=$count;					
 					 $cntry=$this->cc_arrays->get_country_name($cc) ;
-					 $renderer->doc .= $this->row($cntry,$count,$num);
+					 if($depth == false)  {
+					     $renderer->doc .= $this->row($cntry,$count,$num);
+					 }
+					 else if ($num <= $depth) {
+					      $renderer->doc .= $this->row($cntry,$count,$num);
+					 }
 				}
 			  //$renderer->doc .= "<tr><td colspan='3'>Total accesses: $total</td><tr />";
 			  $renderer->doc .= '</table>';		  
