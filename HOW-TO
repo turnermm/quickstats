@@ -1,6 +1,9 @@
 Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
 Its advantage for many users is that is does not require an sql database.  
 
+This plugin has a page on Dokuiwiki's web site which is lkept up-to-date:
+    http://www.dokuwiki.org/plugin:quickstats
+
 Quickstats uses the following modules:
 from Gary Keith
 http://browsers.garykeith.com/downloads.asp
@@ -110,5 +113,7 @@ Configuration Settings
       3. geoip_local: if checked off Maxmind GeoLiteCity.dat must be installed in:  lib/plugins/quickstats/GEOIP'
       4. geoip_dir:   if geoip_local is not checked off quickstats will look in this directory for GeoLiteCity.dat (it defaults to /usr/local/share/GeoIP/)
       5. geoplugin: if this option is checked the geoPlugin will be used for IP geo-locating (defaults to true); with this set to true GeoLIteCity.dat is not needed
-
+      6. long_names: set maximum number of characters to output when oututting long names.  Default is 30,
+         when set to -1 maximum is unlimited
+          
        
