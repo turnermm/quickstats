@@ -85,17 +85,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		$this->ips = unserialize(io_readFile($this->ip_file,false));
 		if(!$this->ips) $this->ips = array();
 		
-		$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
-		if(!$this->misc_data) $this->misc_data = array();
-	
 		$this->totals = unserialize(io_readFile($this->page_totals_file,false));
 		if(!$this->totals) $this->totals = array();
 	}
 
      function save_data() {
 	     io_saveFile($this->ip_file,serialize($this->ips));
-		 io_saveFile($this->page_file,serialize($this->pages));
-		 io_saveFile($this->misc_data_file,serialize($this->misc_data));
+		 io_saveFile($this->page_file,serialize($this->pages));	
 		 $this->totals[$this->year_month] = $this->pages['site_total'] ;
 		 io_saveFile($this->page_totals_file,serialize($this->totals));
 	 }
@@ -137,12 +133,15 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         require_once('db/php-local-browscap.php');       
 
 	    $ip = $_SERVER['REMOTE_ADDR'];	      	
-	
+
          if($this->is_excluded($ip)){		
 		     return;
          }		 
        
-	   
+	
+   		$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
+		if(!$this->misc_data) $this->misc_data = array();
+
 		$country = $this->get_country($ip);
 		if($country) {
 			if(!isset($this->misc_data['country'] [$country['code']])) { 
@@ -153,7 +152,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 			}
 		  }
 		  
-		  $this->get_browser();
+		  $this->get_browser();	  
+		
+		  io_saveFile($this->misc_data_file,serialize($this->misc_data));		  
+		  unset($this->misc_data);
 		  
 		  $wiki_file = wikiFN($ID);
             if(file_exists($wiki_file)) {
