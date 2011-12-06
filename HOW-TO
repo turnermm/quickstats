@@ -56,6 +56,7 @@ For additional installation instructions see http://www.maxmind.com/app/installa
 
 ---------------------------------------
 Quickstats outputs its statistics to a Dokuwiki page using the following syntaxes:
+~~NOCACHE~~
 
 Syntax:
 ~~QUICKSTATS:<month_year>&<category><;;depth>~~
