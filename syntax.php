@@ -25,12 +25,13 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	private $ips;
 	private $misc_data;	
 	private $cc_arrays;
-	private $use_titles;
+	private $long_names =-1;
 
 	function __construct() {
 
 		$this->cc_arrays = new ccArraysDat();
-		
+		$this->long_names = $this->getConf('long_names');
+		if(!isset($this->long_names)  || $this->long_names <= 0) $this->long_names = false;
 	}
 
    /**
@@ -213,6 +214,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }   
 
     function row($name,$val,$num="&nbsp;") {	
+	   if($this->long_names && (@strlen($name) > $this->long_names)) {
+	       $title = $name;	 
+		   $name = "<a href='javascript:void 0;' title = '$title'>" . substr($name,0,$this->long_names) . '...</a>';
+	   }
 	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
     }	
