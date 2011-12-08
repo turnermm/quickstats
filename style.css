@@ -9,15 +9,16 @@ font-size: 125%;
 }
 
 div.quickstats.ip {
-     padding:2px;  
-	clear:left;
-	padding: 8px;  
+    padding:2px;  
+    clear:left;
+    padding: 8px;  
+    margin-left: 85px;  /* aligns with basics left alignment */
 }
 div.quickstats span.total {
        font-size:115%;       	   
-	   color:blue; 
+       color:blue; 
 }   
-
+ 
 div.quickstats.basics { padding:2px; }
 
 /* placeholders for individual css formatting */
