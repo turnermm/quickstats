@@ -2,7 +2,7 @@ div.quickstats {
 color: black;
 }
   
-div.quickstats.basics span.title, div.quickstats.ip span.title {
+div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title {
 color: black;
 font-weight:bold;
 font-size: 125%;
@@ -22,7 +22,7 @@ div.quickstats span.total {
 div.quickstats.basics { padding:2px; }
 
 /* placeholders for individual css formatting */
-div.quickstats.misc span.title, div.quickstats.page span.title, div.quickstats.countries span.title {}
+div.quickstats.misc span.title, div.quickstats.page span.title, div.quickstats.countries span.title, div.quickstats.ua span.title {}
 div.quickstats.misc { }
 div.quickstats.pages {}
 div.quickstats.countries { }

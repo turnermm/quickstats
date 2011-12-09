@@ -24,6 +24,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	private $totals;
 	private $NL = '/';	
 	private $show_date;
+    private $ua_file;
 
 	function __construct() {
 	
@@ -37,6 +38,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		$ns_prefix = "quickstats:";
 		$ns =  $ns_prefix . $today['mon'] . '_'  . $today['year'] . ':'; 
 		$this->page_file = metaFN($ns . 'pages' , '.ser');  
+        $this->ua_file = metaFN($ns . 'ua' , '.ser');  
 		$this->ip_file = metaFN($ns . 'ip' , '.ser');  
 		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
 		$this->page_totals_file = metaFN($ns_prefix . 'page_totals' , '.ser');  
@@ -153,7 +155,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 			}
 		  }
 		  
-		  $this->get_browser();	  
+		 $browser =  $this->get_browser();	  
 		
 		  io_saveFile($this->misc_data_file,serialize($this->misc_data));		  
 		  unset($this->misc_data);
@@ -181,6 +183,19 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
             $this->pages['date'][md5($ID)] = time();
          }
          $this->save_data();
+         $this->pages=array();
+         $this->ips=array();
+       
+        
+        $this->ua = unserialize(io_readFile($this->ua_file,false));
+		if(!$this->ua) $this->ua = array();
+        if(!isset($this->ua[$ip])) {
+              $this->ua[$ip] = array($country['code']);
+         }
+        if(isset($browser) && !in_array($browser, $this->ua[$ip])) {           
+            $this->ua[$ip][]=$browser;
+      		io_saveFile($this->ua_file,serialize($this->ua));
+        }        
     }
 	
    function get_browser() {
@@ -197,6 +212,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     	
 	if(!isset($browser['version'])) return;
     $this->set_browser_value($browser['parent'],'version');	
+    if(isset($browser['parent']) && $browser['parent']) {
+       return $browser['parent'];
+    }   
+    return $browser['browser'];
 	
   }   
  

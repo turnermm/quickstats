@@ -27,6 +27,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	private $cc_arrays;
 	private $long_names =-1;
     private $show_date;
+    private $ua_file;
+    private $ua_data;
+    
 	function __construct() {
 
 		$this->cc_arrays = new ccArraysDat();
@@ -199,8 +202,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			case 'countries':
 				$this->misc_data_xhtml($renderer,true,'country');
 				break;	
+            case 'ua':
+                $this->ua_xhtml($renderer);
+                break;            
 			}
-            
+        
 	       $renderer->doc .= "</div>" ;          	
 			 
 
@@ -242,6 +248,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		
         return $depth;		
 	}
+ /*   
 	function thead($titles) {	
 	   $name_title =$titles['name'];
 	   $val_title=$titles['val'];
@@ -249,6 +256,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	    return "<tr><th>$num_title</th><th>$name_title</td><th>$val_title</th></tr>\n";
        
     }	
+  */  
 	function load_data($date_str=null,$which) {
 		$today = getdate();
 		if($date_str) {
@@ -261,6 +269,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		$this->page_file = metaFN($ns . 'pages' ,'.ser');  
 		$this->ip_file = metaFN($ns . 'ip' , '.ser');  
 		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
+        $this->ua_file = metaFN($ns . 'ua' , '.ser');  
 	
 		if($which == 'basics' || $which == 'pages') {
 			$this->pages = unserialize(io_readFile($this->page_file,false));
@@ -274,7 +283,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
 			if(!$this->misc_data) $this->misc_data = array();
 		}
-		
+		if($which == 'ua') {
+   			$this->ua_data = unserialize(io_readFile($this->ua_file,false));
+			if(!$this->ua_data) $this->ua_data = array();
+        }
 		//$this->page_totals_file = metaFN($ns_prefix . 'page_totals' . '.ser'); 
 	    //$this->totals = unserialize(io_readFile($this->page_totals_file,false));		
 
@@ -282,8 +294,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	}
 	
 	function table($data,&$renderer,$numbers=true,$date=false) {
-	   
-	    if($numbers) 
+    
+	    if($numbers !== false) 
 		   $num = 0;
 		 else  $num = "&nbsp;";
 	 /*
@@ -292,12 +304,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		}
 	*/
  
-
 	   $ttl = 0;
 	   $depth = $this->row_depth();
 	   if($depth == 'all') $depth = 0;
 	    $renderer->doc .= "<table cellspacing='4' >\n";
-		foreach($data as $item=>$count) {		
+		foreach($data as $item=>$count) {		       
             if($numbers) $num++;
             $ttl += $count;
             if($depth  && $num > $depth) continue;      
@@ -439,6 +450,28 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	    }
 	   $this->sort($tmp);
 	   return  $tmp;
+    }
+    
+    function ua_xhtml(&$renderer) {
+    			$renderer->doc .="\n\n<div class=ip_data>\n";
+				$renderer->doc .= '<br /><span class="title">IP Data</span>';
+				
+				$num=0;
+				$renderer->doc .= "<table border='0' >\n";
+				foreach($this->ua_data as $ip=>$data) {           				  
+				   $num++;
+                   $cc = array_shift($data);
+                   $country=$this->cc_arrays->get_country_name($cc) ;
+				   $renderer->doc .= $this->row($ip, $country,$num);
+				   $renderer->doc .= "<tr><td colspan='3' style='border-top: 1px solid black'>";		
+                   $temp = array();
+                   foreach($data as $key=>$val) {
+                      $temp[$val]='&nbsp;';
+                   }
+				   $this->table($temp,$renderer, false);
+				   $renderer->doc .= '</td></tr>';
+				}
+			   $renderer->doc .= "</table>\n</div>\n\n";	
     }
 }
 
