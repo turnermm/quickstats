@@ -1,7 +1,7 @@
 Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
 Its advantage for many users is that is does not require an sql database.  
 
-This plugin has a page on Dokuiwiki's web site which is lkept up-to-date:
+This plugin has a page on Dokuwiki's web site which is lkept up-to-date:
     http://www.dokuwiki.org/plugin:quickstats
 
 Quickstats uses the following modules:
@@ -115,5 +115,5 @@ Configuration Settings
       5. geoplugin: if this option is checked the geoPlugin will be used for IP geo-locating (defaults to true); with this set to true GeoLIteCity.dat is not needed
       6. long_names: set maximum number of characters to output when oututting long names.  Default is 30,
          when set to -1 maximum is unlimited
-          
+            
        

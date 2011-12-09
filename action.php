@@ -22,7 +22,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	private $is_edit_user=false;
 	private $year_month;
 	private $totals;
-    private $NL = '/';	
+	private $NL = '/';	
+	private $show_date;
 
 	function __construct() {
 	
@@ -44,7 +45,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		if( preg_match('/WINNT/i',  PHP_OS) ) {    
 					$this->NL='\\';				
 		}
-		
+		$this->show_date=$this->getConf('show_date');
 	}
 	
     /**
@@ -176,8 +177,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		    }
 		
 		 $this->ips[$ip] += 1;
-   	
-      $this->save_data();
+         if($this->show_date) {
+            $this->pages['date'][md5($ID)] = time();
+         }
+         $this->save_data();
     }
 	
    function get_browser() {

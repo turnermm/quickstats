@@ -26,12 +26,13 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	private $misc_data;	
 	private $cc_arrays;
 	private $long_names =-1;
-
+    private $show_date;
 	function __construct() {
 
 		$this->cc_arrays = new ccArraysDat();
 		$this->long_names = $this->getConf('long_names');
 		if(!isset($this->long_names)  || $this->long_names <= 0) $this->long_names = false;
+        $this->show_date=$this->getConf('show_date');
 	}
 
    /**
@@ -213,18 +214,27 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     	uasort($array, 'QuickStatsCmp');
     }   
 
-    function row($name,$val,$num="&nbsp;") {	
-	   if($this->long_names && (@strlen($name) > $this->long_names)) {
-	       $title = $name;	 
-		   $name = "<a href='javascript:void 0;' title = '$title'>" . substr($name,0,$this->long_names) . '...</a>';
-	   }
+    function row($name,$val,$num="&nbsp;",$date=false) {	    
+        $title = "";
+        if($this->long_names && (@strlen($name) > $this->long_names)) {
+            $title = "$name";              
+            $name = substr($name,0,$this->long_names) . '...';
+        }
+        if($date) {
+            $date = date('r',$date);                      
+            $title = "$title $date";                      
+        }
+
+        if($title) {
+                $name = "<a href='javascript:void 0;' title = '$title'>$name</a>";
+        }
 	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
     }	
 
     function row_depth($new_depth=false) {
 	    STATIC $depth = false;
-		//msg("depth: $depth");
+		
 		if($new_depth !== false) {
 			$depth = $new_depth;
 			return;
@@ -271,7 +281,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	
 	}
 	
-	function table($data,&$renderer,$numbers=true) {
+	function table($data,&$renderer,$numbers=true,$date=false) {
 	   
 	    if($numbers) 
 		   $num = 0;
@@ -281,16 +291,19 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		    $this->thead($header);
 		}
 	*/
+ 
+
 	   $ttl = 0;
 	   $depth = $this->row_depth();
 	   if($depth == 'all') $depth = 0;
 	    $renderer->doc .= "<table cellspacing='4' >\n";
 		foreach($data as $item=>$count) {		
-		     if($numbers) $num++;
-			 $ttl += $count;
-			 if($depth  && $num > $depth) continue;
-			 $renderer->doc .= $this->row($item,$count,$num);
-			
+            if($numbers) $num++;
+            $ttl += $count;
+            if($depth  && $num > $depth) continue;      
+            $md5 =md5($item);
+            $date_str = (is_array($date) &&  isset($date[$md5]) ) ? $date[$md5] : false;                 
+            $renderer->doc .= $this->row($item,$count,$num,$date_str);
 		}
 	   $renderer->doc .= "</table>\n";
 	   return $ttl;
@@ -323,7 +336,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
 				}
 		    $renderer->doc .= '<span class="title">Page Accesses</span>';
-            $page_count = $this->table($this->pages['page'],$renderer);
+            
+            $date =($this->show_date && isset($this->pages['date'] )) ? $this->pages['date'] : false;
+            $page_count = $this->table($this->pages['page'],$renderer,true,$date);
 			$renderer->doc .=  "<span class='total'>Number of pages accessed: " . count($this->pages['page']) . "</span><br />";
 		    $renderer->doc .=  "<span class='total'>Total accesses:  " . $this->pages['site_total'] .'</span>';
 		    $renderer->doc .= "</div>\n";
