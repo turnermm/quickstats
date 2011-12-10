@@ -290,7 +290,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	
 	}
 	
-    function geopicity_ini() {
+    function geoipcity_ini() {
+    
         require_once("GEOIP/geoipcity.inc");
         if($this->getConf('geoip_local')) {
              $this->giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);		
@@ -302,22 +303,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         }        
     }
     
-	function table($data,&$renderer,$numbers=true,$date=false) {
+	function table($data,&$renderer,$numbers=true,$date=false,$ip_array=false) {
     
 	    if($numbers !== false) 
 		   $num = 0;
 		 else  $num = "&nbsp;";
-    		
-      $ip_array = false;
-      if($this->getConf('show_country') && is_array($data) ) {    
-         list($key,$val) = each($data);               
-          if(!$this->getConf('geoplugin') && preg_match('/^\d+\.\d+\.\d+\.\d+$/', $key)) {               
-               $ip_array = true;
-               $this->geopicity_ini();
-          }
-          reset($data);
-      }
-    
+  
+       if($ip_array) $this->geoipcity_ini();
+  
 	   $ttl = 0;
 	   $depth = $this->row_depth();
 	   if($depth == 'all') $depth = 0;
@@ -341,7 +334,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	 
 	   $renderer->doc .= '<div class="quickstats ip">';
 	   $renderer->doc .= '<span class="title">Unique IP Addresses</span>';
-	   $total_accesses = $this->table($this->ips,$renderer);	
+	   $total_accesses = $this->table($this->ips,$renderer,true,true,true);	
 	   $renderer->doc .= "<span class='total'>Total accesses: $total_accesses</span></br>\n"; 
 	   $renderer->doc .= "<span class='total'>Total unique ip addresses: $uniq</span></br>\n";  
 	   $renderer->doc .= "</div>\n";
