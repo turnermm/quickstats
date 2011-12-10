@@ -6,3 +6,4 @@ $lang['geoip_dir'] = 'Maxmind GeoLiteCity.dat directory; quickstats will look he
 $lang['geoplugin'] = 'Use the web-based geoPlugin for IP geo-locating (defaults to true); with this set to true GeoLIteCity.dat is not needed';
 $lang['long_names'] = 'Maximum number of characters when displaying long names, set to -1 for unlimited';
 $lang['show_date'] = 'Show date of last page access with mouseover';
+$lang['show_country'] = 'In IP table, show country of IP address with mouseover.  This will work only when "geoplugin" is set to false';

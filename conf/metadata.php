@@ -6,4 +6,4 @@ $meta['geoip_dir']=array('string');
 $meta['geoplugin'] = array('onoff');
 $meta['long_names'] = array('string');
 $meta['show_date'] = array('onoff');
- 
+$meta['show_country'] = array('onoff');

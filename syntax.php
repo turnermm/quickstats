@@ -29,13 +29,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     private $show_date;
     private $ua_file;
     private $ua_data;
-    
+    private $giCity;
+    private $SEP = '/';    
 	function __construct() {
 
 		$this->cc_arrays = new ccArraysDat();
 		$this->long_names = $this->getConf('long_names');
 		if(!isset($this->long_names)  || $this->long_names <= 0) $this->long_names = false;
         $this->show_date=$this->getConf('show_date');
+        if( preg_match('/WINNT/i',  PHP_OS) ) {    
+			$this->SEP='\\';				
+		}
 	}
 
    /**
@@ -175,8 +179,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		   if($depth) {
 		       $this->row_depth($depth);
 			  }
-			  
-		   //msg($which);
+			  		  
 		   $this->load_data($date_str,$which);
 		   if($which == 'basics') {
 				$renderer->doc .= "<div class='quickstats basics' style='margin: auto;width: 820px;'>" ;          		
@@ -220,9 +223,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     	uasort($array, 'QuickStatsCmp');
     }   
 
-    function row($name,$val,$num="&nbsp;",$date=false) {	    
+    function row($name,$val,$num="&nbsp;",$date=false,$is_ip=false) {	    
         $title = "";
-        if($this->long_names && (@strlen($name) > $this->long_names)) {
+        if($is_ip ) { 
+    		$record = geoip_record_by_addr($this->giCity, $name);             
+		    $title = $record->country_name;
+		}
+
+        elseif($this->long_names && (@strlen($name) > $this->long_names)) {
             $title = "$name";              
             $name = substr($name,0,$this->long_names) . '...';
         }
@@ -248,15 +256,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		
         return $depth;		
 	}
- /*   
-	function thead($titles) {	
-	   $name_title =$titles['name'];
-	   $val_title=$titles['val'];
-	   $num_title=isset($titles['val']) ? $titles['val'] : "&nbsp;";
-	    return "<tr><th>$num_title</th><th>$name_title</td><th>$val_title</th></tr>\n";
-       
-    }	
-  */  
+   
 	function load_data($date_str=null,$which) {
 		$today = getdate();
 		if($date_str) {
@@ -287,23 +287,37 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
    			$this->ua_data = unserialize(io_readFile($this->ua_file,false));
 			if(!$this->ua_data) $this->ua_data = array();
         }
-		//$this->page_totals_file = metaFN($ns_prefix . 'page_totals' . '.ser'); 
-	    //$this->totals = unserialize(io_readFile($this->page_totals_file,false));		
-
 	
 	}
 	
+    function geopicity_ini() {
+        require_once("GEOIP/geoipcity.inc");
+        if($this->getConf('geoip_local')) {
+             $this->giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);		
+        }
+        else {
+            $gcity_dir = $this->getConf('geoip_dir');	            
+            $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->SEP  . 'GeoLiteCity.dat';						           
+            $this->giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
+        }        
+    }
+    
 	function table($data,&$renderer,$numbers=true,$date=false) {
     
 	    if($numbers !== false) 
 		   $num = 0;
 		 else  $num = "&nbsp;";
-	 /*
-		if($header) {
-		    $this->thead($header);
-		}
-	*/
- 
+    		
+      $ip_array = false;
+      if($this->getConf('show_country') && is_array($data) ) {    
+         list($key,$val) = each($data);               
+          if(!$this->getConf('geoplugin') && preg_match('/^\d+\.\d+\.\d+\.\d+$/', $key)) {               
+               $ip_array = true;
+               $this->geopicity_ini();
+          }
+          reset($data);
+      }
+    
 	   $ttl = 0;
 	   $depth = $this->row_depth();
 	   if($depth == 'all') $depth = 0;
@@ -314,7 +328,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             if($depth  && $num > $depth) continue;      
             $md5 =md5($item);
             $date_str = (is_array($date) &&  isset($date[$md5]) ) ? $date[$md5] : false;                 
-            $renderer->doc .= $this->row($item,$count,$num,$date_str);
+            $renderer->doc .= $this->row($item,$count,$num,$date_str, $ip_array);
 		}
 	   $renderer->doc .= "</table>\n";
 	   return $ttl;
@@ -324,9 +338,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $uniq = $this->ips['uniq'];	     
 	   unset($this->ips['uniq']);
 	   $this->sort($this->ips);
-	   
-	 //  $renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
-	   //$renderer->doc .= '<div class="quickstats ip" style="clear:left; float:left; overflow:auto; padding: 8px; width: 300px;">';
+	 
 	   $renderer->doc .= '<div class="quickstats ip">';
 	   $renderer->doc .= '<span class="title">Unique IP Addresses</span>';
 	   $total_accesses = $this->table($this->ips,$renderer);	
@@ -428,7 +440,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					      $renderer->doc .= $this->row($cntry,$count,$num);
 					 }
 				}
-			  //$renderer->doc .= "<tr><td colspan='3'>Total accesses: $total</td><tr />";
+
 			  $renderer->doc .= '</table>';		 
 			  $renderer->doc .= "<span class='total'>Total number of countries: " . count($this->misc_data['country'])  . "</span></br>";
 			  
@@ -466,7 +478,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				   $renderer->doc .= "<tr><td colspan='3' style='border-top: 1px solid black'>";		
                    $temp = array();
                    foreach($data as $key=>$val) {
-                      $temp[$val]='&nbsp;';
+                      $temp[$val]='&nbsp;';  // prevents array numbers from being output by the table foreach
                    }
 				   $this->table($temp,$renderer, false);
 				   $renderer->doc .= '</td></tr>';
