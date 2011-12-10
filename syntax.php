@@ -164,7 +164,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }
 
 	function is_date_string($str) {
-	     return preg_match('/\d\d_\d\d\d/',$str);
+	     return preg_match('/\d+_\d\d\d/',$str);
     }	
 	
    /**
