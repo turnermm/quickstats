@@ -31,6 +31,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     private $ua_data;
     private $giCity;
     private $SEP = '/';    
+    
 	function __construct() {
 
 		$this->cc_arrays = new ccArraysDat();
@@ -225,6 +226,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 
     function row($name,$val,$num="&nbsp;",$date=false,$is_ip=false) {	    
         $title = "";
+        $ns = $name;
         if($is_ip ) { 
     		$record = geoip_record_by_addr($this->giCity, $name);             
 		    $title = $record->country_name;
@@ -238,9 +240,12 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             $date = date('r',$date);                      
             $title = "$title $date";                      
         }
-
-        if($title) {
+        
+        if($title && $is_ip) {
                 $name = "<a href='javascript:void 0;' title = '$title'>$name</a>";
+        }
+        else if(is_numeric($num)  && $date !== false) {
+           $name = "<a href='javascript: QuickstatsShowPage(\"$ns\");' title = '$title'>$name</a>";
         }
 	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
@@ -343,7 +348,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	function pages_xhtml(&$renderer, $no_align=false) {		 
 		
 		if(!$this->pages) return array();            
-	    
+
 			$this->sort($this->pages['page']);
 	        if($no_align) {
 					$renderer->doc .= '<div>';
@@ -411,7 +416,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					$renderer->doc .= '<div>';
 			}
 			else {
-		           $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px;'>";
+		           $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px; margin-top: 12px;'>";
 		    }
 		   $renderer->doc .= '<span class="title">Countries</span>';
 		   
