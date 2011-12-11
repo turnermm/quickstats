@@ -229,7 +229,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         $ns = $name;
         if($is_ip ) { 
     		$record = geoip_record_by_addr($this->giCity, $name);             
-		    $title = $record->country_name;
+		    $title = $record->country_name;      
+            if(isset($this->ua_data[$name])) {            
+            $title .= ' (' . $this->ua_data[$name][1] .')';
+            }
 		}
 
         elseif($this->long_names && (@strlen($name) > $this->long_names)) {
@@ -288,7 +291,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			$this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
 			if(!$this->misc_data) $this->misc_data = array();
 		}
-		if($which == 'ua') {
+		if($which == 'ua' || $which == 'ip') {
    			$this->ua_data = unserialize(io_readFile($this->ua_file,false));
 			if(!$this->ua_data) $this->ua_data = array();
         }
