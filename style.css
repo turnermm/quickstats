@@ -12,14 +12,30 @@ div.quickstats.ip {
     padding:2px;  
     clear:left;
     padding: 8px;  
-    margin-left: 85px;  /* aligns with basics left alignment */
+    margin-left: 60px;  /* aligns with basics left alignment */
 }
 div.quickstats span.total {
        font-size:115%;       	   
        color:blue; 
 }   
- 
+th._quickstats_sort { 
+    color: blue; 
+    pointer: hand;
+    text-align:center;
+    background-color: #eeeeee;
+    }
+    
 div.quickstats.basics { padding:2px; }
+
+/* partial settings for basic layout */
+div.browsers_basics {width: 150px;}
+div.countries_basics, div.pages_basics { width: 300px;  }
+div.pages_basics { margin-left: 225px;  margin-top: 14px;}
+div.countries_basics { 
+  padding-right: 60px; 
+  margin-top: 14px;
+ 
+ }
 
 /* placeholders for individual css formatting */
 div.quickstats.misc span.title, div.quickstats.page span.title, div.quickstats.countries span.title, div.quickstats.ua span.title {}

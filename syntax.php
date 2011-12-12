@@ -183,7 +183,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 			  		  
 		   $this->load_data($date_str,$which);
 		   if($which == 'basics') {
-				$renderer->doc .= "<div class='quickstats basics' style='margin: auto;width: 820px;'>" ;          		
+				$renderer->doc .= "<div class='quickstats basics' style='margin: auto;width: 920px;'>" ;          		
 		   }
 		   else {
 		        $class = "quickstats $which";
@@ -235,7 +235,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             }
 		}
 
-        elseif($this->long_names && (@strlen($name) > $this->long_names)) {
+        elseif($this->long_names && (@strlen($name) > $this->long_names)) {        
             $title = "$name";              
             $name = substr($name,0,$this->long_names) . '...';
         }
@@ -249,6 +249,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         }
         else if(is_numeric($num)  && $date !== false) {
            $name = "<a href='javascript: QuickstatsShowPage(\"$ns\");' title = '$title'>$name</a>";
+        }
+        else if ($title) {
+             $name = "<a href='javascript:void 0;' title = '$title'>$name</a>";
         }
 	    return "<tr><td>$num&nbsp;&nbsp;</td><td>$name</td><td>&nbsp;&nbsp;&nbsp;&nbsp;$val</td></tr>\n";
        
@@ -322,7 +325,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $ttl = 0;
 	   $depth = $this->row_depth();
 	   if($depth == 'all') $depth = 0;
-	    $renderer->doc .= "<table cellspacing='4' >\n";
+	   
+        if($ip_array) {
+             $this->theader($renderer, 'IP');
+        }
+        else if ($date && $numbers) {
+            $this->theader($renderer, 'Page');
+        }
+        else  $renderer->doc .= "<table cellspacing='4'>\n";
 		foreach($data as $item=>$count) {		       
             if($numbers) $num++;
             $ttl += $count;
@@ -334,7 +344,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $renderer->doc .= "</table>\n";
 	   return $ttl;
 	}
-	
+	function theader(&$renderer,$name,$accesses='Accesses') {
+          $renderer->doc .= "<table cellspacing='4' class='sortable'>\n";
+         $renderer->doc .= '<tr><th class="quickstats_sort">&nbsp;</th><th class="quickstats_sort">'.$name .'</th><th class="quickstats_sort">' . $accesses .'</th></tr>';
+    }
+    
 	function ip_xhtml(&$renderer) {
 	   $uniq = $this->ips['uniq'];	     
 	   unset($this->ips['uniq']);
@@ -357,7 +371,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					$renderer->doc .= '<div>';
 			}
 		    else {
-				$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
+				//$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
+                $renderer->doc .= '<div   class="pages_basics"  style="overflow:auto;">';
 				}
 		    $renderer->doc .= '<span class="title">Page Accesses</span>';
             
@@ -387,7 +402,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					$renderer->doc .= '<div>';
 			   }
 			  else {
-					$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
+					//$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
+                    $renderer->doc .= '<div class="browsers_basics"  style="float:left;">';
 				}	
 				$renderer->doc .="\n\n";
 				$renderer->doc .= '<br /><span class="title">Browsers</span>';
@@ -419,11 +435,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					$renderer->doc .= '<div>';
 			}
 			else {
-		           $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px; margin-top: 12px;'>";
+		       //  $renderer->doc .= "<div style='float: right; overflow: auto; width: 200px; margin-right: 1px; margin-top: 12px;'>";
+                   $renderer->doc .= "<div  class='countries_basics' style='float: right; overflow: auto;'>";
 		    }
 		   $renderer->doc .= '<span class="title">Countries</span>';
-		   
-				$renderer->doc .= "<table cellspacing='4'>\n";
+		        $this->theader($renderer, 'Country');
 				$num = 0;
 				$total = 0;
 				$depth = $this->row_depth();		
@@ -441,7 +457,6 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 					      $renderer->doc .= $this->row($cntry,$count,$num);
 					 }
 				}
-
 			  $renderer->doc .= '</table>';		 
 			  $renderer->doc .= "<span class='total'>Total number of countries: " . count($this->misc_data['country'])  . "</span></br>";
 			  

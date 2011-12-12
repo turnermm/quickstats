@@ -24,7 +24,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	private $totals;
 	private $NL = '/';	
 	private $show_date;
-    private $ua_file;
+        private $ua_file;
 
 	function __construct() {
 	
@@ -38,7 +38,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		$ns_prefix = "quickstats:";
 		$ns =  $ns_prefix . $today['mon'] . '_'  . $today['year'] . ':'; 
 		$this->page_file = metaFN($ns . 'pages' , '.ser');  
-        $this->ua_file = metaFN($ns . 'ua' , '.ser');  
+	        $this->ua_file = metaFN($ns . 'ua' , '.ser');  
 		$this->ip_file = metaFN($ns . 'ip' , '.ser');  
 		$this->misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
 		$this->page_totals_file = metaFN($ns_prefix . 'page_totals' , '.ser');  
@@ -59,8 +59,18 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	
         $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this,
                                    'add_data');
+        //$controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
     }
 	
+
+    function load_js(&$event, $param) {    
+           $event->data["script"][] = array (
+          "type" => "text/javascript",
+          "src" => DOKU_BASE."lib/plugins/quickstats/scripts/sorttable-cmpr.js",
+          "_data" => "",
+        );
+    }
+    
 	function set_cookies(&$event, $param) {	
 	
 	global $ACT;
