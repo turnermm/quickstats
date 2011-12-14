@@ -18,7 +18,7 @@ require_once('GEOIP/ccArraysDat.php');
  */
 class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 
-  private $page_file;
+    private $page_file;
 	private $ip_file;
 	private $misc_data_file;
 	private $pages;
@@ -31,6 +31,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     private $ua_data;
     private $giCity;
     private $SEP = '/';    
+    private $helper;
     
 	function __construct() {
 
@@ -41,6 +42,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         if( preg_match('/WINNT/i',  PHP_OS) ) {    
 			$this->SEP='\\';				
 		}
+        $this->helper =  & plugin_load('helper', 'quickstats');
 	}
 
    /**
@@ -113,7 +115,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     *
     */
     function handle($match, $state, $pos, &$handler){
-	
+	   global $ID;
+        $this->helper->writeCache($ID);
         switch ($state) {
           case DOKU_LEXER_SPECIAL :		 			
 		    $match =  trim(substr($match,13,-2));			
@@ -344,9 +347,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $renderer->doc .= "</table>\n";
 	   return $ttl;
 	}
-	function theader(&$renderer,$name,$accesses='Accesses') {
-          $renderer->doc .= "<table cellspacing='4' class='sortable'>\n";
-         $renderer->doc .= '<tr><th class="quickstats_sort">&nbsp;</th><th class="quickstats_sort">'.$name .'</th><th class="quickstats_sort">' . $accesses .'</th></tr>';
+	function theader(&$renderer,$name,$accesses='Accesses',$num="&nbsp;Num&nbsp;") {
+         
+         $renderer->doc .= "<table cellspacing='4' class='sortable'>\n";
+         $js = "<a href='javascript:void 0;' title='sort' class='quickstats_sort_title'>";
+         $num = $js . $num . '</a>';
+         $name = $js . $name . '</a>';
+         $accesses = $js . $accesses . '</a>';
+         $renderer->doc .= '<tr><th class="quickstats_sort">'. $num .'</th><th class="quickstats_sort">'.$name .'</th><th class="quickstats_sort">' . $accesses .'</th></tr>';
     }
     
 	function ip_xhtml(&$renderer) {

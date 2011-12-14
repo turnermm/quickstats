@@ -1,0 +1,10 @@
+To save download time, ''quickstats'' attempts to download its table sorting scripts only if needed.  For this purpose it keeps a cache file of pages which
+use the ''quickstats'' syntax  and therefore use these scripts.  This utility will prune away any files which are no longer being used for ''quickstats''.
+Clicking on the 'Delete' button will save your deletions to memory; clicking on 'Confirm Deletion' will remove them from the cache.  There is no harm
+in removing a page from the cache file.  If it contains ''quickstats'' syntax, it will be added to the cache file the next time the page is opened in the
+editor and either previewed or changed and saved.  The change can simply be a new line.   You can also add the page to the ''sorttable_ns'' list
+in the configuration editor.
+
+
+
+

@@ -9,7 +9,10 @@ if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once DOKU_PLUGIN.'action.php';
-
+/*
+error_reporting(E_ALL);
+ini_set('display_errors','1');
+*/
 
 class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     private $page_file;
@@ -24,7 +27,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	private $totals;
 	private $NL = '/';	
 	private $show_date;
-        private $ua_file;
+    private $ua_file;
+    private $helper;
 
 	function __construct() {
 	
@@ -48,6 +52,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 					$this->NL='\\';				
 		}
 		$this->show_date=$this->getConf('show_date');
+        
+         $this->helper = $this->loadHelper('quickstats', true); 
 	}
 	
     /**
@@ -59,11 +65,23 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 	
         $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this,
                                    'add_data');
-        //$controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
+        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
     }
 	
+    function isQSfile() {
+         global $ID;
+         if(!$this->helper->is_inConfList($ID) ) { 
+            return $this->helper->is_inCache($ID) ;
+         }
+         return true;
+    }
 
     function load_js(&$event, $param) {    
+           global $ACT, $ID;
+           if($ACT != 'show' && $ACT != 'preview') return;  // don't load the sortable script unless it's potentially needed
+           
+           if(!$this->isQSfile()) return;
+        //   msg('qs found=' .$ACT);
            $event->data["script"][] = array (
           "type" => "text/javascript",
           "src" => DOKU_BASE."lib/plugins/quickstats/scripts/sorttable-cmpr.js",
@@ -258,7 +276,9 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 		}
 		
 		$record = geoip_record_by_addr($giCity, $ip);     
-        
+        if(!isset($record)) {
+             return array();
+        }
 		return (array('code'=>$record->country_code,'name'=>$record->country_name));
 	}
 	

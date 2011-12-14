@@ -72,6 +72,7 @@ Stats for current month
 ~~QUICKSTATS:misc<;;depth>~~
 ~~QUICKSTATS:countries<;;depth>~~
 ~~QUICKSTATS:pages<;;depth>~~
+~~QUICKSTATS:ua<;;depth>~~
 
 Stats for a previous month
 ~~QUICKSTATS:<month_year><;;depth>~~
@@ -80,7 +81,7 @@ Stats for a previous month
 ~~QUICKSTATS:<month_year>&misc<;;depth>~~
 ~~QUICKSTATS:<month_year>&countries<;;depth>~~
 ~~QUICKSTATS:<month_year>&pages<;;depth>~~
-
+~~QUICKSTATS:<month_year>&ua<;;depth>~~
 
 
 The months are numbered from 1 to 12
@@ -105,6 +106,10 @@ countries:
   Countries
 ip:
  IP addresses
+ua:
+ IP address
+ browsers/user agents  
+ countries
       
 Configuration Settings
     There are two settings
@@ -115,5 +120,10 @@ Configuration Settings
       5. geoplugin: if this option is checked the geoPlugin will be used for IP geo-locating (defaults to true); with this set to true GeoLIteCity.dat is not needed
       6. long_names: set maximum number of characters to output when oututting long names.  Default is 30,
          when set to -1 maximum is unlimited
+      7. show_date: Show date of last page access with mouseover
+      8. show_country: In IP table, show country of IP address with mouseover.  This will work only when
+       "geoplugin" is set to false
+     9. sorttable_ns: Comma separated list of whole or partial namespaces and
+        file names which require sortable output         
             
        

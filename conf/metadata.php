@@ -7,3 +7,5 @@ $meta['geoplugin'] = array('onoff');
 $meta['long_names'] = array('string');
 $meta['show_date'] = array('onoff');
 $meta['show_country'] = array('onoff');
+$meta['sorttable_ns'] = array('string');
+

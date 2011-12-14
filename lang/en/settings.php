@@ -7,3 +7,4 @@ $lang['geoplugin'] = 'Use the web-based geoPlugin for IP geo-locating (defaults 
 $lang['long_names'] = 'Maximum number of characters when displaying long names, set to -1 for unlimited';
 $lang['show_date'] = 'Show date of last page access with mouseover';
 $lang['show_country'] = 'In IP table, show country of IP address with mouseover.  This will work only when "geoplugin" is set to false';
+$lang['sorttable_ns'] = 'Comma separated list of whole or partial namespaces and file names which require sortable output';

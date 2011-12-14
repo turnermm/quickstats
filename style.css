@@ -18,23 +18,24 @@ div.quickstats span.total {
        font-size:115%;       	   
        color:blue; 
 }   
-th._quickstats_sort { 
-    color: blue; 
+th.quickstats_sort {  
     pointer: hand;
     text-align:center;
     background-color: #eeeeee;
     }
-    
+ a.quickstats_sort_title  { /*color: blue !important; */}   /* this will change the color etc of the column titles */
+ 
 div.quickstats.basics { padding:2px; }
 
 /* partial settings for basic layout */
 div.browsers_basics {width: 150px;}
-div.countries_basics, div.pages_basics { width: 300px;  }
+div.pages_basics { width: 310px;  }
+
 div.pages_basics { margin-left: 225px;  margin-top: 14px;}
 div.countries_basics { 
   padding-right: 60px; 
   margin-top: 14px;
- 
+ width: 280px;  
  }
 
 /* placeholders for individual css formatting */
