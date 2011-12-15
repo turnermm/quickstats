@@ -1,0 +1,22 @@
+ip.ser
+IP=>Accesses
+
+misc_data.ser
+ [country] => Array       (   [CountryCode] => Accesses, . . .),
+ [browser] => Array      (   [BrowserName] => Accesses, . . .),
+ [platform] => Array     (   [PlatformID] => Accesses, . . . )
+ [version] => Array      (   [BrowserNameAndVersionNumber] => Accesses, . . . )
+ 
+pages.ser
+[site_total] => TotalAccesses
+[page] => Array  (  [<namespace:>page_name] => Accesses, . . .),
+[date] => Array(     [md5(<namespace:>page_name)] => timestamp)
+
+ua.ser 
+[IP] => Array
+        (
+            [0] => CountryCode,
+            [1] => BrowserVersion,  [2] => BrowserVersion, [3] => BrowserVersion, . . . )
+	   )		
+
+
