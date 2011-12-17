@@ -514,8 +514,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 				$renderer->doc .= '<br /><span class="title">Browsers and User Agents</span>';
 
                $this->theader($renderer,'IP','Country',"&nbsp;Accesses&nbsp;", "&nbsp;User Agents&nbsp;");		
-				foreach($this->ua_data as $ip=>$data) {           				  
-				    $num++;
+				foreach($this->ua_data as $ip=>$data) {           				  		
                     $cc = array_shift($data);
                     $country=$this->cc_arrays->get_country_name($cc) ;
 				    $uas = '&nbsp;&nbsp;&nbsp;&nbsp;' . implode(',&nbsp;',$data);
