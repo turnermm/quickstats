@@ -5,8 +5,7 @@
  */
 if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
-
+if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 
 class helper_plugin_quickstats extends Dokuwiki_Plugin {
     private $isCached = false;

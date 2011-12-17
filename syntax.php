@@ -8,7 +8,8 @@
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
-define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
+if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
+
 require_once('GEOIP/ccArraysDat.php');
 //error_reporting(E_ALL);
 //ini_set('display_errors','1');

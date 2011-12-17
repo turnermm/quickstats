@@ -7,7 +7,7 @@
 
 if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
+if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once DOKU_PLUGIN.'action.php';
 /*
 error_reporting(E_ALL);
