@@ -228,6 +228,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     	uasort($array, 'QuickStatsCmp');
     }   
 
+	function extended_row($num="&nbsp;", $cells, $styles="") {
+	    $style = "";
+		if($styles)  $style = "style = '$styles' "; 
+		$row = "<tr><td  $style >$num&nbsp;&nbsp;</td>";
+		foreach($cells as $cell_data) {
+			$row .= "<td  $style >$cell_data</td>";
+		}
+		$row .= '</tr>';
+		return $row;
+	}
+	
     function row($name,$val,$num="&nbsp;",$date=false,$is_ip=false) {	    
         $title = "";
         $ns = $name;
@@ -301,6 +312,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		if($which == 'ua' || $which == 'ip') {
    			$this->ua_data = unserialize(io_readFile($this->ua_file,false));
 			if(!$this->ua_data) $this->ua_data = array();
+			$this->ips = unserialize(io_readFile($this->ip_file,false));
+			if(!$this->ips) $this->ips = array();
         }
 	
 	}
@@ -348,14 +361,19 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $renderer->doc .= "</table>\n";
 	   return $ttl;
 	}
-	function theader(&$renderer,$name,$accesses='Accesses',$num="&nbsp;Num&nbsp;") {
-         
+	
+	function theader(&$renderer,$name,$accesses='Accesses',$num="&nbsp;Num&nbsp;",$other="") {         
          $renderer->doc .= "<table cellspacing='4' class='sortable'>\n";
          $js = "<a href='javascript:void 0;' title='sort' class='quickstats_sort_title'>";
          $num = $js . $num . '</a>';
          $name = $js . $name . '</a>';
          $accesses = $js . $accesses . '</a>';
-         $renderer->doc .= '<tr><th class="quickstats_sort">'. $num .'</th><th class="quickstats_sort">'.$name .'</th><th class="quickstats_sort">' . $accesses .'</th></tr>';
+         $renderer->doc .= '<tr><th class="quickstats_sort">'. $num .'</th><th class="quickstats_sort">'.$name .'</th><th class="quickstats_sort">' . $accesses .'</th>';
+         if($other) {
+		       $other = $js . $other .  '</a>';
+		       $renderer->doc .= '<th class="quickstats_sort">'. $other . '</th>';
+         } 		 
+		 $renderer->doc .='</tr>';
     }
     
 	function ip_xhtml(&$renderer) {
@@ -490,23 +508,18 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }
     
     function ua_xhtml(&$renderer) {
+	            
     			$renderer->doc .="\n\n<div class=ip_data>\n";
-				$renderer->doc .= '<br /><span class="title">IP Data</span>';
-				
-				$num=0;
-				$renderer->doc .= "<table border='0' >\n";
+				$styles = " padding-bottom: 4px; ";
+				$renderer->doc .= '<br /><span class="title">Browsers and User Agents</span>';
+
+               $this->theader($renderer,'IP','Country',"&nbsp;Accesses&nbsp;", "&nbsp;User Agents&nbsp;");		
 				foreach($this->ua_data as $ip=>$data) {           				  
-				   $num++;
-                   $cc = array_shift($data);
-                   $country=$this->cc_arrays->get_country_name($cc) ;
-				   $renderer->doc .= $this->row($ip, $country,$num);
-				   $renderer->doc .= "<tr><td colspan='3' style='border-top: 1px solid black'>";		
-                   $temp = array();
-                   foreach($data as $key=>$val) {
-                      $temp[$val]='&nbsp;';  // prevents array numbers from being output by the table foreach
-                   }
-				   $this->table($temp,$renderer, false);
-				   $renderer->doc .= '</td></tr>';
+				    $num++;
+                    $cc = array_shift($data);
+                    $country=$this->cc_arrays->get_country_name($cc) ;
+				    $uas = '&nbsp;&nbsp;&nbsp;&nbsp;' . implode(',&nbsp;',$data);
+				    $renderer->doc .=  $this->extended_row($this->ips[$ip], array($ip, "&nbsp;&nbsp;$country",$uas), $styles);
 				}
 			   $renderer->doc .= "</table>\n</div>\n\n";	
     }
