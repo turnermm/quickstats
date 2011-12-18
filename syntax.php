@@ -284,6 +284,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	}
    
 	function load_data($date_str=null,$which) {
+	    global $uasort_ip; 
 		$today = getdate();
 		if($date_str) {
 		   list($mon,$yr) = explode('_',$date_str);
@@ -312,8 +313,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 		if($which == 'ua' || $which == 'ip') {
    			$this->ua_data = unserialize(io_readFile($this->ua_file,false));
 			if(!$this->ua_data) $this->ua_data = array();
-			$this->ips = unserialize(io_readFile($this->ip_file,false));
-			if(!$this->ips) $this->ips = array();
+			if($which == 'ip') {
+				$this->ips = unserialize(io_readFile($this->ip_file,false));
+				if(!$this->ips) $this->ips = array();
+			}
+			else {
+				$uasort_ip = unserialize(io_readFile($this->ip_file,false));
+				if(!$uasort_ip) $uasort_ip = array();
+			}
         }
 	
 	}
@@ -506,19 +513,46 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	   $this->sort($tmp);
 	   return  $tmp;
     }
+
     
-    function ua_xhtml(&$renderer) {
-	            
+	function ua_sort(&$array) {
+     global $uasort_ip;
+	
+  	 function ua_Cmp($a, $b) {
+	        global $uasort_ip; 
+		
+			$na = $uasort_ip[$a];
+			$nb = $uasort_ip[$b];
+			
+		   if ($na == $nb) {			
+				return 0;
+			}
+			return ($na > $nb) ? -1 : 1;
+			
+		 }
+	   
+	   uksort($array, 'ua_Cmp');    
+	}
+    
+	function ua_xhtml(&$renderer) {				
+	            global $uasort_ip; 
+	            $this->ua_sort($this->ua_data);		
+
+	            $depth = $this->row_depth();		
+                if($depth == 'all') $depth = false;
+				
     			$renderer->doc .="\n\n<div class=ip_data>\n";
 				$styles = " padding-bottom: 4px; ";
 				$renderer->doc .= '<br /><span class="title">Browsers and User Agents</span>';
-
+                $n = 0;
                $this->theader($renderer,'IP','Country',"&nbsp;Accesses&nbsp;", "&nbsp;User Agents&nbsp;");		
-				foreach($this->ua_data as $ip=>$data) {           				  		
+				foreach($this->ua_data as $ip=>$data) {     
+                     $n++;
+                    if($depth !== false && $n > $depth) break;					 
                     $cc = array_shift($data);
                     $country=$this->cc_arrays->get_country_name($cc) ;
 				    $uas = '&nbsp;&nbsp;&nbsp;&nbsp;' . implode(',&nbsp;',$data);
-				    $renderer->doc .=  $this->extended_row($this->ips[$ip], array($ip, "&nbsp;&nbsp;$country",$uas), $styles);
+				    $renderer->doc .=  $this->extended_row($uasort_ip[$ip], array($ip, "&nbsp;&nbsp;$country",$uas), $styles);
 				}
 			   $renderer->doc .= "</table>\n</div>\n\n";	
     }
