@@ -538,13 +538,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 	            global $uasort_ip; 
 	            
 
-	            $depth = $this->row_depth();		
+	            $depth = $this->row_depth();						
                 if($depth == 'all') $depth = false;
+				$asize = count($this->ua_data);
 				if($depth !== false) {
-						$this->ua_sort($this->ua_data);		
-						$asize = count($this->ua_data);
+						$this->ua_sort($this->ua_data);	
+                        if($depth > $asize) $depth = $asize;
 						$header = " ($depth/$asize) ";
 				}
+				else {				   
+				    $header = " ($asize/$asize) ";
+				}	
     			$renderer->doc .="\n\n<div class=ip_data>\n";
 				$styles = " padding-bottom: 4px; ";
 				$renderer->doc .= '<br /><span class="title">Browsers and User Agents ' . $header   .'</span>';
