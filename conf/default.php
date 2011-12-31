@@ -8,5 +8,6 @@ $conf['long_names'] = '25';
 $conf['show_date'] = 1;
 $conf['show_country'] = 0;
 $conf['sorttable_ns'] = 'quickstats';
+$conf['xcl_name_val'] ='';
 
 

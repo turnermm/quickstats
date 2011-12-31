@@ -1,5 +1,5 @@
 ip.ser
-IP=>Accesses
+[IP]=>Accesses
 
 misc_data.ser
  [country] => Array       (   [CountryCode] => Accesses, . . .),
@@ -20,3 +20,66 @@ ua.ser
 	   )		
 
 
+qs.ser
+[words] => Array 
+                (
+                    [<word>] => Array 
+                            (
+                                [count] => <n>
+                                [ip] => Array 
+                                    (
+                                      [<ip>] => [<count>] 
+                                    )
+                            )
+                    [<word>] => Array 
+                            (
+                            )
+                )
+[ns]=> Array 
+                (
+                    [<ns>] => Array 
+                            (
+                                [count] => <n>
+                                [ip] => Array 
+                                    (
+                                      [<ip>] => [<count>] 
+                                    )
+                            ) 
+                    [<ns>] => Array
+                            (
+                            )                    
+                
+                )
+ 
+page_users.ser 
+/* assoc array intermixed md5(page_id)  and ip keys */
+[md5(page_id)] => Array
+                        (
+                           ip,
+                           ip . . .         
+                        ),
+[md5(page_id)] => Array
+                        (
+                        ),
+[ip] => Array
+               (
+                   $ID,
+                   $ID . . .
+               ),              
+[ip] => Array
+               (     
+               ),                              
+ [md5(page_id)] => Array
+                        (
+                        )         
+[ip] => Array
+               (
+                   $ID,
+                   $ID . . .
+               ),                   
+
+page_totals.ser
+[month_year]=>page_totals    //updated with each new page addition from pages.ser=>site_total
+     .
+     .
+     

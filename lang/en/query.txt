@@ -1,0 +1,32 @@
+Queries can be about pages, IP addresses, or Countries. 
+ Page queries have priorty over IP queries and both have priority over country queries, so that while you can
+enter both an IP address and a page name, the result returned will refer to the page query.  If you query either a page or an IP address and also select a country,
+data will be returned only for IP addresses which match the country.  The page search function is case-insensitive and will match partial names
+aw well as whole names.  So, for instance, if you search for ''wiki'', it will return all pages which occur in the wiki namespace and any other pages
+which include wiki in their names.
+
+
+When you query a page or an IP address you will get a table with the following columns for each of the months you select from the drop-down menu of months:
+
+|''Month''|''Accesses''|''Pages''|''Country''|''User Agent''|''Search Terms''|''Name Spaces''|''Query String Names''|''Query String Values''|
+
+When you query a page, this data will be displayed for every IP address that has accessed the page.  This can sometimes amount to a considerable amount of output,
+especailly for IP addresses that are spiders and have accessed many pages on your wiki.  Therefore, when you query a page, you have the option
+of displaying a ''brief'' format with the following columns:
+
+|''Month''|''Accesses''|''Country''|''User Agent''|
+
+In the case of country queries, the columns will be the same as in the long form above, but with the exclusion of the ''country'' column.  
+
+There is a drop -down menu of files which are currently using the quickstats syntax.  You can click on theese an the page will pop up.  The purpose
+here is to give you a convenient means of checking page names and IP's which you might want to use in  your queries.
+
+**Notes**  \\
+1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\
+2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki.  When you request data about a page or 
+group of pages, the header for each page will indicate the number of times the page itself has been accessed.  The header for page output will
+look like this and will then be followed by the listings of IP addresses which have accesed that page:
+
+======wiki:syntax======
+===Total accesses for wiki:syntax: 53===
+

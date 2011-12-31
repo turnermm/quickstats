@@ -45,3 +45,17 @@ div.quickstats.pages {}
 div.quickstats.countries { }
 div.quickstats.ua {}
 
+td.padded,th.padded { padding-left: 10px; padding-right: 10px; }
+div.quick__stats td.divider { border-left: 1px solid black; }
+div.quick__stats td.padded input { background-color: #ffffaa; }
+div.quick__stats td.place_holder { }
+div.quick__stats th.thead {
+  border-bottom: 1px solid black; 
+  padding-bottom: 4px;  padding-top: 4px;  
+  text-align:center;
+ }
+caption.qs_cap { font-size: 125%;  font-weight: bold; color:white; background-color: gray;}
+caption.qs_bold_left { text-align: left;  font-weight: bold; }
+
+#qs_cache_panel,#quick__stats { display: none; }
+#qs_query_intro { border: 1px blue solid;  padding:10px; margin-top: 10px;}

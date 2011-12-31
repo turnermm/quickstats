@@ -13,4 +13,7 @@ $lang['menu'] = 'Quickstats';
 $lang['btn_delete'] = 'Delete';
 $lang['btn_restore'] = 'Reset';
 $lang['btn_confirm'] = 'Confirm Deletions';
-
+$lang['btn_queries'] = 'Query Data';
+$lang['btn_prune'] = 'Update Quickstats Cache';
+$lang['btn_submit_query'] = 'Submit Query';
+$lang['btn_qinfo'] = 'Query Info';

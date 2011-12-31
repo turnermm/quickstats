@@ -6,11 +6,12 @@
 if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
-
+require_once('GEOIP/ccArraysDat.php');
 class helper_plugin_quickstats extends Dokuwiki_Plugin {
     private $isCached = false;
     private $script_file;
     private $cache;
+    private $cc_arrays;
 
     
     function getMethods(){
@@ -48,6 +49,7 @@ class helper_plugin_quickstats extends Dokuwiki_Plugin {
             $this->script_file = metaFN('quickstats:cache', '.ser');
             $this->cache = unserialize(io_readFile($this->script_file,false));
             if(!$this->cache) $this->cache = array();
+            $this->cc_arrays = new ccArraysDat();
     }
     
 	function msg($text) {
@@ -57,6 +59,9 @@ class helper_plugin_quickstats extends Dokuwiki_Plugin {
 		msg($text,2);
 	}
 	
+    function get_cc_arrays() {
+        return $this->cc_arrays;
+    }
     function is_inCache($id) {   
   //     msg('<pre>'  .  print_r($this->cache,true) .  '</pre>',2);       
          $md5 = md5($id);
@@ -118,7 +123,10 @@ class helper_plugin_quickstats extends Dokuwiki_Plugin {
      function getCache() {
          return  $this->cache;
      }     
-    function metaFilePath() {
+    function metaFilePath($directory=false) {
+       if($directory) {
+            return preg_replace('/quickstats.*$/','quickstats/',$this->script_file); 
+       }
         return $this->script_file;
     }
  }   

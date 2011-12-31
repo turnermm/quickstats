@@ -126,4 +126,5 @@ Configuration Settings
      9. sorttable_ns: Comma separated list of whole or partial namespaces and
         file names which require sortable output         
             
+There is also an admin panel which has various options for making detailed queries.
        

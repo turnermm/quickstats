@@ -1,0 +1,5 @@
+With this admin panel you can do two things.  You can maintain the list of files which are currently using the quickstats syntax plugin, keeping it up-to-date,
+and you can make specific queries based on country, ip address, and Dokuwiki page names.  For the maintenance panel, click on the
+**Update Quickstats Cache** button.  For the Query panel, click on the **Query Data** button.  These are toggles and will both open
+and close their respective windows.  The **Query Info** button will re-open the Query Info panel which is displayed on first opening the
+Query Data panel and which can be closed with a button at the bottom of the Query Info panel.

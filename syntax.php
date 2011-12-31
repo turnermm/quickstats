@@ -10,7 +10,7 @@ if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
 if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 
-require_once('GEOIP/ccArraysDat.php');
+//require_once('GEOIP/ccArraysDat.php');
 //error_reporting(E_ALL);
 //ini_set('display_errors','1');
 /**
@@ -36,7 +36,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     
     function __construct() {
 
-        $this->cc_arrays = new ccArraysDat();
+      //  $this->cc_arrays = new ccArraysDat();
         $this->long_names = $this->getConf('long_names');
         if(!isset($this->long_names)  || $this->long_names <= 0) $this->long_names = false;
         $this->show_date=$this->getConf('show_date');
@@ -44,6 +44,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             $this->SEP='\\';                
         }
         $this->helper =  & plugin_load('helper', 'quickstats');
+        $this->cc_arrays = $this->helper->get_cc_arrays();
     }
 
    /**
@@ -514,10 +515,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
        return  $tmp;
     }
 
-    
+    /*  this sorts ua array by ip accesses 
+     *  the keys to both ua and ip arrays are the ip addresses     
+     *  $a and $b in ua_Cmp($a,$b) are ip addresses, so $uasort_ip[$a] = number of accesses for ip $a
+    */
     function ua_sort(&$array) {
      global $uasort_ip;
     
+       
        function ua_Cmp($a, $b) {
             global $uasort_ip; 
         
@@ -533,11 +538,11 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
        
        uksort($array, 'ua_Cmp');    
     }
-    
+  
+   
     function ua_xhtml(&$renderer) {                
-                global $uasort_ip; 
+                global $uasort_ip;   // sorted IP=>acceses
                 
-
                 $depth = $this->row_depth();                        
                 if($depth == 'all') $depth = false;
                 $asize = count($this->ua_data);
@@ -555,7 +560,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                 $n = 0;
                $this->theader($renderer,'IP','Country',"&nbsp;Accesses&nbsp;", "&nbsp;User Agents&nbsp;");        
                 foreach($this->ua_data as $ip=>$data) {     
-                     $n++;
+                    $n++;
                     if($depth !== false && $n > $depth) break;                     
                     $cc = array_shift($data);
                     $country=$this->cc_arrays->get_country_name($cc) ;

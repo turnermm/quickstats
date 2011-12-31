@@ -88,4 +88,34 @@
      return NULL; 
   }
 
+ function qs_country_index($country) {
+     global $QSTATS_COUNTRY_CODES,$QSTATS_COUNTRY_NAMES;
+       $key = array_search($country, $QSTATS_COUNTRY_NAMES);
+       if($key !== false) {
+           return $key ;
+       }
+       
+     
+ }
+ 
+ 
+
+ function qs_array_search_ci ($needle = null)
+ {
+   global $QSTATS_COUNTRY_CODES,$QSTATS_COUNTRY_NAMES;
+
+   $ret_str = "";
+    foreach($QSTATS_COUNTRY_NAMES as $key => $eval)
+    {
+        //$eval = substr($eval, 0);
+        if(stristr($eval, $needle) !== false) {
+          $ret_str .= $QSTATS_COUNTRY_CODES[$key]. '::' . $eval."\n";
+         } 
+         
+    }
+   return rawurlencode(trim($ret_str,"\n"));    
+
+ }
+ 
+
 ?>
