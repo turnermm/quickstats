@@ -31,9 +31,9 @@ div.quickstats.basics { padding:2px; }
 div.browsers_basics {width: 150px;}
 div.pages_basics { width: 310px;  }
 
-div.pages_basics { margin-left: 225px;  margin-top: 14px;}
+div.pages_basics { margin-left: 245px;  margin-top: 14px;}
 div.countries_basics { 
-  padding-right: 60px; 
+  padding-right: 80px; 
   margin-top: 14px;
  width: 280px;  
  }
