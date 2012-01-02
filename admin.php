@@ -118,14 +118,12 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
             $ip_file = metaFN($ns . 'ip' , '.ser');  
             $ip_data = unserialize(io_readFile($ip_file,false));
             $this->uniqIPCurrent=$ip_data['uniq'];
-            $this->uniqIPTotal=$uniq_data['uniq'];
-           // msg($this->uniqIPCurrent . " / " . $this->uniqIPTotal);
-            if($current_dir != $uniq_data['last'] ) {
-           // msg($current_dir);
-          //  msg($uniq_data['last']);
-               $uniq_data = array_merge ($uniq_data , array_keys($ip_data));
+         
+            $uniq_data = array_unique(array_merge ($uniq_data , array_keys($ip_data)));
+            $uniq_data['uniq'] = count($uniq_data);
+            $this->uniqIPTotal = $uniq_data['uniq'];
+            if($current_dir != $uniq_data['last'] ) {      
                $uniq_data['last'] = $current_dir;
-               $uniq_data['uniq'] = count($uniq_data);
                io_saveFile($uniq_data_file,serialize($uniq_data)); 
             }
             
