@@ -22,6 +22,11 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
     private $cc_arrays;
     private $countries;
     private $meta_path;
+    private $page_totals; 
+    private $uniqIPTotal;
+    private $uniqIPCurrent;
+    private $page_accessesTotal=0;
+    private $page_accessesCurrent=0;
     
      function __construct() {
      
@@ -29,7 +34,16 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
        $this->cache = $this->helper->getCache(); 
        $this->cc_arrays = $this->helper->get_cc_arrays();
        $this->meta_path = $this->helper->metaFilePath(true) ;     
-       $this->countries_setup();
+       $this->page_totals = unserialize(io_readFile($this->meta_path .  'page_totals.ser'));
+       if(!$this->page_totals) $this->page_totals = array();
+       if(!empty($this->page_totals)) {
+           foreach($this->page_totals as $ttl) {
+              $this->page_accessesTotal+=$ttl;
+              $this->page_accessesCurrent=$ttl;
+           }
+           $this->countries_setup();
+           $this->uniq_ip();
+       }
     
      }
 
@@ -40,10 +54,10 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
         
          $this->countries = array();
          $country_codes = array();
-         $data = unserialize(io_readFile($this->meta_path .  'page_totals.ser'));
-         if(!data) $data = array();
-         $data_dirs = array_reverse(array_keys($data));
-        
+         //$data = unserialize(io_readFile($this->meta_path .  'page_totals.ser'));
+         //if(!data) $data = array();
+         //$data_dirs = array_reverse(array_keys($data));       
+         $data_dirs = array_reverse(array_keys($this->page_totals));                
          if(count($data_dirs) > 6) {
             $data_dirs = array_slice($data_dirs,0,6);
          }
@@ -63,6 +77,60 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
              }
          }
          asort($this->countries);
+
+     }
+     
+     function uniq_ip() {
+            $dirs = array_keys($this->page_totals);
+            $current_dir = array_pop($dirs);
+            $ns_prefix = "quickstats:"; 
+            $uniq_data_file = metaFN($ns_prefix . 'uniq_ip' , '.ser');  
+            if(file_exists($uniq_data_file)) {
+                $uniq_data = unserialize(io_readFile($uniq_data_file,false));
+            }
+            else if(count($dirs) > 0) {
+                $uniq_data = array();
+                foreach($dirs as $dir) {
+                    $ns =  $ns_prefix .  $dir . ':'; 
+                    $ip_file = metaFN($ns . 'ip' , '.ser');  
+                    $ip_data = unserialize(io_readFile($ip_file,false));
+                    if(empty($ip_data)) { 
+                       $ip_data = array();
+                     }
+                     else {
+                         unset($ip_data['uniq']);
+                    }                     
+                    $ip_data = array_keys($ip_data);
+                    $uniq_data = array_merge ($uniq_data , $ip_data);
+                }
+                unset($uniq_data['uniq']);
+                unset($uniq_data['last']);
+                $uniq_data = array_unique($uniq_data);
+                $uniq_data['uniq'] = count($uniq_data);
+                $uniq_data['last'] = $dir;
+                io_saveFile($uniq_data_file,serialize($uniq_data)); 
+            }
+            else {
+                $uniq_data = array();
+            }
+            
+            $ns =  $ns_prefix .  $current_dir . ':'; 
+            $ip_file = metaFN($ns . 'ip' , '.ser');  
+            $ip_data = unserialize(io_readFile($ip_file,false));
+            $this->uniqIPCurrent=$ip_data['uniq'];
+            $this->uniqIPTotal=$uniq_data['uniq'];
+           // msg($this->uniqIPCurrent . " / " . $this->uniqIPTotal);
+            if($current_dir != $uniq_data['last'] ) {
+           // msg($current_dir);
+          //  msg($uniq_data['last']);
+               $uniq_data = array_merge ($uniq_data , array_keys($ip_data));
+               $uniq_data['last'] = $current_dir;
+               $uniq_data['uniq'] = count($uniq_data);
+               io_saveFile($uniq_data_file,serialize($uniq_data)); 
+            }
+            
+            
+       
      }
      
     /**
@@ -142,36 +210,38 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('<input type="hidden" name="meta_path" value="'.$this->meta_path.'" />');   
       
       ptln('<table  border="0"  STYLE="border: 1px solid black" cellspacing="0">');
-      ptln('<tr><th class="thead">&nbsp;Quickstats pages&nbsp;</th><th class="thead" colspan="2">Date</th><td><!-- divider --></td><th class="thead" colspan="2">Search Fields</th></tr>');
+      ptln('<tr><th class="thead">&nbsp;' . $this->getLang('label_qs_pages') .' &nbsp;</th><th class="thead" colspan="2">' . $this->getLang('label_date')  .'</th><td><!-- divider --></td><th class="thead" colspan="2">' . $this->getLang('label_search') . '</th></tr>');
       ptln('<tr><td rowspan="5" valign="top" class="padded"><select name="popups" id="popups" size="6" onchange="onChangeQS(this);">');
       $this->get_Options('popups');
       ptln('</select></td>'); 
      
-      ptln('<td rowspan="5" valign="top" class="padded">&nbsp;<select name="month" multiple id="month" size="6">');
+      ptln('<td rowspan="5" valign="top" class="padded" nowrap>&nbsp;<select name="month" multiple id="month" size="6">');
       $this->get_Options('months',$today['mon']) ;
-      ptln('</select></td><th class="padded">&nbsp;Select Month(s) from menu at left </th><td rowspan="6" class="divider"></td>');
+      ptln('</select></td><th class="padded" nowrap>&nbsp;' . $this->getLang('label_sel_months') . ' </th><td rowspan="6" class="divider"></td>');
       
-      ptln('<td class="padded">&nbsp;IP:&nbsp;<input type="text" name = "ip" id="ip" size="16" value=""' .NL .'</td>');
+      ptln('<td class="padded" nowrap>&nbsp;' . $this->getLang('label_ip') . ':&nbsp;<input type="text" name = "ip" id="ip" size="16" value=""' .NL .'</td>');
 
-      ptln('<td rowspan="5" align="top" class="padded">&nbsp;<select name="country_names" id="country_names" size="6">');
+      ptln('<td rowspan="5" align="top" class="padded" nowrap>&nbsp;<select name="country_names" id="country_names" size="6">');
       $this->get_Options('country') ;
       ptln('</select></td>');
       ptln('</tr>'); 
 
-      ptln('<tr><td></td><td class="padded">&nbsp;Page:&nbsp;<input type="text" name = "page" id="page" size="36" value=""</td></tr>');
-      ptln('<tr><th valign="bottom" class="padded">&nbspEnter year below</th>');
+      ptln('<tr><td></td><td class="padded" nowrap>&nbsp;' . $this->getLang('label_page') . ':&nbsp;<input type="text" name = "page" id="page" size="36" value=""</td></tr>');
+      ptln('<tr><th valign="bottom" class="padded">&nbsp' . $this->getLang('label_sel_year')  .'</th>');
       ptln('<td class="padded  place_holder">Brief pages display: <input type="checkbox" id="qs_p_brief" name="qs_p_brief"></td></tr>'); // here
       ptln('<tr><td valign="top" class="padded">&nbsp;Year (4 digits):&nbsp;<input type="text" name = "year" id="year" size="4" value="' . $today['year'] . '"' .NL .'</td><td class="padded  place_holder">&nbsp;</td></tr>');
       ptln('<tr><td class="padded place_holder"></td><td class="padded place_holder"></td></tr><tr><td class="padded place_holder">&nbsp;</td>');
       ptln('<td class="padded place_holder">&nbsp;</td>');
       ptln('<td class="padded place_holder">&nbsp;</td>');
       ptln('<td class="padded place_holder">&nbsp;</td>');
-      ptln('<td class="padded" style="padding-top:2px;"><a href="javascript:qs_country_search();" style="text-decoration:underline">Search:</a> <input type="text" value ="test" id="cc_extra" name="cc_extra" size="24"></td>');
+      ptln('<td class="padded" style="padding-top:2px;"><a href="javascript:qs_country_search();" style="text-decoration:underline">Search:</a> <input type="text" value ="" id="cc_extra" name="cc_extra" size="24"></td>');
      
       ptln('</table>');
            
-      ptln('<p><input type="submit" onclick="getExtendedData(this.form,\''. DOKU_INC . '\');"  class="button" value="'.$this->getLang('btn_submit_query').'" /></p>');
-      ptln('</form></p>');
+      ptln('<p><input type="submit" onclick="getExtendedData(this.form,\''. DOKU_INC . '\');"  class="button" value="'.$this->getLang('btn_submit_query').'" />');
+      ptln('&nbsp;&nbsp;&nbsp;&nbsp;<span class="status">[ <b>' . $this->getLang('label_uniq_ip')  . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' .  $this->uniqIPTotal . '&nbsp;&nbsp;Current month: ' . $this->uniqIPCurrent .' ]');
+      ptln('&nbsp;&nbsp;&nbsp;[ <b>' . $this->getLang('label_page_access') . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' . $this->page_accessesTotal. '&nbsp;&nbsp;' . $this->getLang('label_current_month') . ': ' . $this->page_accessesCurrent.  ' ]</span>');   
+      ptln('</p></form></p>');
      
       ptln('<p>&nbsp;</p><div id="extended_data"></div>');
       ptln('</div>');

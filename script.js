@@ -149,7 +149,9 @@ function getExtendedData(f,DOKU_INCL) {
     DOKU_BASE + 'lib/plugins/quickstats/scripts/extended_data.php',
     params,
     function (data) {            
-           dom.innerHTML = decodeURIComponent(data);      
+          dom.innerHTML = decodeURIComponent(decodeURIComponent(data));      
+          //dom.innerHTML = decodeURIComponent(dom.innerHTML);      
+         //dom.innerHTML = decodeURI(decodeURIComponent(data));      
         
     },
     'html'

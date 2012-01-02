@@ -17,3 +17,18 @@ $lang['btn_queries'] = 'Query Data';
 $lang['btn_prune'] = 'Update Quickstats Cache';
 $lang['btn_submit_query'] = 'Submit Query';
 $lang['btn_qinfo'] = 'Query Info';
+$lang['label_ip'] = 'IP';
+$lang['label_page'] = 'Page';
+$lang['label_brief'] = 'Brief pages display';
+$lang['label_sel_months'] = 'Select Month(s) from menu at left';
+$lang['label_sel_year'] = 'Enter year below';
+$lang['label_current_month'] = 'Current month';
+$lang['label_uniq_ip'] = 'Unique IPs';
+$lang['label_page_access'] = 'Page Accesses ';
+$lang['label_total']='Total';
+$lang['label_qs_pages']='Quickstats pages';
+$lang['label_date']='Quickstats pages';
+$lang['label_search']='Search Fields';
+$lang['label_date']='Date';
+//Date		Search Fields
+ //$this->getLang('abel_search')
