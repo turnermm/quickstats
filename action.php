@@ -9,6 +9,12 @@ if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once DOKU_PLUGIN.'action.php';
+/* for backward compatiblity */
+if(!function_exists('utf8_strtolower')) {  
+require_once(DOKU_INC.'inc/common.php'); 
+require_once(DOKU_INC.'inc/utf8.php'); 
+}
+
 /*
 error_reporting(E_ALL);
 ini_set('display_errors','1');
