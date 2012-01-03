@@ -55,9 +55,6 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
         
          $this->countries = array();
          $country_codes = array();
-         //$data = unserialize(io_readFile($this->meta_path .  'page_totals.ser'));
-         //if(!data) $data = array();
-         //$data_dirs = array_reverse(array_keys($data));       
          $data_dirs = array_reverse(array_keys($this->page_totals));                
          if(count($data_dirs) > 6) {
             $data_dirs = array_slice($data_dirs,0,6);
@@ -146,15 +143,17 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
     
       switch (key($_REQUEST['cmd'])) {
         case 'delete' :          
+           if(isset($_REQUEST['del']) && is_array($_REQUEST['del']) && !empty($_REQUEST['del'])) {
 		    $this->deletions = $_REQUEST['del'];	
 			$this->to_confirm = implode(',',array_keys($this->deletions));
-		//	$this->output = print_r($_REQUEST,true);
-		//	$this->output  .= "\n to confirm: " .  $this->to_confirm;
+            }
+            else {
+               $this->deletions = array();
+               $this->to_confirm = array();
+            }
 			 break;
         case 'confirm' :
-	     // $this->output = print_r($_REQUEST,true);
 		   $this->cache=$this->helper->pruneCache($_REQUEST['confirm'],$_REQUEST['del']);
-         
 		   break;
           
       }      
@@ -175,7 +174,12 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_open_info(' . "'qs_query_intro'" . ');">' . $this->getLang("btn_qinfo") . '</button>');
       
       /* Cache Pruning Panel */
-      ptln('<div id="qs_cache_panel">');
+      if(isset($this->deletions) || isset($this->to_confirm)) {
+         $qs_display = ' style="display:block; "';
+      }
+      else  $qs_display = "";
+     
+      ptln('<div ' . $qs_display . ' id="qs_cache_panel">');
       
       ptln( $this->locale_xhtml(intro));   
       ptln('<form action="'.wl($ID).'" method="post">');
