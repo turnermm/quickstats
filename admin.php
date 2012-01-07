@@ -232,7 +232,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('<tr><td></td><td class="padded" nowrap>&nbsp;' . $this->getLang('label_page') . ':&nbsp;<input type="text" name = "page" id="page" size="36" value=""</td></tr>');
       ptln('<tr><th valign="bottom" class="padded">&nbsp' . $this->getLang('label_sel_year')  .'</th>');
       ptln('<td class="padded  place_holder">Brief pages display: <input type="checkbox" id="qs_p_brief" name="qs_p_brief"></td></tr>'); // here
-      ptln('<tr><td valign="top" class="padded">&nbsp;Year (4 digits):&nbsp;<input type="text" name = "year" id="year" size="4" value="' . $today['year'] . '"' .NL .'</td><td class="padded  place_holder">&nbsp;</td></tr>');
+      ptln('<tr><td valign="top" class="padded">&nbsp;Year (4 digits):&nbsp;<input type="text" name = "year" id="year" size="4" value="' . $today['year'] . '">' .NL .'</td><td class="padded  place_holder">&nbsp;</td></tr>');
       ptln('<tr><td class="padded place_holder"></td><td class="padded place_holder"></td></tr><tr><td class="padded place_holder">&nbsp;</td>');
       ptln('<td class="padded place_holder">&nbsp;</td>');
       ptln('<td class="padded place_holder">&nbsp;</td>');
