@@ -1,32 +1,53 @@
-Queries can be about pages, IP addresses, or Countries. 
- Page queries have priorty over IP queries and both have priority over country queries, so that while you can
-enter both an IP address and a page name, the result returned will refer to the page query.  If you query either a page or an IP address and also select a country,
-data will be returned only for IP addresses which match the country.  The page search function is case-insensitive and will match partial names
-aw well as whole names.  So, for instance, if you search for ''wiki'', it will return all pages which occur in the wiki namespace and any other pages
+===== Queries =====
+Queries can be about pages, IP addresses, Countries, or Browser/User Agents. 
+
+==== Rules ====
+The queries are governed by the dominant or **priority** field.  There are three basic rules:
+   - Country or User Agent priority with both fields set will match both fields.
+   - Any priority with country set will match the priority field plus the country.
+   - Page priority with both agent and country set will match all three fields.
+
+==== Searches ====
+The search functions are case-insensitive and will match partial strings as well as whole strings.  So, for instance, 
+if you search for ''wiki'' in the page search, it will return all pages which occur in the wiki namespace and any other pages
 which include wiki in their names.
 
+   - **UserAgent Other:**  This search is useful if a particular user agent does not show up on the drop-down menu.  This can happen if a particular user agent string appears in a subversion but not in the major version string.  This field takes precedence over the drop-down menu, so if you want to select from the drop-down menu, you must clear this field.  
+   - **Country Search: **   If a country does not appear in the list of countries, this will add it to the list so that you can then select it.  If you enter a partial name, it will add all matches.  For instance, if you enter 'isl', you will add a whole list of countries that have Island in their names
+   - ** Page:**  This will accept any whole or part of a page name and will return results for all matching values.     
 
-When you query a page or an IP address you will get a table with the following columns for each of the months you select from the drop-down menu of months:
+ ==== Dates ====  
+ Dates are all confined to months within the same year.   You can select multiple dates except for page priority.  However, the page
+ field can be included in a mulit-date query where one of the other fields has priority.
 
-|''Month''|''Accesses''|''Pages''|''Country''|''User Agent''|''Search Terms''|''Name Spaces''|''Query String Names''|''Query String Values''|
+
+==== Output ====
+Queries will result in tables with the following columns for each of the months you select from the drop-down menu of months:
+
+|<''IP''>|''Month''|''Accesses''|''Pages''|<''Country''>|''User Agent''|''Search Terms''|''Name Spaces''|''Query String Names''|''Query String Values''|
+
 
 When you query a page, this data will be displayed for every IP address that has accessed the page.  This can sometimes amount to a considerable amount of output,
-especailly for IP addresses that are spiders and have accessed many pages on your wiki.  Therefore, when you query a page, you have the option
+especially for IP addresses that are spiders and have accessed many pages on your wiki.  The page column can often have a great many entries. Therefore, when you query a page, you have the option
 of displaying a ''brief'' format with the following columns:
 
 |''Month''|''Accesses''|''Country''|''User Agent''|
 
-In the case of country queries, the columns will be the same as in the long form above, but with the exclusion of the ''country'' column.  
+The columns in angle brackets will not appear in every table.  The ''Country''  column will be excluded from Country queries.  The ''IP''
+column will appear in tables with ''User Agent'' and ''Country'' priority.
 
-There is a drop -down menu of files which are currently using the quickstats syntax.  You can click on theese an the page will pop up.  The purpose
-here is to give you a convenient means of checking page names and IP's which you might want to use in  your queries.
+==== File Menu ====
 
+There is a drop-down menu of files which are currently using the quickstats syntax.  You can click on these an the page will pop up.  
+This serves a two-fold purpose: \\
+1. They give you a convenient means of checking names and IP's which you might want to use in your queries. \\
+2. They enable you to keep all your work with quickstats in the admin panel, giving you immediate access to any
+charts you may have created with the quickstats syntax plugin.
+
+----
 **Notes**  \\
 1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\
 2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki.  When you request data about a page or 
-group of pages, the header for each page will indicate the number of times the page itself has been accessed.  The header for page output will
-look like this and will then be followed by the listings of IP addresses which have accesed that page:
+group of pages, the header for each page will indicate the number of times the page itself has been accessed. 
 
-======wiki:syntax======
-===Total accesses for wiki:syntax: 53===
 

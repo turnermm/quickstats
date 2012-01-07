@@ -25,6 +25,11 @@ function qs_open_panel(which) {
 }
 
 function qs_open_info(which) {
+   var dom = document.getElementById(which) ;
+   if(dom.style.display == 'block') {
+       qs_close_panel(which);
+       return;
+   }
    qs_open_panel(which);
    qs_open_panel('quick__stats');     
    qs_close_panel('qs_general_intro');
@@ -44,6 +49,17 @@ function toggle_panel(which) {
     else dom.style.display = 'block';
       
 }
+
+function qs_check_year(year) {
+ if(!year) year = document.getElementById('year');
+ 
+   if(parseInt(year.value) < 2010) {
+        alert("Year values must have four digits, e.g 2012");
+        return false;
+   }
+    return true;
+}
+
 function checkforJQuery() {
 
   if(!window.jQuery) {
@@ -81,8 +97,18 @@ function onChangeQS(which) {
   QuickstatsShowPage(which.options[which.selectedIndex].value) ; 
  }
 
+ function qs_priority_error(err) {
+    elems = err.split(';;');
+    alert('You have selected ' + elems[0] + ' priority, but have not  ' + elems[1] + ' in your query');
+ }
+ 
 function getExtendedData(f,DOKU_INCL) {
 
+    var priority_error = "";
+    var priority = "";
+    var page = "";
+    
+    if(!qs_check_year(null)) return;
     var params="doku_inc="+encodeURIComponent(DOKU_INCL);
     var inp = f.getElementsByTagName('input');
     for(el in inp) {
@@ -91,10 +117,10 @@ function getExtendedData(f,DOKU_INCL) {
           params += p;      
       }
     }
-
- 
+    var ignore = document.getElementById('qs_ignore').checked;
+      
     var p_brief = document.getElementById('qs_p_brief');
-    if(p_brief.checked) params+="& p_brief=1";
+    if(p_brief.checked) params+="&p_brief=1";
     var months = document.getElementById('month');
     if(months.selectedIndex == 0 && !whole_year.checked) {
        alert("You must select a month");
@@ -102,28 +128,79 @@ function getExtendedData(f,DOKU_INCL) {
     }
     else month = months.selectedIndex;
     
-    var countries=document.getElementById('country_names');
-    var option = countries.options[countries.selectedIndex];
-    var country_set = false;
-    if(option.value != 0) {
-        params+="&country_name=" + encodeURIComponent(option.text); 
-        params+="&country_code=" + encodeURIComponent(option.value); 
-        country_set = true;
+    var priority_types = new Array('page','ip','agent','country');
+    for(var p in priority_types) {
+        var dom = document.getElementById('qs_priority_'+ priority_types[p]);
+        if(dom.checked) {
+            priority = priority_types[p];
+        }
     }
-    
-    var page = document.getElementById('page').value;
+    if(priority != 'ip') {
+        var countries=document.getElementById('country_names');
+        var option = countries.options[countries.selectedIndex];
+        var country_set = false;
+        if(option.value != 0) {        
+            if(!ignore || priority == 'country') {
+                params+="&country_name=" + encodeURIComponent(option.text); 
+                params+="&country_code=" + encodeURIComponent(option.value); 
+                country_set = true;
+            }
+        }
+       
+       var ua_set = false; 
+        var ua_other =document.getElementById('other_agent');    
+        if(ua_other.value) {
+              params+="&user_agent=" + encodeURIComponent(ua_other.value); 
+              ua_set = true;
+        }
+        else {
+            var ua =document.getElementById('user_agent');    
+            var option = ua.options[ua.selectedIndex];    
+            if(option.value != 0) {
+                if(!ignore || priority == 'agent') {           
+                    params+="&user_agent=" + encodeURIComponent(option.value); 
+                   ua_set = true;
+                }
+            }
+        }
+        var page = document.getElementById('page').value;
+    }
     var ip = document.getElementById('ip').value;
     
-     if(!country_set && !page && !ip) {
-         alert('Query term(s) missing: Page/IP/Country');
+     if(!country_set && !page && !ip &&!ua_set) {
+         alert('Query term(s) missing: Page/IP/Country/User Agent');
          return; 
     }     
+   
+       if(priority == 'page' && !page)  {
+            priority_error = 'page;;entered a page name';
+       }
+       else if(priority == 'country' && !country_set)  {
+           priority_error = 'country;;chosen a Country';
+       }
+      else if(priority == 'agent' && !ua_set)  {
+         priority_error = 'user agent;;selected a User Agent';
+       }
+      else if(priority == 'ip' && !ip)  {
+         priority_error = 'ip;;entered an IP address';
+       }
     
-    if(ip != "") {
-        params+="&ip=" + ip;
+    
+    if(priority_error) {
+        qs_priority_error(priority_error);
+        return;
     }
-    if(page !="") {
-        params+="&page=" + page;
+ 
+    params +=  '&priority='  + priority;
+     if(!ignore || priority == 'ip') {
+        if(ip != "") {
+            params+="&ip=" + ip;
+        }
+    }
+    if(!ignore || priority == 'page') {
+        if(page !="") {
+            params+="&page=" + page;
+        }
     }
     var year = document.getElementById('year').value;
     date = '&date=' +month + '_' + year;
@@ -135,8 +212,8 @@ function getExtendedData(f,DOKU_INCL) {
         }
     }
 
-    if(page && date_multiples) {
-       alert("Page queries can be made for only one month at a time.");
+    if(page && date_multiples && priority == 'page') {
+       alert("Page - queries can be made for only one month at a time.");
        return;
     }
     

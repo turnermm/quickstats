@@ -22,6 +22,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
 	private $to_confirm;
     private $cc_arrays;
     private $countries;
+    private $user_agents;
     private $meta_path;
     private $page_totals; 
     private $uniqIPTotal;
@@ -42,7 +43,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
               $this->page_accessesTotal+=$ttl;
               $this->page_accessesCurrent=$ttl;
            }
-           $this->countries_setup();
+           $this->misc_data_setup();
            $this->uniq_ip();
        }
     
@@ -51,23 +52,31 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
      /*
      *  Create a list of countries accessed during last 6 months, for countries Select
      */     
-     function countries_setup() {
+     function misc_data_setup() {
         
          $this->countries = array();
          $country_codes = array();
+         $this->user_agents = array();
+    
          $data_dirs = array_reverse(array_keys($this->page_totals));                
          if(count($data_dirs) > 6) {
             $data_dirs = array_slice($data_dirs,0,6);
          }
 
          $ns_prefix = "quickstats:"; 
-         foreach($data_dirs as $dir) {
+         foreach($data_dirs as $dir) {         
              $ns =  $ns_prefix .  $dir . ':'; 
              $misc_data_file = metaFN($ns . 'misc_data' , '.ser');  
              $misc_data = unserialize(io_readFile($misc_data_file,false));
-             if(!empty($misc_data) &&   !empty($misc_data['country'])) {                
-                 $country_codes = array_merge ($country_codes, array_keys($misc_data['country']));               
-             }
+             if(!empty($misc_data)) {
+                 if(!empty($misc_data['country'])) {                
+                     $country_codes = array_merge ($country_codes, array_keys($misc_data['country']));               
+                }
+                 if(!empty($misc_data['browser'])) {                     
+                     $this->user_agents = array_merge ($this->user_agents, array_keys($misc_data['browser']));               
+                   //  $this->user_agents = array_merge ($this->user_agents, array_keys($misc_data['version']));               
+                }                
+            }
          }
          foreach($country_codes as $cc) {
              if($cc) {
@@ -75,7 +84,10 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
              }
          }
          asort($this->countries);
-
+         $this->user_agents = array_unique($this->user_agents);
+         natcasesort($this->user_agents);
+         
+        
      }
      
      function uniq_ip() {
@@ -206,54 +218,85 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       $today = getdate();
       ptln('<div id="quick__stats" class="quick__stats">');
       ptln('<div class="qs_query_intro" id="qs_query_intro">' . $this->locale_xhtml(query));
-      ptln('<button class="button" onclick="qs_close_panel(' . "'qs_query_intro'" . ');">Close info window</button>');
+      ptln('<button class="button" onclick="qs_close_panel(' . "'qs_query_intro'" . ');">' . $this->getLang('btn_close_info') . '</button>');
       ptln('</div>');   
        
-      ptln('<p>&nbsp;</p><p><form action="javascript:void 0;">');
+      ptln('<p>&nbsp;</p><p><form id="qs_stats_form" action="javascript:void 0;">');
       ptln('<input type="hidden" name="meta_path" value="'.$this->meta_path.'" />');   
       
       ptln('<table  border="0"  STYLE="border: 1px solid black" cellspacing="0">');
-      ptln('<tr><th class="thead">&nbsp;' . $this->getLang('label_qs_pages') .' &nbsp;</th><th class="thead" colspan="2">' . $this->getLang('label_date')  .'</th><td><!-- divider --></td><th class="thead" colspan="2">' . $this->getLang('label_search') . '</th></tr>');
+      
+      //header row
+      ptln('<tr><th class="thead">&nbsp;' . $this->getLang('label_qs_pages') .' &nbsp;</th><th class="thead" colspan="1">' . $this->getLang('label_date')  .'</th>');
+      
+      ptln('<td></td><th class="thead">UserAgent</th><td></td><th class="thead">' . $this->getLang('label_search') . '</th>');
+      ptln('<th class="thead">Country</th></tr>');
+      
+      /* Row 1  */
+      //row 1/col1 files popups select
       ptln('<tr><td rowspan="5" valign="top" class="padded"><select name="popups" id="popups" size="6" onchange="onChangeQS(this);">');
-      $this->get_Options('popups');
+      $this->get_Options('popups'); 
       ptln('</select></td>'); 
-     
+      
+      //row 1 col2 months select 
       ptln('<td rowspan="5" valign="top" class="padded" nowrap>&nbsp;<select name="month" multiple id="month" size="6">');
       $this->get_Options('months',$today['mon']) ;
-      ptln('</select></td><th class="padded" nowrap>&nbsp;' . $this->getLang('label_sel_months') . ' </th><td rowspan="6" class="divider"></td>');
-      
+        
+       
+      ptln('</select></td><td rowspan="6" class="divider"></td><th class="padded" rowspan="6"nowrap valign="top">');
+     //row 1 col3  browser/useragent
+     ptln('<select size="6" name="user_agent" id="user_agent">');
+     $this->get_Options('ua') ;
+     ptln('</select>');
+     ptln('<br /><span style="font-weight:normal">Other:</span> <input type ="text" id="other_agent"></td>');
+      ptln('</th><td rowspan="6" class="divider"></td>');
+      //row 1 col4 IP       
       ptln('<td class="padded" nowrap>&nbsp;' . $this->getLang('label_ip') . ':&nbsp;<input type="text" name = "ip" id="ip" size="16" value=""' .NL .'</td>');
 
+      //row 1 col5 Countries
       ptln('<td rowspan="5" align="top" class="padded" nowrap>&nbsp;<select name="country_names" id="country_names" size="6">');
       $this->get_Options('country') ;
       ptln('</select></td>');
       ptln('</tr>'); 
 
-      ptln('<tr><td></td><td class="padded" nowrap>&nbsp;' . $this->getLang('label_page') . ':&nbsp;<input type="text" name = "page" id="page" size="36" value=""</td></tr>');
-      ptln('<tr><th valign="bottom" class="padded">&nbsp' . $this->getLang('label_sel_year')  .'</th>');
-      ptln('<td class="padded  place_holder">Brief pages display: <input type="checkbox" id="qs_p_brief" name="qs_p_brief"></td></tr>'); // here
-      ptln('<tr><td valign="top" class="padded">&nbsp;Year (4 digits):&nbsp;<input type="text" name = "year" id="year" size="4" value="' . $today['year'] . '">' .NL .'</td><td class="padded  place_holder">&nbsp;</td></tr>');
-      ptln('<tr><td class="padded place_holder"></td><td class="padded place_holder"></td></tr><tr><td class="padded place_holder">&nbsp;</td>');
-      ptln('<td class="padded place_holder">&nbsp;</td>');
-      ptln('<td class="padded place_holder">&nbsp;</td>');
-      ptln('<td class="padded place_holder">&nbsp;</td>');
-      ptln('<td class="padded" style="padding-top:2px;"><a href="javascript:qs_country_search();" style="text-decoration:underline">Search:</a> <input type="text" value ="" id="cc_extra" name="cc_extra" size="24"></td>');
+       /* ROW 2 */
+       // col 1 -- below row 1 col 4
+      ptln('<tr><td class="padded" nowrap>&nbsp;' . $this->getLang('label_page') . ':&nbsp;<input type="text" name = "page" id="page" size="36" value=""</td></tr>');
+       /* ROW 3 */
+      // col 1 -- below row 2 col 1       
+      ptln('<tr><td class="padded  place_holder">&nbsp;' . $this->getLang('label_brief'). ': <input type="checkbox" id="qs_p_brief" name="qs_p_brief"></td></tr>'); 
+      /* ROWS 4-5: under row 3 col1/row 1 col 4 */
+      ptln('<tr><td class="padded  place_holder">&nbsp;</td></tr>');
+      
+      ptln('<tr><td class="padded" valign="bottom" nowrap>&nbsp;<b>Priority:</b>&nbsp;');
+      ptln('Page <input type="radio" checked value="page" name="qs_priority" id="qs_priority_page">');
+      ptln('&nbsp;IP <input type="radio" value="ip" name="qs_priority" id="qs_priority_ip">');
+      ptln('&nbsp;Country <input type="radio" value="country" name="qs_priority" id="qs_priority_country">');
+      ptln('&nbsp;UserAgent: <input type="radio" value="agent" name="qs_priority" id="qs_priority_agent"></td></tr>');
+      //ptln('country, user agent</td></tr>');
      
+     /*ROW 6 */
+      ptln('<tr><td class="padded nowrap">&nbsp;</td>');     
+      ptln('<td class="padded">&nbsp;Year:&nbsp;<input type="text"  onchange="qs_check_year(this);"  name="year" id="year" size="4" value="' . $today['year'] . '">' .NL .'</td>');
+    
+      ptln('<td class="padded" valign="bottom" >&nbsp;' . $this->getLang('label_no_secondary') . ':&nbsp;<input type="checkbox" checked id="qs_ignore"></td>');
+      ptln('<td class="padded" style="padding-top:2px;"><a href="javascript:qs_country_search();" style="text-decoration:underline">Search:</a> <input type="text" value ="" id="cc_extra" name="cc_extra" size="24"></td>');     
       ptln('</table>');
            
       ptln('<p><input type="submit" onclick="getExtendedData(this.form,\''. DOKU_INC . '\');"  class="button" value="'.$this->getLang('btn_submit_query').'" />');
+      ptln('&nbsp;<input  type="reset" class="button" value="' . $this->getLang('btn_reset') . '">');
       ptln('&nbsp;&nbsp;&nbsp;&nbsp;<span class="status">[ <b>' . $this->getLang('label_uniq_ip')  . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' .  $this->uniqIPTotal . '&nbsp;&nbsp;Current month: ' . $this->uniqIPCurrent .' ]');
       ptln('&nbsp;&nbsp;&nbsp;[ <b>' . $this->getLang('label_page_access') . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' . $this->page_accessesTotal. '&nbsp;&nbsp;' . $this->getLang('label_current_month') . ': ' . $this->page_accessesCurrent.  ' ]</span>');   
       ptln('</p></form></p>');
      
       ptln('<p>&nbsp;</p><div id="extended_data"></div>');
       ptln('</div>');
-      $this->debug(); 	  
+      //$this->debug(); 	  
 
     }
 	
 	function debug() {
-	    return;
+	 //   return;
 	    ptln('<p><pre>');	  
         ptln(htmlspecialchars($this->output));
 	
@@ -297,13 +340,17 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
             }
        }
       else if($which == 'country') {
-       
-       
         ptln("<option value='0' selected> &nbsp; <b>Select Country</b> &nbsp;" . NL);        
         foreach($this->countries as $cc => $country) {
              ptln("<option value='$cc'> $country" . NL);
         }
       }
+     else if($which == 'ua') {
+        ptln("<option value='0' selected> &nbsp; <b>Select UserAgent</b> &nbsp;" . NL);        
+        foreach($this->user_agents as $ua) {
+             ptln("<option value='$ua'> $ua" . NL);
+        }        
+     }     
     }
 
 }
