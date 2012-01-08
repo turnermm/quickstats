@@ -248,8 +248,8 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
      ptln('<select size="6" name="user_agent" id="user_agent">');
      $this->get_Options('ua') ;
      ptln('</select>');
-     ptln('<br /><span style="font-weight:normal">Other:</span> <input type ="text" id="other_agent"></td>');
-      ptln('</th><td rowspan="6" class="divider"></td>');
+     ptln('<br /><a href="javascript:qs_agent_search();" style="text-decoration:underline; font-weight:normal;line-height:200%;">Search:</a><input type ="text" id="other_agent"></td>');
+     ptln('</th><td rowspan="6" class="divider"></td>');
       //row 1 col4 IP       
       ptln('<td class="padded" nowrap>&nbsp;' . $this->getLang('label_ip') . ':&nbsp;<input type="text" name = "ip" id="ip" size="16" value=""' .NL .'</td>');
 

@@ -12,10 +12,11 @@ The search functions are case-insensitive and will match partial strings as well
 if you search for ''wiki'' in the page search, it will return all pages which occur in the wiki namespace and any other pages
 which include wiki in their names.
 
-   - **UserAgent Other:**  This search is useful if a particular user agent does not show up on the drop-down menu.  This can happen if a particular user agent string appears in a subversion but not in the major version string.  This field takes precedence over the drop-down menu, so if you want to select from the drop-down menu, you must clear this field.  
+   - **UserAgent Search:**  This search is useful if a particular user agent does not show up on the drop-down menu. This can happen if a user agent string appears in a subversion but not in the major version string.  A successful search will add whatever is found to the top of the drop-down menu so that  you can then select it.   
    - **Country Search: **   If a country does not appear in the list of countries, this will add it to the list so that you can then select it.  If you enter a partial name, it will add all matches.  For instance, if you enter 'isl', you will add a whole list of countries that have Island in their names
    - ** Page:**  This will accept any whole or part of a page name and will return results for all matching values.     
 
+ 
  ==== Dates ====  
  Dates are all confined to months within the same year.   You can select multiple dates except for page priority.  However, the page
  field can be included in a mulit-date query where one of the other fields has priority.

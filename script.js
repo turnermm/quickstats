@@ -148,19 +148,12 @@ function getExtendedData(f,DOKU_INCL) {
         }
        
        var ua_set = false; 
-        var ua_other =document.getElementById('other_agent');    
-        if(ua_other.value) {
-              params+="&user_agent=" + encodeURIComponent(ua_other.value); 
-              ua_set = true;
-        }
-        else {
-            var ua =document.getElementById('user_agent');    
-            var option = ua.options[ua.selectedIndex];    
-            if(option.value != 0) {
-                if(!ignore || priority == 'agent') {           
-                    params+="&user_agent=" + encodeURIComponent(option.value); 
-                   ua_set = true;
-                }
+        var ua =document.getElementById('user_agent');    
+        var option = ua.options[ua.selectedIndex];    
+        if(option.value != 0) {
+            if(!ignore || priority == 'agent') {           
+                params+="&user_agent=" + encodeURIComponent(option.value); 
+               ua_set = true;
             }
         }
         var page = document.getElementById('page').value;
@@ -226,10 +219,7 @@ function getExtendedData(f,DOKU_INCL) {
     DOKU_BASE + 'lib/plugins/quickstats/scripts/extended_data.php',
     params,
     function (data) {            
-          dom.innerHTML = decodeURIComponent(decodeURIComponent(data));      
-          //dom.innerHTML = decodeURIComponent(dom.innerHTML);      
-         //dom.innerHTML = decodeURI(decodeURIComponent(data));      
-        
+          dom.innerHTML = decodeURIComponent(decodeURIComponent(data));   
     },
     'html'
    );
@@ -261,6 +251,37 @@ function qs_country_search() {
                var obj = new Option(elems[1], elems[0],false,false);
                 select.add(obj,1);
            }
+    },
+    'html'
+   );
+ 
+}
+
+function qs_agent_search() {
+
+    checkforJQuery();
+    var select = document.getElementById('user_agent');
+    
+    var params = ""; 
+    var dom=document.getElementById('other_agent');   
+    params += '&other_agent=' + encodeURIComponent(dom.value);
+       
+    jQuery.post(
+    DOKU_BASE + 'lib/plugins/quickstats/scripts/get_useragent.php',
+    params,
+    function (data) {        
+           if(!data) {
+               alert("Nothing found  for " + dom.value);
+               return;
+           }           
+           var str =decodeURIComponent(data);              
+           var entries = str.split(/::/);
+           if(!entries.length) return;
+           for (i=0; i< entries.length; i++) {               
+               var obj = new Option(entries[i], entries[i],false,false);
+                select.add(obj,1);
+           }
+          
     },
     'html'
    );
