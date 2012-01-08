@@ -223,7 +223,7 @@ function load_data($which,$date) {
 function get_page_row($ip, $date, $p_brief=false,$agent=false) {
   $table = "";
   if($p_brief) {    
-    $result = ip_row(array('ip','ua'), $ip,$date,true,true); 
+    $result = ip_row(array('ip','ua'), $ip,$date,true,true,$agent); 
     if($result) {
         $table .= $result;
     }
@@ -255,17 +255,25 @@ function qs_format_pages($pages) {
     if(isset($_POST['p_brief'])) {
         foreach($pages as $page=>$ar) {
             $page = rawurlencode($page);
-            echo "<h1>$page</h1>\n";
-            echo '<div class="level2 qs_brief"><h3>Total accesses for  ' . $page . ': '  . $ar['accesses'] . '</h3>' . "\n";     
-            echo "<table cellspacing='0' class='qs_brief_table'>\n";
-            echo qs_header(array('ip','month','access','country','agent'));
+            $header = "<h1>$page</h1>\n";
+            $header .=  '<div class="level2 qs_brief"><h3>Total accesses for  ' . $page . ': '  . $ar['accesses'] . '</h3>' . "\n";     
+            $header .=  "<table cellspacing='0' class='qs_brief_table'>\n";
+            
+            $header_displayed = false;
+            $close_div = false;
             foreach($ar['ips'] as $ip) {   
                 $ipdata = get_page_row($ip, $month, isset($_POST['p_brief']),$agent) ;
                 if($ipdata) {         
-                   echo rawurlencode($ipdata);             
+                    if(!$header_displayed) {
+                        echo $header;
+                        echo qs_header(array('ip','month','access','country','agent'));
+                        $header_displayed = true;
+                        $close_div = true;
+                    }
+                    echo rawurlencode($ipdata);             
                 }
             }
-            echo "</table></div>\n";
+            if($close_div) echo "</table></div>\n";
         }
     }
     else {
