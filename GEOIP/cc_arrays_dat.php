@@ -103,7 +103,7 @@
  function qs_array_search_ci ($needle = null)
  {
    global $QSTATS_COUNTRY_CODES,$QSTATS_COUNTRY_NAMES;
-
+   if(!$needle)  return "";
    $ret_str = "";
     foreach($QSTATS_COUNTRY_NAMES as $key => $eval)
     {
@@ -113,6 +113,7 @@
          } 
          
     }
+    if(!$ret_str) return "";
    return rawurlencode(trim($ret_str,"\n"));    
 
  }

@@ -239,7 +239,7 @@ function qs_country_search() {
     jQuery.post(
     DOKU_BASE + 'lib/plugins/quickstats/scripts/country_data.php',
     params,
-    function (data) {        
+    function (data) {  
            if(!data) {
                alert("Nothing found  for " + dom.value);
                return;
