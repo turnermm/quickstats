@@ -223,15 +223,12 @@ function load_data($which,$date) {
 function get_page_row($ip, $date, $p_brief=false,$agent=false) {
   $table = "";
   if($p_brief) {    
-    $result = ip_row(array('ip','ua'), $ip,$date); 
+    $result = ip_row(array('ip','ua'), $ip,$date,true,true); 
     if($result) {
-        $table .= '<tr>' . cell("$ip ",'caption',false,$p_brief) . '</tr>';      
-        $table .= qs_header(array('month','access','country','agent'));
         $table .= $result;
     }
   }  
-  else  {
-                                                                                     //$index,$date,$show_country=true, $show_ip=false,$check_agent=false
+  else  {                                                                                     
       $result = ip_row(array('ip','page_users','ua', 'qs_data'), $ip,$date,true,false,$agent); 
       if($result) {
           $table .= '<tr>' . cell("Data for IP address:  $ip ",'caption',false,$p_brief) . '</tr>';
@@ -253,24 +250,40 @@ function qs_format_pages($pages) {
    if(isset($_POST['user_agent'])) {
        $agent = $_POST['user_agent'];
    }   
-   else $agent = false;
-   
-  foreach($pages as $page=>$ar) {
-     $page = rawurlencode($page);
-     
-     foreach($ar['ips'] as $ip) {        
-        $ipdata = get_page_row($ip, $month, isset($_POST['p_brief']),$agent) ;
-        if($ipdata) {
-            echo "<h1>$page</h1>\n";
-            echo '<div class="level2"><h3>Total accesses for  ' . $page . ': '  . $ar['accesses'] . '</h3>' . "\n<table>\n";
-            echo rawurlencode($ipdata);
-             echo "</table></div>\n";
-        }
-        
-     }
+    else $agent = false;
     
-  }
+    if(isset($_POST['p_brief'])) {
+        foreach($pages as $page=>$ar) {
+            $page = rawurlencode($page);
+            echo "<h1>$page</h1>\n";
+            echo '<div class="level2 qs_brief"><h3>Total accesses for  ' . $page . ': '  . $ar['accesses'] . '</h3>' . "\n";     
+            echo "<table cellspacing='0' class='qs_brief_table'>\n";
+            echo qs_header(array('ip','month','access','country','agent'));
+            foreach($ar['ips'] as $ip) {   
+                $ipdata = get_page_row($ip, $month, isset($_POST['p_brief']),$agent) ;
+                if($ipdata) {         
+                   echo rawurlencode($ipdata);             
+                }
+            }
+            echo "</table></div>\n";
+        }
+    }
+    else {
+        foreach($pages as $page=>$ar) {
+            $page = rawurlencode($page);
+            foreach($ar['ips'] as $ip) {        
+                $ipdata = get_page_row($ip, $month, isset($_POST['p_brief']),$agent) ;
+                if($ipdata) {
+                    echo "<h1>$page</h1>\n";
+                    echo '<div class="level2"><h3>Total accesses for  ' . $page . ': '  . $ar['accesses'] . '</h3>' . "\n<table>\n";
+                    echo rawurlencode($ipdata);
+                    echo "</table></div>\n";
+                }
+            }
+        }     
+    }
 }
+
   /**
   *  @param $needle: page name or partial name from $_POST
   *  @param $month: formatted for path name: month_year 

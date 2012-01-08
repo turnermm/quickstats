@@ -60,3 +60,4 @@ caption.qs_bold_left { text-align: left;  font-weight: bold; }
 
 #qs_cache_panel,#quick__stats { display: none; }
 #qs_query_intro { border: 1px blue solid;  padding:10px; margin-top: 10px; display: none;}
+div.qs_brief table.qs_brief_table td { border-bottom: 1px solid black;  }
