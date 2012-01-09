@@ -9,7 +9,7 @@ global $PAGE_USERS_ARRAY;
 $UserAgentArray = false;
 $PAGE_USERS_ARRAY = false;
 
-
+qs_formatQuery() ;
 $priority = "";
 if(isset($_POST['priority']) && $_POST['priority']) {
     $priority = $_POST['priority'];
@@ -17,7 +17,7 @@ if(isset($_POST['priority']) && $_POST['priority']) {
         $priority = 'agent';
     }
 }
-//echo $priority;
+
 switch ($priority) {
 case 'page':
     $temp =  qs_process_pages ($_POST['page']);
@@ -45,23 +45,16 @@ default:
   
           
 }
-exit;
-if(isset($_POST['page']) && $_POST['page']) {
-   $temp =  qs_process_pages ($_POST['page']);
-   if(!$temp) echo "no data";
-   qs_format_pages($temp);
-}
-else if(isset($_POST['ip']) && $_POST['ip']) {
-    echo rawurlencode(ip_data()) . "\n";
-}
-else if(isset($_POST['country_code']) && $_POST['country_code']) {
-    qs_process_country($_POST['country_code'],$_POST['country_name']) . "\n";
-}
-else if(isset($_POST['user_agent'])) {
-   qs_process_agents($_POST['user_agent']);
-}
+echo "<b>Total Accesses: " . qs_total_accesses(0) . '</b>';
 exit;
 
+function qs_total_accesses($n) {
+static $total=0;
+    if(is_numeric($n)) {
+        $total += $n;
+   }    
+   return $total;
+}
 function ip_data($ip=false,$p_brief=false) {
    $row = "";
    $table = '<table border=1 cellspacing="0">';   
@@ -123,6 +116,7 @@ function qs_data(&$ar,$ip) {
 function ip_row($which,$index,$date,$show_country=true, $show_ip=false,$check_agent=false) {
    global $UserAgentArray;
    global $PAGE_USERS_ARRAY;
+   $accesses = 0;
    if(isset($_POST['country_code'])) {
      $country_code = rawurldecode($_POST['country_code']);
    }  
@@ -171,11 +165,17 @@ function ip_row($which,$index,$date,$show_country=true, $show_ip=false,$check_ag
                     if($show_country) $row .= cell('&nbsp;&nbsp;&nbsp;' ." $country");
                     $row .= cell($uas);
               }
-              else $row .= cell($temp[$index]);
+              else {
+                  $row .= cell($temp[$index]);
+                  $accesses += $temp[$index];
+              }
      }
      else {
          $row .= cell('&nbsp;');
     }
+  }
+  if($row) {
+     qs_total_accesses($accesses);
   }
   return $row . '</tr>';
 }
@@ -420,17 +420,55 @@ function qs_format_pages($pages) {
 
 function qs_formatQuery() {
     $months = array("",'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-     
+    $fields = array('country_name'=>'Country',  'user_agent'=>'User Agent',  'priority'=>'Priority',  'ip'=>'IP Address', 
+                           'page'=>'&lt;Namespace:&gt;Page',  'date'=>'Month/Year' );
+    
+    $ip_set = false;
+    $priority = false;
+    echo "\n" . '<table><tr><th class="thead">Query</th><tr>' . "\n";
+    $str = "";    
+    foreach($fields as $field=>$label) {
+        if(!isset($_POST[$field])) continue;
+        $value = $_POST[$field];
+        switch($field) {      
+            case 'date':
+            $str .= "<th align='right'>$label:&nbsp;</th><td>";
+                list($mon,$year) =   explode('_',$value); //explode('_',$_POST['date']);
+                $str .=  $months[$mon] . ' ' . $year . '&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+                break; 
+             case 'priority':   
+                $priority = $value;   
+                $str .= "<th align='right'>$label:&nbsp;</th><td>";
+                $str .= $value . '&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+                break;
+            case 'ip':
+                $str .= "<th align='right'>$label:&nbsp;</th><td>";
+                $str .= $value . '&nbsp;&nbsp;&nbsp;&nbsp;</td>';            
+                $ip_set = true;            
+                break;
+            default: 
+                $str .= "<th align='right'>$label:&nbsp;</th><td>";
+                $str .= $value . '&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+                break;
+        }
+ 
+    }
+   
+    if($ip_set && $priority != 'ip') {
+        $str .= '<caption align="bottom">IP Addresses are matched only where priority is set to IP (and secondary fields are ignored)</caption>';    
+    }
+    $str .= "</table>\n";
+    echo "$str</b><br />";
 }
 function display_post_data() {
     $keys =array_keys($_POST);
   
    $data = "<pre>" . print_r($_POST,true)  . '</pre>';
-    
-    $data .= "<pre>" . print_r($keys,true)  . '</pre>';
-    echo $data . DOKU_INC;
-    
-    exit;
+   echo $data;
+   $data .= "<pre>" . print_r($keys,true)  . '</pre>';
+   echo $data . DOKU_INC;
+   
+   exit;
 }
 ?>
 
