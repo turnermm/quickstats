@@ -1,8 +1,3 @@
-Quickstats collectsweb traffc data for all Dokuwiki page requests, including geo-lcation, IP, page counts,
-browsers, operating systems, query string parameters. Its advantage for many users is that is does not
-require an sql database; this may limit is workability on high volume sites.  It outputs its statistics
-both to a Dokuwiki page and in the admin panel, which can accept detailed queries.  Complete details 
-are found on the plugin page: http://www.dokuwiki.org/plugin:quickstats
-
+Quickstats collectsweb traffc data for all Dokuwiki page requests, including geo-location, IP, page counts, browsers, operating systems, query string parameters. Its advantage for many users is that is does not require an sql database; this may limit is workability on high volume sites.  It outputs its statistics both to a Dokuwiki page and in the admin panel, which can accept detailed queries.  Complete details are found on the plugin page: http://www.dokuwiki.org/plugin:quickstats 
 
 
