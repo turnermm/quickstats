@@ -1,4 +1,8 @@
-Quickstats will give you the web traffic for modest sites.  It is not yet optimized for high volume traffic.
-Its advantage for many users is that is does not require an sql database.  It outputs its statistics
-to a Dokuwiki page.  See the HOW-TO document for the quickstats syntax.
+Quickstats collectsweb traffc data for all Dokuwiki page requests, including geo-lcation, IP, page counts,
+browsers, operating systems, query string parameters. Its advantage for many users is that is does not
+require an sql database; this may limit is workability on high volume sites.  It outputs its statistics
+both to a Dokuwiki page and in the admin panel, which can accept detailed queries.  Complete details 
+are found on the plugin page: http://www.dokuwiki.org/plugin:quickstats
+
+
 
