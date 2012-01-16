@@ -554,6 +554,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                 else {                   
                     $header = " ($asize/$asize) ";
                 }    
+                $total_accesses = $this->ua_data['counts'] ;
+                unset($this->ua_data['counts']); 
                 $renderer->doc .="\n\n<div class=ip_data>\n";
                 $styles = " padding-bottom: 4px; ";
                 $renderer->doc .= '<br /><span class="title">Browsers and User Agents ' . $header   .'</span>';
@@ -567,7 +569,18 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                     $uas = '&nbsp;&nbsp;&nbsp;&nbsp;' . implode(',&nbsp;',$data);
                     $renderer->doc .=  $this->extended_row($uasort_ip[$ip], array($ip, "&nbsp;&nbsp;$country",$uas), $styles);
                 }
-               $renderer->doc .= "</table>\n</div>\n\n";    
+               $renderer->doc .= "</table>\n";    
+               
+                // Output total table
+              $renderer->doc .= '<br /><span class="title">Total Accesses for User Agents</span><br />';
+               $n=0;
+               $this->theader($renderer,"&nbsp;&nbsp;&nbsp;&nbsp;Agents&nbsp;&nbsp;&nbsp;&nbsp;");               
+               foreach($total_accesses as $agt=>$cnt) {    
+                  $n++;               
+                  if($depth !== false && $n > $depth) continue;                     
+                  $renderer->doc .= "<tr><td>$n</td><td>$agt&nbsp;</td><td>&nbsp;&nbsp;$cnt</td>\n";
+               }
+              $renderer->doc .= "</table></div>\n\n";    
     }
 }
 

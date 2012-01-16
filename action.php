@@ -336,13 +336,22 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         
         $this->ua = unserialize(io_readFile($this->ua_file,false));
         if(!$this->ua) $this->ua = array();
+        if(!isset($this->ua['counts'])) {
+              $this->ua['counts'] = array();
+         }
+    
+        if(!isset($this->ua['counts'][$browser])) {
+            $this->ua['counts'][$browser]=1;
+        }
+        else $this->ua['counts'][$browser]++;
+        
         if(!isset($this->ua[$ip])) {
               $this->ua[$ip] = array($country['code']);
          }
         if(isset($browser) && !in_array($browser, $this->ua[$ip])) {           
-            $this->ua[$ip][]=$browser;
-              io_saveFile($this->ua_file,serialize($this->ua));
+             $this->ua[$ip][]=$browser;    
         } 
+         io_saveFile($this->ua_file,serialize($this->ua));
         $this->ua = array();
 
         $this->pusers = unserialize(io_readFile($this->page_users_file,false));
