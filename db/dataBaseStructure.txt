@@ -22,36 +22,76 @@ ua.ser
 
 
 qs.ser
-[words] => Array 
-                (
-                    [<word>] => Array 
+Array 
+(
+    [words] => Array 
+                    (
+                        [<word>] => Array 
+                                (
+                                    [count] => <n>
+                                    [ip] => Array 
+                                        (
+                                          [<ip>] => [<count>] 
+                                        )
+                                )
+                        [<word>] => Array 
+                                (
+                                )
+                    )
+    [ns]=> Array 
+                    (
+                        [<ns>] => Array 
+                                (
+                                    [count] => <n>
+                                    [ip] => Array 
+                                        (
+                                          [<ip>] => [<count>] 
+                                        )
+                                ) 
+                        [<ns>] => Array
+                                (
+                                )   
+                    )
+     [extern] => Array
+            (
+                [name] => Array
+                    (
+                        [<name>] => Array
                             (
                                 [count] => <n>
-                                [ip] => Array 
-                                    (
-                                      [<ip>] => [<count>] 
-                                    )
+                                [<ip>] => <n>
+                                [<ip] => <n>
+                                  .
+                                  .
+                                  .
                             )
-                    [<word>] => Array 
+
+                        [<name>] => Array
                             (
+
                             )
-                )
-[ns]=> Array 
-                (
-                    [<ns>] => Array 
+                    )
+
+                [val] => Array
+                    (
+                        [<val>] => Array
                             (
                                 [count] => <n>
-                                [ip] => Array 
-                                    (
-                                      [<ip>] => [<count>] 
-                                    )
-                            ) 
-                    [<ns>] => Array
+                                [<ip>] => <n>
+                                [<ip] => <n>
+                                  .
+                                  .
+                                  .
+                            )
+
+                        [<val>] => Array
                             (
-                            )                    
-                
-                )
- 
+
+                            )
+                    )
+            )
+)
+       
 page_users.ser 
 /* assoc array intermixed md5(page_id)  and ip keys */
 [md5(page_id)] => Array
