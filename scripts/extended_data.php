@@ -100,7 +100,9 @@ function ip_data($ip=false,$p_brief=false) {
 function qs_data(&$ar,$ip) {
            $search_terms = "";
            if(!is_array($ar)) return cell('&nbsp;&nbsp;&nbsp;');
-            foreach($ar as $word =>$data) {
+           foreach($ar as $word =>$data) {			  
+               $word = htmlentities($word);
+               $word = str_replace('%','&#37;',$word);
                 if(isset($data[$ip])) {
                    $search_terms .= "&nbsp;&nbsp;&nbsp;$word (" .  $data[$ip] . ')<br />'; 
                 }
