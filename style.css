@@ -1,7 +1,14 @@
 div.quickstats {
 color: black;
 }
-  
+ 
+ /* This can be used to control the dimensions of the query output display */
+#quickstats_admin_disp {
+    width: 1024px; 
+  /* height: 800px;  */
+   overflow:scroll; 
+} 
+
 div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title {
 color: black;
 font-weight:bold;

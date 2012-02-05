@@ -46,6 +46,12 @@ This serves a two-fold purpose: \\
 2. They enable you to keep all your work with quickstats in the admin panel, giving you immediate access to any
 charts you may have created with the quickstats syntax plugin.
 
+==== Execution Time ====
+If your query times out, you see a "timed out" message.  If your server is not set to safemode for PHP scripts, you can increase the maxiumum 
+execution time with the ''max_exec_time'' option in the quickstats section of the Configuration Manager.  This option is set by default to 
+60 seconds.  If your server is set to safemode and you have permission to make changes to php.ini, then you can reset the 
+''max_execution_time'' value in php.ini.   The value in php.ini usually defaults to 30 seconds.
+
 ----
 **Notes**  \\
 1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\

@@ -101,13 +101,44 @@ function onChangeQS(which) {
     elems = err.split(';;');
     alert('You have selected ' + elems[0] + ' priority, but have not  ' + elems[1] + ' in your query');
  }
+
+var qs_timer_on=false; 
+var qs_tid;
+var qs_seconds=0;
+function set_timer(dom) {
+    qs_timer_on=true;
+    var max_script_time = document.getElementById('qs_script_max_time').value;
+    var throbber = DOKU_BASE + 'lib/plugins/quickstats/throbber.gif';
+    dom.innerHTML = "<div id='qs_throbber_div' style='display:none'><center>Loading<br /><br /><img src='" + throbber +"'><br /><span id='qs_throbber_tm'></span></center></div>";	
+	
+    qs_tid=setInterval("qs_timer()", 1025);	
+	var dom = document.getElementById("qs_throbber_div");
+	dom.style.display='none';
+}
+ function qs_timer() {
+  if(qs_seconds && !qs_timer_on) {
+      clearInterval(qs_tid);
+	  return;
+  }
+   qs_seconds++;
+   if(qs_seconds < 8) return;
+   var dom = document.getElementById("qs_throbber_div");
+   if(dom.style.display=='none' || dom.style.display=='') dom.style.display='block';
+   
+   var dom = document.getElementById("qs_throbber_tm");
+   if(!dom) {
+      clearInterval(qs_tid);
+	  return; 
+   }
+   dom.innerHTML=qs_seconds ;
+ }
  
 function getExtendedData(f,DOKU_INCL) {
 
     var priority_error = "";
     var priority = "";
     var page = "";
-    
+    qs_seconds=0;
     if(!qs_check_year(null)) return;
     var params="doku_inc="+encodeURIComponent(DOKU_INCL);
     var inp = f.getElementsByTagName('input');
@@ -118,7 +149,7 @@ function getExtendedData(f,DOKU_INCL) {
       }
     }
     var ignore = document.getElementById('qs_ignore').checked;
-      
+
     var p_brief = document.getElementById('qs_p_brief');
     if(p_brief.checked) params+="&p_brief=1";
     var months = document.getElementById('month');
@@ -215,15 +246,17 @@ function getExtendedData(f,DOKU_INCL) {
     
     checkforJQuery();
     var dom = document.getElementById('extended_data');
+	set_timer(dom) ;
     jQuery.post(
     DOKU_BASE + 'lib/plugins/quickstats/scripts/extended_data.php',
     params,
     function (data) {            
+	     qs_timer_on=false;
           dom.innerHTML = decodeURIComponent(decodeURIComponent(data));   
     },
     'html'
    );
-
+   
 }
 
 function qs_country_search() {

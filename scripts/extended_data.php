@@ -8,9 +8,22 @@ global $UserAgentArray;
 global $PAGE_USERS_ARRAY;
 $UserAgentArray = false;
 $PAGE_USERS_ARRAY = false;
+if(isset($_REQUEST['qs_script_max_time'])) {
+    $script_max_time = $_REQUEST['qs_script_max_time'];
+}
+else {
+   $script_max_time = 60;
+}
 
-qs_formatQuery() ;
+ if( !ini_get('safe_mode') ){
+          set_time_limit($script_max_time);
+ } 
+
+$qs_start_time=time();
+
 $priority = "";
+qs_formatQuery() ;
+echo "<div id='quickstats_admin_disp'>"; 
 if(isset($_POST['priority']) && $_POST['priority']) {
     $priority = $_POST['priority'];
     if($priority == 'country' && isset($_POST['user_agent'])) {
@@ -46,6 +59,11 @@ default:
           
 }
 echo "<b>Total Accesses: " . qs_total_accesses(0) . '</b>';
+$extime = time() - $qs_start_time;
+if($extime) {
+    echo "<br /><b>Execution Time: " . $extime . ' seconds</b>';
+}
+echo '</div>';
 exit;
 
 function qs_total_accesses($n) {
@@ -115,6 +133,15 @@ function qs_data(&$ar,$ip) {
 
 }
 
+function qs_check_time() {
+   global $qs_start_time, $script_max_time;
+   $tm=time();
+   if($tm-$qs_start_time > $script_max_time-1) {
+      echo "<b>Timed out after $script_max_time seconds.  See the Query How-To </b><br /><br />";
+	  exit;
+   }
+}
+
 function ip_row($which,$index,$date,$show_country=true, $show_ip=false,$check_agent=false) {
    global $UserAgentArray;
    global $PAGE_USERS_ARRAY;
@@ -123,7 +150,7 @@ function ip_row($which,$index,$date,$show_country=true, $show_ip=false,$check_ag
      $country_code = rawurldecode($_POST['country_code']);
    }  
    else $country_code = false;
-   
+qs_check_time();
    $row = '<tr>';
    if($show_ip) {
       $row .= cell($index,'th');
@@ -348,7 +375,7 @@ function qs_format_pages($pages) {
     $UserAgentArray = $ua_data;
     if(!empty($ua_data)) {
         foreach($ua_data as $ip=>$ar) {
-           if($ar[0] == $cc) { 
+           if(isset($ar[0]) && $ar[0] == $cc) { 
                echo rawurlencode(ip_row(array('ip','page_users','ua', 'qs_data'), $ip,$date,false,true)); 
                echo "\n";
            }
@@ -411,7 +438,7 @@ function qs_format_pages($pages) {
     
     foreach($agents as $ip => $val)
     {        
-        if(stristr($val[1], $needle) !== false) {
+        if(isset($val[1]) && stristr($val[1], $needle) !== false) {
              //$ret_ar[$key] = $val;
              $ret_ar[] = $ip;
          }
@@ -427,6 +454,7 @@ function qs_formatQuery() {
     
     $ip_set = false;
     $priority = false;
+	
     echo "\n" . '<table><tr><th class="thead">Query</th><tr>' . "\n";
     $str = "";    
     foreach($fields as $field=>$label) {
@@ -461,6 +489,7 @@ function qs_formatQuery() {
     }
     $str .= "</table>\n";
     echo "$str</b><br />";
+	
 }
 function display_post_data() {
     $keys =array_keys($_POST);

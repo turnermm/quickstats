@@ -29,7 +29,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
     private $uniqIPCurrent;
     private $page_accessesTotal=0;
     private $page_accessesCurrent=0;
-    
+    private $script_max_time = 0;
      function __construct() {
      
        $this->helper = $this->loadHelper('quickstats', true);    
@@ -46,7 +46,8 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
            $this->misc_data_setup();
            $this->uniq_ip();
        }
-    
+        //$this->script_max_time = ini_get('max_execution_time');
+		 $this->script_max_time = $this->getConf('max_exec_time') ? $this->getConf('max_exec_time') : 60;
      }
 
      /*
@@ -223,6 +224,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
        
       ptln('<p>&nbsp;</p><p><form id="qs_stats_form" action="javascript:void 0;">');
       ptln('<input type="hidden" name="meta_path" value="'.$this->meta_path.'" />');   
+	  ptln('<input type="hidden" id="qs_script_max_time" name="qs_script_max_time" value="'.$this->script_max_time.'" />');   
       
       ptln('<table  border="0"  STYLE="border: 1px solid black" cellspacing="0">');
       

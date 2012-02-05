@@ -21,7 +21,7 @@ ua.ser
 	   )		
 
 
-qs.ser
+qs_data.ser
 Array 
 (
     [words] => Array 
@@ -59,7 +59,11 @@ Array
                         [<name>] => Array
                             (
                                 [count] => <n>
-                                [<ip>] => <n>
+                               [values] => Array (
+                                      [<ip>] => Array (<val>, <val>, . .),   /* value is only saved once , i.e value_1, no matter how many times it occurs */
+                                      [<ip>] => Array (<val>, <val>, . .),
+                                 )
+                                [<ip>] => <n>  /* number of instances where a value occurs, so value_1 shows up here as occuring <n> times */
                                 [<ip] => <n>
                                   .
                                   .

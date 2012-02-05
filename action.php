@@ -201,6 +201,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
                    $this->set_queries($queries['extern'],urldecode($name),'name');
                    if(!$val) $val = '_empty_';                   
                    $this->set_queries($queries['extern'],urldecode($val),'val');
+				   $this->set_named_values($queries['extern']['name'][urldecode($name)],urldecode($val));
                 }
             }
           
@@ -210,6 +211,19 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         }
     }   
     
+	function set_named_values(&$queries,$val="_empty_") {		
+	
+	    if(!isset($queries['values'])) {
+		       $queries['values'] = array();
+        }		
+	    if(!isset($queries['values'][$this->ipaddr])) {
+	          $queries['values'][$this->ipaddr] = array();
+       }
+	   if(!in_array($val, $queries['values'][$this->ipaddr])) {
+	            $queries['values'][$this->ipaddr][] = $val;
+	   }
+	}
+	
     function set_queries(&$queries,$word,$which) {
             if(!isset($queries[$which][$word])) {
                 $queries[$which][$word]['count'] = 1;
