@@ -462,9 +462,15 @@ function qs_formatQuery() {
         $value = $_POST[$field];
         switch($field) {      
             case 'date':
-            $str .= "<th align='right'>$label:&nbsp;</th><td>";
-                list($mon,$year) =   explode('_',$value); //explode('_',$_POST['date']);
-                $str .=  $months[$mon] . ' ' . $year . '&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+                $str .= "<th align='right'>$label:&nbsp;</th><td>";      
+                $keys=array_keys($_POST);
+                foreach($keys as $key) {
+                    if(strpos($key,'date') !== false) {                      
+                       list($mon,$year) =   explode('_',$_POST[$key]);
+                       $str .=  $months[$mon] . ' ' . $year .' &nbsp;';                                        
+                    }
+                }               
+                $str .= '&nbsp;</td>'; 
                 break; 
              case 'priority':   
                 $priority = $value;   
