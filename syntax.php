@@ -35,8 +35,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     private $helper;
     
     function __construct() {
-
-      //  $this->cc_arrays = new ccArraysDat();
+        
         $this->long_names = $this->getConf('long_names');
         if(!isset($this->long_names)  || $this->long_names <= 0) $this->long_names = false;
         $this->show_date=$this->getConf('show_date');
@@ -51,10 +50,17 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     * Get an associative array with plugin info.    
     */
     function getInfo(){
+        $pname = $this->getPluginName();
+        $info  = DOKU_PLUGIN.'/'.$pname.'/plugin.info.txt';
+     
+        if(@file_exists($info))  {
+              return parent::getInfo();
+        }   
+     
         return array(
             'author' => 'Myron Turner',
             'email'  => 'turnermm02@shaw.ca',
-            'date'   => '2011-11-2',
+            'date'   => '2011-11-02',
             'name'   => 'Quickstats Plugin',
             'desc'   => 'Output browser/user stats to wiki page',
             'url'    => 'http://www.dokuwiki.org/plugin:quickstats',

@@ -2,12 +2,14 @@ div.quickstats {
 color: black;
 }
  
- /* This can be used to control the dimensions of the query output display */
+ /* This can be used to control the dimensions and overflow of the query output display */
 #quickstats_admin_disp {
-    width: 1024px; 
-  /* height: 800px;  */
+  /* width: 1024px;    */ 
    overflow:scroll; 
 } 
+
+/* This controls the overflow of the query form */
+#qs_admin_form_div { overflow:scroll !important; }
 
 div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title {
 color: black;
@@ -68,3 +70,5 @@ caption.qs_bold_left { text-align: left;  font-weight: bold; }
 #qs_cache_panel,#quick__stats { display: none; }
 #qs_query_intro { border: 1px blue solid;  padding:10px; margin-top: 10px; display: none;}
 div.qs_brief table.qs_brief_table td { border-bottom: 1px solid black;  }
+
+/*#extended_data { } */

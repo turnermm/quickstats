@@ -222,7 +222,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('<button class="button" onclick="qs_close_panel(' . "'qs_query_intro'" . ');">' . $this->getLang('btn_close_info') . '</button>');
       ptln('</div>');   
        
-      ptln('<p>&nbsp;</p><p><form id="qs_stats_form" action="javascript:void 0;">');
+      ptln('<div id="qs_admin_form_div"><p>&nbsp;</p><p><form id="qs_stats_form" action="javascript:void 0;">');
       ptln('<input type="hidden" name="meta_path" value="'.$this->meta_path.'" />');   
 	  ptln('<input type="hidden" id="qs_script_max_time" name="qs_script_max_time" value="'.$this->script_max_time.'" />');   
       
@@ -289,7 +289,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('&nbsp;<input  type="reset" class="button" value="' . $this->getLang('btn_reset') . '">');
       ptln('&nbsp;&nbsp;&nbsp;&nbsp;<span class="status">[ <b>' . $this->getLang('label_uniq_ip')  . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' .  $this->uniqIPTotal . '&nbsp;&nbsp;Current month: ' . $this->uniqIPCurrent .' ]');
       ptln('&nbsp;&nbsp;&nbsp;[ <b>' . $this->getLang('label_page_access') . '</b>&nbsp;&nbsp;' . $this->getLang('label_total') . ': ' . $this->page_accessesTotal. '&nbsp;&nbsp;' . $this->getLang('label_current_month') . ': ' . $this->page_accessesCurrent.  ' ]</span>');   
-      ptln('</p></form></p>');
+      ptln('</p></form></p></div>');
      
       ptln('<p>&nbsp;</p><div id="extended_data"></div>');
       ptln('</div>');
