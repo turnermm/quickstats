@@ -228,17 +228,10 @@ function getExtendedData(f,DOKU_INCL) {
     }
     var year = document.getElementById('year').value;
     date = '&date=' +month + '_' + year;
-    date_multiples = false;
     for(i=months.selectedIndex+1; i<months.options.length; i++) {
         if(months.options[i].selected) { 
-            date += '&date_' + i + '=' + i + '_' + year;
-            date_multiples=true;
+            date += '&date_' + i + '=' + i + '_' + year;           
         }
-    }
-
-    if(page && date_multiples && priority == 'page') {
-       alert("Page - queries can be made for only one month at a time.");
-       return;
     }
     
     params += date;

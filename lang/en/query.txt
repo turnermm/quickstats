@@ -35,6 +35,9 @@ of displaying a ''brief'' format with the following columns:
 
 |''Month''|''Accesses''|''Country''|''User Agent''|
 
+In the case of output for page queries, there are two results for **accesses**.  The one which appears in the header at the top of the output refers to the number of access for the page being queried.
+The accesses field in the table refers to the number of times the IP address has accessed the site.
+
 The columns in angle brackets will not appear in every table.  The ''Country''  column will be excluded from Country queries.  The ''IP''
 column will appear in tables with ''User Agent'' and ''Country'' priority.
 

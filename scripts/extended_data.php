@@ -33,9 +33,16 @@ if(isset($_POST['priority']) && $_POST['priority']) {
 
 switch ($priority) {
 case 'page':
-    $temp =  qs_process_pages ($_POST['page']);
-    if(!$temp) echo "no data";
-    qs_format_pages($temp);
+    $page = rawurldecode($_POST['page']);
+    $keys =array_keys($_POST);
+    foreach($keys as $key) {
+         if(strpos($key,'date') !== false) {
+          $temp = array();  
+          $month = rawurldecode($_POST[$key]); 
+          $temp =  qs_process_pages ($page,$month);
+          qs_format_pages($temp, $month);
+         }
+    }
     break;
 case 'ip':
    if(isset($_POST['ip']) && $_POST['ip']) {
@@ -272,9 +279,8 @@ function get_page_row($ip, $date, $p_brief=false,$agent=false) {
  *  @param $pages: array returned from qs_process_pages()
  *  outputs header of page name and page access, then ip data for the ip using ip_row
  */
-function qs_format_pages($pages) { 
-   global $PAGE_USERS_ARRAY;
-   $month = rawurldecode($_POST['date']);   
+function qs_format_pages($pages,$month) { 
+   global $PAGE_USERS_ARRAY;   
    $PAGE_USERS_ARRAY = load_data('page_users',$month);
    if(isset($_POST['user_agent'])) {
        $agent = $_POST['user_agent'];
@@ -352,18 +358,18 @@ function qs_format_pages($pages) {
   *  @param $page: page name or partial name from $_POST
   *  @return array of [page_names] = array(accesses=>integer, ips=>array(ip_addresses)) 
   */
- function qs_process_pages ($page) {   
-   $month = rawurldecode($_POST['date']);   
+ function qs_process_pages ($page, $month) {   
+   $temp = array();   
    $page_users = load_data('page_users',$month);
    $found = qs_pages_search_i($page,$month);
-   if(!$found) { echo "no data\n"; exit; }
-
-   $temp = array();
+   if(!$found) { 
+       return $temp; 
+    }
+   
    foreach($found as $page=>$accesses) {
        if(isset($page_users[md5($page)])) {
            $temp[$page] = array('accesses'=>$accesses, 'ips'=>$page_users[md5($page)]);
        }
-       
    }
   
    return $temp;
