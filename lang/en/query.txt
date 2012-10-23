@@ -20,7 +20,7 @@ which include wiki in their names.
   
  ==== Dates ====  
  Dates are all confined to months within the same year.   You can select multiple dates except for page priority.  However, the page
- field can be included in a mulit-date query where one of the other fields has priority.
+ field can be included in a multi-date query where one of the other fields has priority.
 
 
 ==== Output ====
