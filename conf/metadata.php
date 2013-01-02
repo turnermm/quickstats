@@ -10,5 +10,6 @@ $meta['show_country'] = array('onoff');
 $meta['sorttable_ns'] = array('string');
 $meta['xcl_name_val'] = array('string');
 $meta['max_exec_time']=array('string');
+$meta['rebuild_uip'] = array('onoff');
 
 

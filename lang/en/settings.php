@@ -10,3 +10,4 @@ $lang['show_country'] = 'In IP table, show country of IP address with mouseover.
 $lang['sorttable_ns'] = 'Comma separated list of whole or partial namespaces and file names which require sortable output';
 $lang['xcl_name_val'] = 'Comma separated list of query string name/value pairs which should be excluded from stats';
 $lang['max_exec_time'] = 'Maximum number of seconds for which to run queries in quickstats admin panel';
+$lang['rebuild_uip'] = 'Rebuild Unique IP array';

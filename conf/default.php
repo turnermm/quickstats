@@ -10,4 +10,4 @@ $conf['show_country'] = 0;
 $conf['sorttable_ns'] = 'quickstats';
 $conf['xcl_name_val'] ='';
 $conf['max_exec_time'] ='60';
-
+$conf['rebuild_uip'] =0;

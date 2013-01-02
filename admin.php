@@ -96,7 +96,8 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
             $current_dir = array_pop($dirs);
             $ns_prefix = "quickstats:"; 
             $uniq_data_file = metaFN($ns_prefix . 'uniq_ip' , '.ser');  
-            if(file_exists($uniq_data_file)) {
+            
+            if(file_exists($uniq_data_file) && !$this->getConf('rebuild_uip')) {
                 $uniq_data = unserialize(io_readFile($uniq_data_file,false));
             }
             else if(count($dirs) > 0) {
