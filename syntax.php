@@ -249,7 +249,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     function row($name,$val,$num="&nbsp;",$date=false,$is_ip=false) {        
         $title = "";
         $ns = $name;
-        if($is_ip ) { 
+        if($is_ip  && $this->giCity) { 
             $record = geoip_record_by_addr($this->giCity, $name);             
             $title = $record->country_name;      
             if(isset($this->ua_data[$name])) {            
@@ -333,7 +333,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }
     
     function geoipcity_ini() {
-    
+         if(!$this->getConf('geoplugin')) {
+            return;
+         }
         require_once("GEOIP/geoipcity.inc");
         if($this->getConf('geoip_local')) {
              $this->giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);        
@@ -341,6 +343,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         else {
             $gcity_dir = $this->getConf('geoip_dir');                
             $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->SEP  . 'GeoLiteCity.dat';                                   
+            if(!file_exists( $gcity_dat)) return;
             $this->giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
         }        
     }
