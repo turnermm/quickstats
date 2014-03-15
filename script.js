@@ -318,14 +318,15 @@ function qs_agent_search() {
  
 }
 
-  function qs_download_GeoLite()  {
+  function qs_download_GeoLite(geoip_local)  {
+        var params="&geoip_local=" + geoip_local;
         var dom = document.getElementById('download_results');     
         qs_seconds=0;       
         set_timer(dom,true);        
-         var $params="";
+       
         jQuery.post(
         DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity.php',
-        $params,
+        params,
         function (data) {                        
            dom.innerHTML ='<pre>' +data +'</pre>';           
         },
