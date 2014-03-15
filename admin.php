@@ -186,7 +186,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('<button class="button" onclick=" toggle_panel(' . "'qs_cache_panel'" . ');">' . $this->getLang("btn_prune") . '</button>');
       ptln('&nbsp;&nbsp;<button class="button" onclick="toggle_panel(' . "'quick__stats'" . ');">' . $this->getLang("btn_queries") . '</button>');
       ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_open_info(' . "'qs_query_intro'" . ');">' . $this->getLang("btn_qinfo") . '</button>');
-      ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_download_GeoLite();" title = "download Maxmind Database">' . $this->getLang('btn_download') . '</button>');           
+     // ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_download_GeoLite();" title = "download Maxmind Database">' . $this->getLang('btn_download') . '</button>');           
       
       /* Cache Pruning Panel */
       if(isset($this->deletions) || isset($this->to_confirm)) {
