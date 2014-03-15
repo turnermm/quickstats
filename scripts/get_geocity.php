@@ -9,7 +9,7 @@ require_once(DOKU_INC.'inc/io.php');
 
 function get_GeoLiteCity() {
     @set_time_limit(120);  
-    $dnld_dir = '/var/www/ebooks/binky_rc2/lib/plugins/quickstats/GEOIP/';
+    $dnld_dir = DOKU_INC .  'lib/plugins/quickstats/GEOIP/';
     $url = 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz';
     $data_file = $dnld_dir . 'GeoLiteCity.dat';
     $gzfile = $data_file .'.gz';    
