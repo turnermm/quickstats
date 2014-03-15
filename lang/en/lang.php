@@ -34,4 +34,8 @@ $lang['btn_close_info'] = 'Close How-To Window';
 $lang['label_no_secondary'] = 'Ignore secondary fields';
 $lang['btn_reset'] = 'Reset';
 $lang['btn_download'] = 'Download DB';
- //$this->getLang('btn_reset')
+$lang['download_fail'] = '%s failed to download.';
+$lang['write_fail'] = 'Unable to write %s. Please check your permissions and/or disk space.';
+$lang['file_saved'] = 'Saved %s.';
+$lang['no_unpack'] = 'Unable to unpack %s. You may be able to do this using a zip tool on your system.';
+$lang['no_geoip_local'] = 'When installing GeoLiteCity.dat in quickstats/GEOIP/, the "geoip_local" option must be set to true.';

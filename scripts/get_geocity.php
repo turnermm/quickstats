@@ -9,7 +9,7 @@ require_once(DOKU_INC.'inc/io.php');
 function get_GeoLiteCity() {
     @set_time_limit(120);  
     $geoip_local = $_POST['geoip_local'];    
-    
+    $helper = plugin_load('helper', 'quickstats');       
     $dnld_dir = DOKU_INC .  'lib/plugins/quickstats/GEOIP/';
     $url = 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz';
     $data_file = $dnld_dir . 'GeoLiteCity.dat';
@@ -22,39 +22,44 @@ function get_GeoLiteCity() {
 
     $data = $http->get($url);
     if(!$data) { 
-        echo "$gzfile failed to download\n";    
+        qs_say($helper->getLang('download_fail'),  $gzfile);
         return;
       }  
 
      $fp = @fopen($gzfile,'wb');
       if($fp === false) { 
-           echo "Unable to write $gzfile. Please check your permissions and/or disk space.\n";
+           qs_say($helper->getLang('write_fail'),  $gzfile);
            return;
       }
       if(!fwrite($fp,$data)) {
-         echo "Unable to write $gzfile. Please check your permissions and/or disk space.\n";
+         qs_say($helper->getLang('write_fail'),  $gzfile);    
          return;
       }
       fclose($fp); 
+     qs_say($helper->getLang('file_saved'),  $gzfile);          
 
-          
-    echo  "Saved: $gzfile\n";  
     $gz = gzopen($gzfile, "rb");  
     $data= gzread($gz, 32777216);
     gzclose($gz);                                            
     
      if( io_saveFile($data_file, $data)) {
-           echo "Saved: $data_file \n";
+           qs_say($helper->getLang('file_saved'),  $data_file);   
      }
      else {
-         echo "Unable to unpack $gzfile. You may be able to do this using a zip tool on your system.\n";
+        qs_say($helper->getLang('no_unpack'),  $gzfile);      
          return; 
      }
     if(!$geoip_local) {
-        echo "When installing GeoLiteCity.dat in quickstats/GEOIP/, the 'geoip_local' option must be set to true.\n";
+        qs_say($helper->getLang('no_geoip_local'));      
      }
     
 }           
+
+  function qs_say(){
+        $args = func_get_args();
+        echo vsprintf(array_shift($args)."\n",$args);        
+        ob_flush();
+    }
 
 get_GeoLiteCity(); 
   
