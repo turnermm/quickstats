@@ -33,4 +33,5 @@ $lang['label_date']='Date';
 $lang['btn_close_info'] = 'Close How-To Window';
 $lang['label_no_secondary'] = 'Ignore secondary fields';
 $lang['btn_reset'] = 'Reset';
+$lang['btn_download'] = 'Download DB';
  //$this->getLang('btn_reset')

@@ -333,7 +333,8 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }
     
     function geoipcity_ini() {
-         if(!$this->getConf('geoplugin')) {
+    
+         if($this->getConf('geoplugin')) {
             return;
          }
         require_once("GEOIP/geoipcity.inc");

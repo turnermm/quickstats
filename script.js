@@ -105,7 +105,7 @@ function onChangeQS(which) {
 var qs_timer_on=false; 
 var qs_tid;
 var qs_seconds=0;
-function set_timer(dom) {
+function set_timer(dom,immediate_display) {
     qs_timer_on=true;
     var max_script_time = document.getElementById('qs_script_max_time').value;
     var throbber = DOKU_BASE + 'lib/plugins/quickstats/throbber.gif';
@@ -113,7 +113,11 @@ function set_timer(dom) {
 	
     qs_tid=setInterval("qs_timer()", 1025);	
 	var dom = document.getElementById("qs_throbber_div");
+    if(!immediate_display) {
 	dom.style.display='none';
+}
+     else dom.style.display='block';
+    
 }
  function qs_timer() {
   if(qs_seconds && !qs_timer_on) {
@@ -239,7 +243,7 @@ function getExtendedData(f,DOKU_INCL) {
     
     checkforJQuery();
     var dom = document.getElementById('extended_data');
-	set_timer(dom) ;
+    set_timer(dom,false) ;
     jQuery.post(
     DOKU_BASE + 'lib/plugins/quickstats/scripts/extended_data.php',
     params,
@@ -312,4 +316,19 @@ function qs_agent_search() {
     'html'
    );
  
+}
+
+  function qs_download_GeoLite()  {
+        var dom = document.getElementById('download_results');     
+        qs_seconds=0;       
+        set_timer(dom,true);        
+         var $params="";
+        jQuery.post(
+        DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity.php',
+        $params,
+        function (data) {                        
+           dom.innerHTML ='<pre>' +data +'</pre>';           
+        },
+        'html'
+        ); 
 }
