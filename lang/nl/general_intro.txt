@@ -1,0 +1,8 @@
+Met dit beheer scherm kun je drie dingen doen. 
+    -  een lijst bijhoudenvan bestanden die de quickstats syntax plugin gebruiken, om dit actueel te houden;
+    -  specifieke zoekopdrachten maken gebaseerd op land, ip adres, en Dokuwiki pagina namen; 
+    - download de Maxmind GeoLiteCity.dat database in ''lib/plugins/quickstats/GEOIP/''; hier voor moet je de ''geoip_local'' inschakelen in de Configuratie Manager.
+
+Voor het onderhoudscherm, kies de **Werk Quickstats cache bij** knop.  Voor het zoekscherm , kies de **Doorzoek gegevens** knop. 
+Dit zijn schakelaars die het bijbehorende scherm openen.  De **Query Info** knop zal het Query Info scherm heropenen welk getoond werd 
+toen toen het Doorzoek gegevens scherm het eerst werd geopend en welk weer kan worden gesloten door de knop onderaan het Query Info scherm.  De **Download DB** knop zal trachten de Maxmind database te downloaden.
