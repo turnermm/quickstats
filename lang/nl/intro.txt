@@ -1,4 +1,4 @@
-Om download tijd te beperken zal ''quickstats'' alleen indien noodzakelijk de tabel sorteer scrips te downloaden.  Hiervoor bewaart het een cache bestand van pagina's die
+Om download tijd te beperken zal ''quickstats'' alleen indien noodzakelijk de tabel sorteer scrips downloaden.  Hiervoor bewaart het een cache bestand van pagina's die
 gebruik maken van de ''quickstats'' syntax  en dus gebruik maken van de scripts.  Dit gereedschap verwijderd alle bestanden die niet langer gebruikt worden door ''quickstats''.
 Klik op de 'Verwijder' knop om de geselecteerde in het geheugen te plaatsen; klik op 'Bevestig verwijderen' om deze uit de cache te verwijderen.  Het is geen probleem om
 een pagina uit de cache te verwijderen.  Indien het de ''quickstats'' syntax bevat, zal het weer in de cache worden geplaatst zodra deze weer wordt geopend in de
