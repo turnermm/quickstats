@@ -1,0 +1,58 @@
+===== Zoekopdrachten =====
+Zoekopdrachten kunnen gaan over pagina's, IP adressen, Landen, or Browser/User Agents. 
+
+==== Regels ====
+Zoekopdrachten worden beheerst door  een dominant of **voorrang** veld.      
+   - Elke voorrang met land ingesteld stemt overeen met het voorrangveld met het land.              
+   - Pagina voorrang met zowel user agent en land ingesteld stemt overeen met alle drie velden.
+   - IP zoekopdrachten (= ip voorrang) negeert elk ander veld en als een IP is inbegrepen in een zoekopdracht waar een ander veld voorrang heeft dan wordt het IP adres genegeerd.
+
+Je kunt er voor kiezen alle velden anders dan het voorrang veld te negeren en alleen dan wordt het voorrang veld gezocht.  
+   
+==== Zoeken ====
+De zoek functies zijn hoofdletter gevoelig en werken zowel met gedeeltelijke als ook met hele tekenreeksen.  Dus, indien gezocht op "wiki", worden alle pagina's gevonden in de wiki namespace en alle andere pagina's welke het woord wiki in hun naam bevatten.
+
+   - **UserAgent Zoeken:**  Deze zoekmethode is bruikbaar als een bepaalde user agent niet wordt getoond in de keuzelijst. Dit kan gebeuren wanneer een user agent tekenreeks wel in een subversie wordt getoond maar niet in de hoofdversie.  Bij een succesvolle  zoekopdracht zal dat wat wordt gevonden worden toegevoegd aan de lijst.   
+   - **Land Zoeken: **   Indien een land niet is opgenomen in de keuzelijst van landen, zal deze opdracht deze toevoegen aan de lijst zodat je deze kunt kiezen.  Indien een gedeeltelijke naam wordt opgegeven worden alle overeenkomstige opgenomen.  Dus als je bijvoorbeeld 'isl' invoerd, woren alle landen met Island in hun naam opgeomen.
+   - ** Pagina:**  Hier kan een zowel een gedeeltelijke als een hele paginanaam worden opgegeven, alle overeenkomstige waarden worden getoond.     
+  
+ ==== Datums ====  
+ Datums zijn allemaal beperkt tot maanden in hetzelfde jaar.   Je kunt meerdere datums selecteren behalve als pagina voorrang.  Echter het pagina veld
+ kan worden gebruikt in een meervoudige datum zoekopdracht waar een andere veld voorrang heeft.
+
+
+==== Output ====
+Zoekopdrachten worden getoond in tabellen met de navolgende kolomkoppen voor elk van de gekozen maanden uit het keuzelijst menu van maanden:
+
+|<''IP''>|''Maand''|''Opvragingen''|''Pagina's''|<''Landen''>|''User Agent''|''Zoekwoorden''|''Name Spaces''|''Zoek reeks naam''|''Zoek reeks waarden''|
+
+
+Bij het doorzoeken van een pagina worden deze gegevens getoond voor elk IP adres dat de pagina bezocht.  Dit kan soms een aanzienlijke hoeveelheid output opleveren, vooral indien de wiki is bezocht door spiders welke veel pagina's hebben opgevraagd.  In de pagina kolom kunnen vaak veel regels voorkomen. Daarom bestaat de mogelijkheid om te kiezen voor het tonen van  
+"verkorte" weergave van :
+
+|''Maand''|''Opvragingen''|''Landen''|''User Agent''|
+
+Indien de output betrekking heeft op  **pagina opvragingen** dan zijn er twee mogelijkheden.  De eerste is opgenomen in de kop van de output en verwijst naar het aantal opvragingen van de pagina.
+Het opvragingen veld in de tabel verwijst naar het aantal malen dat het IP adres de website bezocht.
+
+De kolommen tussen <..> worden niet in elke tabel getoond.  De ''landen''  kolom wordt niet getoond in zoekopdrachten op land.  De ''IP''
+kolom wordt alleen getoond in ''User Agent'' en ''Land'' zoekopdrachten.
+
+==== Bestands Menu ====
+
+er is een keuzemenu van bestanden die gebruikmaken van de  quickstats syntax.  Indien gekozen zal een pagina worden getoond.  
+Dit heeft een tweevoudige bedoeling: \\
+1. Het geeft een gemakkelijk bruikbare methode om namen en IP adressen te kiezen om in de zoekopdracht te gebruiken. \\
+2. Het maakt het mogelijk om alle werkzaamheden met quickstats in het beheerscherm uit te voeren, en geeft direct toegang tot elke kaart die werd vervaardigd met de quickstats syntax plugin.
+
+==== Uitvoeringstijd ====
+Indien de uitvoeringstijd wordt overschreden wordt een "timed out" boodschap getoond.  Indien de server niet is ingesteld op safemode voor PHP scripts, dan kan de maximale uitvoeringstijd worden vergroot 
+met de ''max_exec_time'' optie in de quickstats sectie van de  Configuratie Manager.  Deze optie is standaard ingesteld op  
+60 seconden.  Indien de server is ingesteld op safemode en je toegang hebt tot php.ini, kan de waarde van  
+''max_execution_time'' in php.ini worden hersteld.   Deze waarde in php.ini bedraagt standaard 30 seconden.
+
+----
+**Opmerkingen**  \\
+1. De User Agent is de naam van de browser of de naam van een spider, search engine robot, of crawler. \\
+2. De ''Opvragingen'' kolom verwijst altijd naar het IP adres dat de pagina heeft opgevraagd van de wiki.  Wanneer gegevens over een pagina of een  
+groep pagina's worden opgevraagd, word in de kop van de pagina het aantal keer dat de pagina werd opgevraagd getoond. 
