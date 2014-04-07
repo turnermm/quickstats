@@ -381,6 +381,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     }
     
     function theader(&$renderer,$name,$accesses='Accesses',$num="&nbsp;Num&nbsp;",$other="") {         
+         if($accesses=='Accesses') $accesses=$this->getLang('accesses');
          $renderer->doc .= "<table cellspacing='4' class='sortable'>\n";
          $js = "<a href='javascript:void 0;' title='sort' class='quickstats_sort_title'>";
          $num = $js . $num . '</a>';
@@ -400,10 +401,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
        $this->sort($this->ips);
      
        $renderer->doc .= '<div class="quickstats ip">';
-       $renderer->doc .= '<span class="title">Unique IP Addresses</span>';
+       $renderer->doc .= '<span class="title">' .$this->getLang('uniq_ip') .'</span>';
        $total_accesses = $this->table($this->ips,$renderer,true,true,true);    
-       $renderer->doc .= "<span class='total'>Total accesses: $total_accesses</span></br>\n"; 
-       $renderer->doc .= "<span class='total'>Total unique ip addresses: $uniq</span></br>\n";  
+       $renderer->doc .= "<span class='total'>" .$this->getLang('ttl_accesses') . "$total_accesses</span></br>\n"; 
+       $renderer->doc .= "<span class='total'>" .$this->getLang('ttl_uniq_ip') ."$uniq</span></br>\n";  
        $renderer->doc .= "</div>\n";
     }  
     
@@ -413,24 +414,23 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
 
             $this->sort($this->pages['page']);
             if($no_align) {
-                    $renderer->doc .= '<div>';
+                    $renderer->doc .= '<div class="qs_noalign">';
             }
             else {
                 //$renderer->doc .= '<div style="margin: 10px 250px; overflow:auto; padding: 8px; width: 300px;">';
                 $renderer->doc .= '<div   class="pages_basics"  style="overflow:auto;">';
                 }
-            $renderer->doc .= '<span class="title">Page Accesses</span>';
+            $renderer->doc .= '<span class="title">'. $this->getLang('label_page_access') .'</span>';
             
             $date =($this->show_date && isset($this->pages['date'] )) ? $this->pages['date'] : false;
             $page_count = $this->table($this->pages['page'],$renderer,true,$date);
-            $renderer->doc .=  "<span class='total'>Number of pages accessed: " . count($this->pages['page']) . "</span><br />";
-            $renderer->doc .=  "<span class='total'>Total accesses:  " . $this->pages['site_total'] .'</span>';
+            $renderer->doc .=  "<span class='total'>" . $this->getLang('pages_accessed')  . count($this->pages['page']) . "</span><br />";
+            $renderer->doc .=  "<span class='total'>". $this->getLang('ttl_accesses')  . $this->pages['site_total'] .'</span>';
             $renderer->doc .= "</div>\n";
         
     }
     function misc_data_xhtml(&$renderer,$no_align=false,$which='all') {
         
-
        $renderer->doc .= "\n";
     
        if($which == 'all' || $which == 'misc') {
@@ -444,14 +444,14 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             
               $renderer->doc .= "\n\n<!-- start misc -->\n";
                if($no_align) {
-                    $renderer->doc .= '<div>';
+                    $renderer->doc .= '<div class="qs_noalign">';
                }
               else {
                     //$renderer->doc .= '<div style="float:left;width: 200px; margin-left:20px;">';
                     $renderer->doc .= '<div class="browsers_basics"  style="float:left;">';
                 }    
                 $renderer->doc .="\n\n";
-                $renderer->doc .= '<br /><span class="title">Browsers</span>';
+                $renderer->doc .= '<br /><span class="title">' . $this->getLang('browsers') .'</span>';
                 
                 $num=0;
                 $renderer->doc .= "<table border='0' >\n";
@@ -484,7 +484,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                    $renderer->doc .= "<div  class='countries_basics' style='float: right; overflow: auto;'>";
             }
            $renderer->doc .= '<span class="title">Countries</span>';
-                $this->theader($renderer, 'Country');
+                $this->theader($renderer,  $this->getLang('country') );
                 $num = 0;
                 $total = 0;
                 $depth = $this->row_depth();        
@@ -503,9 +503,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                      }
                 }
               $renderer->doc .= '</table>';         
-              $renderer->doc .= "<span class='total'>Total number of countries: " . count($this->misc_data['country'])  . "</span></br>";
+              $renderer->doc .= "<span class='total'>" .$this->getLang('ttl_countries') . count($this->misc_data['country'])  . "</span></br>";
               
-              $renderer->doc .= "<span class='total'>Total accesses: $total</span></br>";
+              $renderer->doc .= "<span class='total'>" . $this->getLang('ttl_accesses') ."$total</span></br>";
               
           
              $renderer->doc .= "</div>\n";
@@ -568,9 +568,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                 unset($this->ua_data['counts']); 
                 $renderer->doc .="\n\n<div class=ip_data>\n";
                 $styles = " padding-bottom: 4px; ";
-                $renderer->doc .= '<br /><span class="title">Browsers and User Agents ' . $header   .'</span>';
+                $renderer->doc .= '<br /><span class="title">'. $this->getLang('browsers_and_ua') . $header   .'</span>';
                 $n = 0;
-               $this->theader($renderer,'IP','Country',"&nbsp;Accesses&nbsp;", "&nbsp;User Agents&nbsp;");        
+               $this->theader($renderer,'IP', $this->getLang('country'),"&nbsp;" . $this->getLang('accesses'). "&nbsp;", "&nbsp;User Agents&nbsp;");        
                 foreach($this->ua_data as $ip=>$data) {     
                     $n++;
                     if($depth !== false && $n > $depth) break;                     
@@ -582,7 +582,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
                $renderer->doc .= "</table>\n";    
                
                 // Output total table
-              $renderer->doc .= '<br /><span class="title">Total Accesses for User Agents</span><br />';
+              $renderer->doc .= '<br /><span class="title">' . $this->getLang('ttl_accesses_ua') .'</span><br />';
                $n=0;
                $this->theader($renderer,"&nbsp;&nbsp;&nbsp;&nbsp;Agents&nbsp;&nbsp;&nbsp;&nbsp;");               
                foreach($total_accesses as $agt=>$cnt) {    

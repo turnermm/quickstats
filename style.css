@@ -11,7 +11,9 @@ color: black;
 /* This controls the overflow of the query form */
 #qs_admin_form_div { overflow:scroll !important; }
 
-div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title {
+div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title,
+div.qs_noalign span.title
+{
 color: black;
 font-weight:bold;
 font-size: 125%;
