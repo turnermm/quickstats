@@ -1,0 +1,49 @@
+===== requêtes =====
+Les requêtes peuvent porter sur les pages, les IP, les pays, les navigateurs ou agents utilisateurs
+
+==== Règles ====
+Les requêtes sont gouvernées par le champ dominant ou **prioritaire**.
+  - Tout champ prioritaire associé avec un ensemble de pays correspondra au champ prioritaire plus le pays
+  - la priorité donné aux pages avec à la fois l'agent utilisateur et le pays sélectionnés correspondra aux trois champs
+  - les requêtes d'IP (i.e. IP prioritaire) ignorent les autres champs, et si lP est incluse dans une requête où un autre champ est prioritaire, alors l'adresse IP est ignorée.
+
+Vous pouvez choisir d'ignorer tous les champs autres que le champ prioritaire; et alors la requête ne portera que sur le champ prioritaire.
+
+==== Recherche ====
+Les fonctions de recherche sont insensibles à la casse et correspondent à des chaînes partielles ou complètes. Donc, par exemple,
+Si vous cherchez "wiki" dans les pages, cela retournera toutes les pages qui se trouvent dans la catégorie wiki ainsi que toutes les pages qui contiennent "wiki" dans leur nom.
+
+ - **Recherche d'agent utilisateur**: Cette recherche est utile si un agent utilisateur particulier ne se trouve pas dans la liste déroulante. Ceci peut se produire lorsqu'une chaîne d'agent utilisateur apparaît dans la chaîne d'une sousversion mais pas la celle de la version principale. Une recherche fructueuse ajoutera le résultat au sommet de la liste déroulante de telle sorte qu'il soit sélectionnable.
+  - *Recherche de pays**: Si un pays n'apparaît pas dans la liste des pays, ceci l'ajoutera à la liste déroulante de telle sorte qu'il soit sélectionnable. Si vous saisissez un nom partiel, cela ajoutera tous lespays contenant la saisie. Par exemple, si vous saisissez ''isl'' vous ajouterez la liste complète de tous les pays qui ont ''island'' dans leur nom
+  - ** Page:** nom complet ou partiel de page et retourne la liste de toutes les pages contentant la saisie dans leur nom.
+
+==== Dates ====
+Dates are all confined to months within the same year. You can select multiple dates except for page priority. However, the page field can be included in a multi-date query where one of the other fields has priority.
+
+
+==== Output ====
+Queries will result in tables with the following columns for each of the months you select from the drop-down menu of months:
+
+|<''IP''>|''Mois''|''Accesses''|''Pages''|<''Pays''>|''Agent utilisateur''|''Termes recherchés''|''Catégorie'|''Query String Names''|''Query String Values''|
+
+When you query a page, this data will be displayed for every IP address that has accessed the page. This can sometimes amount to a considerable amount of output, especially for IP addresses that are spiders and have accessed many pages on your wiki. The page column can often have a great many entries. Therefore, when you query a page, you have the option of displaying a ''brief'' format with the following columns:
+
+|''Month''|''Accesses''|''Country''|''User Agent''|
+
+In the case of output for page queries, there are two results for **accesses**. The one which appears in the header at the top of the output refers to the number of access for the page being queried. The accesses field in the table refers to the number of times the IP address has accessed the site.
+
+The columns in angle brackets will not appear in every table. The ''Country'' column will be excluded from Country queries. The ''IP'' column will appear in tables with ''User Agent'' and ''Country'' priority.
+
+==== File Menu ====
+
+There is a drop-down menu of files which are currently using the quickstats syntax. You can click on these an the page will pop up. This serves a two-fold purpose: \\
+1. They give you a convenient means of checking names and IP's which you might want to use in your queries. \\
+2. They enable you to keep all your work with quickstats in the admin panel, giving you immediate access to any charts you may have created with the quickstats syntax plugin.
+
+==== Execution Time ====
+If your query times out, you see a "timed out" message. If your server is not set to safemode for PHP scripts, you can increase the maxiumum execution time with the ''max_exec_time'' option in the quickstats section of the Configuration Manager. This option is set by default to 60 seconds. If your server is set to safemode and you have permission to make changes to php.ini, then you can reset the ''max_execution_time'' value in php.ini. The value in php.ini usually defaults to 30 seconds.
+
+----
+**Notes** \\
+1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\
+2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki. When you request data about a page or group of pages, the header for each page will indicate the number of times the page itself has been accessed.
