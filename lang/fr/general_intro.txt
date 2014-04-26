@@ -1,0 +1,6 @@
+Avec ce panneau de contrôle, vous pouvez faire trois choses
+  - maintenir la listes des pages qui utilisent la syntaxe de l'extension quickstat, pour les tenir à jour,
+  - écrire des requêtes spécifique en fonction des pays, adresses IP, ou page DokuWiki,
+  - télécharger la base de données //Maxmind GeoLiteCity.dat// dans ''lib/plugins/quickstats/GEOIP/''. Pour que ça fonctionne, il faut régler l'option ''geoip_local'' à vrai dans le gestionnaire de configuration.
+
+Pour obtenir le panneau de maintenance, cliquer sur le bouton **Mettre à jour le cache Quickstats**, pour le panneau de requêtes cliquer sur le bouton **Explorer les données**. Ce sont des bascules et chacune ouvrira leur fenêtre respective. Le bouton **Query Info** réouvrira le panneau de requêtes qui est affiché lors de la première ouverture du panneau d'exploration des données et que l'on peut fermer grâce à un bouton au bas du panneau. Le bouton  **Télécharger la BDD** tente de télécharger la base de données Maxmind.
