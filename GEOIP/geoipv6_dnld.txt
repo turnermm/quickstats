@@ -1,0 +1,1 @@
+http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
