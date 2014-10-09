@@ -6,13 +6,15 @@ require_once(DOKU_INC.'inc/init.php');
 require_once(DOKU_INC.'inc/io.php');
 
 
-function get_GeoLiteCity() {
+function get_GeoLiteCity($db) {
+
     @set_time_limit(120);  
     $geoip_local = $_POST['geoip_local'];    
     $helper = plugin_load('helper', 'quickstats');       
     $dnld_dir = DOKU_INC .  'lib/plugins/quickstats/GEOIP/';
-    $url = 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz';
-    $data_file = $dnld_dir . 'GeoLiteCity.dat';
+    $url = "http://geolite.maxmind.com/download/geoip/database/${db}.gz";
+   // $data_file = $dnld_dir . 'GeoLiteCity.dat';
+    $data_file = $dnld_dir . $db;
     $gzfile = $data_file .'.gz';    
    
     $http = new DokuHTTPClient();
@@ -61,7 +63,8 @@ function get_GeoLiteCity() {
         ob_flush();
     }
 
-get_GeoLiteCity(); 
+get_GeoLiteCity('GeoLiteCity.dat'); 
+get_GeoLiteCity('GeoIPv6.dat'); 
   
     
 
