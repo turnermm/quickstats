@@ -272,8 +272,8 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       /* ROWS 4-5: under row 3 col1/row 1 col 4 */
       ptln('<tr><td class="padded  place_holder">&nbsp;</td></tr>');
       
-      ptln('<tr><td class="padded" valign="bottom" nowrap>&nbsp;<b>Priority:</b>&nbsp;');
-      ptln($this->getLang('page') .'<input type="radio" checked value="page" name="qs_priority" id="qs_priority_page">');
+      ptln('<tr><td class="padded" valign="bottom" nowrap><b>Priority:</b></br />');
+      ptln($this->getLang('label_page') .'<input type="radio" checked value="page" name="qs_priority" id="qs_priority_page">');
       ptln('&nbsp;IP <input type="radio" value="ip" name="qs_priority" id="qs_priority_ip">');
       ptln('&nbsp;' . $this->getLang('country') .'<input type="radio" value="country" name="qs_priority" id="qs_priority_country">');
       ptln('&nbsp;' . $this->getLang('user_agent')  . ':<input type="radio" value="agent" name="qs_priority" id="qs_priority_agent"></td></tr>');
