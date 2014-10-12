@@ -124,7 +124,14 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     
     global $ACT;
     global $ID;
+    global $conf; 
+    $sidebar_ns = $this->getConf('hide_sidebar'); 
             
+    if(!empty($sidebar_ns))  {
+        $quick_ns =getNS($ID);
+         $sidebar_ns = trim($sidebar_ns,':');         
+         if($quick_ns == trim($sidebar_ns,':'))  $conf['sidebar'] = "";  
+   }    
         if(is_array($ACT) || $ACT=='edit') {                    
                  $expire = time()+3600;
                  setcookie('Quick_Stats','abc', $expire, '/');                  
@@ -452,11 +459,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         }
         
         if($this->getConf('geoip_local')) {
+             if(!file_exists (QUICK_STATS. 'GEOIP/' . $db)) { return array();}
              $giCity = geoip_open(QUICK_STATS. 'GEOIP/' . $db, GEOIP_STANDARD);        
         }
         else {
             $gcity_dir = $this->getConf('geoip_dir');                
             $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->SEP  . $db;     
+             if(!file_exists ($gcity_dat)) { return array();}            
             $giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
         }
        

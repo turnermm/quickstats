@@ -13,7 +13,7 @@ function get_GeoLiteCity($db) {
     $helper = plugin_load('helper', 'quickstats');       
     $dnld_dir = DOKU_INC .  'lib/plugins/quickstats/GEOIP/';
     $url = "http://geolite.maxmind.com/download/geoip/database/${db}.gz";
-   // $data_file = $dnld_dir . 'GeoLiteCity.dat';
+  
     $data_file = $dnld_dir . $db;
     $gzfile = $data_file .'.gz';    
    
