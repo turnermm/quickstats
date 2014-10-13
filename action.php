@@ -470,7 +470,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         }
        
         if($this->ipv6) {
-             msg(print_r(array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ), true));
+            // msg(print_r(array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ), true));
              return (array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ));
         }
         else  $record = GeoIP_record_by_addr($giCity, $ip);     
