@@ -9,6 +9,7 @@ if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once DOKU_PLUGIN.'action.php';
+require_once QUICK_STATS . 'scripts/php-inet6_1.0.2/valid_v6.php';
 /* for backward compatiblity */
 if(!function_exists('utf8_strtolower')) {  
 require_once(DOKU_INC.'inc/common.php'); 
@@ -39,14 +40,24 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     private $qs_file;
     private $dw_tokens; // query string names to omit from stats
     private $page_users_file;
+    private $ipv6 = false;
     
     function __construct() {
     
          $ip = $_SERVER['REMOTE_ADDR'];         
+         //$ip = "2001:982:acd6:1:4899:d135:226b:2e79";       
+         //$ip = "2602:304:cec0:9b00:e96b:9c78:eb14:9fb";       
+        // $ip = "76.24.190.253";
          if($this->is_excluded($ip, true)){          
            exit("403: Not Available");
          }         
-        $this->ipaddr = $ip;
+         
+        $ipv6 = isValidIPv6($ip);
+        if($ipv6) {
+            $this->ipaddr = $ipv6;
+            $this->ipv6 = $ipv6;
+        }
+        else $this->ipaddr = $ip;
         $today = getdate();
             
         $ns_prefix = "quickstats:";
@@ -310,6 +321,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
              return;
          }         
            
+        if($this->ipv6) {
+            $ip = $this->ipv6;            
+        }
+       
         $this->misc_data = unserialize(io_readFile($this->misc_data_file,false));
         if(!$this->misc_data) $this->misc_data = array();
 
@@ -432,6 +447,11 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     function get_country($ip=null) {
   
         if(!$ip) return null;        
+        if($this->ipv6) {
+            $ip = $this->ipv6;
+            $db =  'GeoIPv6.dat';
+         }        
+         else $db = 'GeoLiteCity.dat';
         
         if($this->getConf('geoplugin')) {        
             $country_data = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip=' .$ip));        
@@ -439,15 +459,22 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         }
         
         if($this->getConf('geoip_local')) {
-             $giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);        
+             if(!file_exists (QUICK_STATS. 'GEOIP/' . $db)) { return array();}
+             $giCity = geoip_open(QUICK_STATS. 'GEOIP/' . $db, GEOIP_STANDARD);        
         }
         else {
             $gcity_dir = $this->getConf('geoip_dir');                
-            $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->SEP  . 'GeoLiteCity.dat';                        
+            $gcity_dat=rtrim($gcity_dir, "\040,/\\") . $this->SEP  . $db;     
+             if(!file_exists ($gcity_dat)) { return array();}            
             $giCity = geoip_open($gcity_dat,GEOIP_STANDARD);
         }
        
-        $record = geoip_record_by_addr($giCity, $ip);     
+        if($this->ipv6) {
+             msg(print_r(array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ), true));
+             return (array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ));
+        }
+        else  $record = GeoIP_record_by_addr($giCity, $ip);     
+    
         if(!isset($record)) {
              return array();
         }
