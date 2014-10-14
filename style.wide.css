@@ -1,0 +1,76 @@
+div.quickstats {
+color: black;
+}
+ 
+ /* This can be used to control the dimensions and overflow of the query output display */
+#quickstats_admin_disp {
+  /* width: 1024px;    */ 
+   overflow:scroll; 
+} 
+
+/* This controls the overflow of the query form */
+#qs_admin_form_div { overflow:scroll !important; }
+
+div.quickstats.basics span.title, div.quickstats.ip span.title, div.quickstats.ua span.title,
+div.qs_noalign span.title
+{
+color: black;
+font-weight:bold;
+font-size: 125%;
+}
+
+div.quickstats.ip {
+    padding:2px;  
+    clear:left;
+    padding: 8px;  
+    margin-left: 60px;  /* aligns with basics left alignment */
+}
+div.quickstats span.total {
+       font-size:115%;       	   
+       color:blue; 
+}   
+th.quickstats_sort {  
+    pointer: hand;
+    text-align:center;
+    background-color: #eeeeee;
+    }
+ a.quickstats_sort_title  { /*color: blue !important; */}   /* this will change the color etc of the column titles */
+ 
+div.quickstats.basics { padding:2px; }
+
+/* partial settings for basic layout */
+div.browsers_basics {width: 150px;}
+div.pages_basics { width: 350px;  }
+
+div.pages_basics { margin-left: 255px;  margin-top: 14px;}
+div.countries_basics { 
+  padding-right: 30px; 
+  margin-top: 14px;
+ width: 280px;  
+ }
+
+/* placeholders for individual css formatting */
+div.quickstats.misc span.title, div.quickstats.page span.title, div.quickstats.countries span.title, div.quickstats.ua span.title {}
+div.quickstats.misc { }
+div.quickstats.pages {}
+div.quickstats.countries { }
+div.quickstats.ua {}
+
+td.padded,th.padded { padding-left: 10px; padding-right: 10px; }
+div.quick__stats td.divider { border-left: 1px solid black; }
+div.quick__stats td.padded input { background-color: #ffffaa; }
+div.quick__stats th.padded input { background-color: #ffffaa; }
+div.quick__stats td.place_holder { }
+div.quick__stats th.thead {
+  border-bottom: 1px solid black; 
+  padding-bottom: 4px;  padding-top: 4px;  
+  text-align:center;
+ }
+caption.qs_cap { font-size: 125%;  font-weight: bold; color:white; background-color: gray;}
+caption.qs_bold_left { text-align: left;  font-weight: bold; }
+
+#qs_cache_panel,#quick__stats { display: none; }
+#qs_query_intro { border: 1px blue solid;  padding:10px; margin-top: 10px; display: none;}
+div.qs_brief table.qs_brief_table td { border-bottom: 1px solid black;  }
+
+/*#extended_data { } */
