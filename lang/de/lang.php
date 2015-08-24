@@ -4,6 +4,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * 
  * @author Thor Weinreich <thorweinreich@nefkom.net>
+ * @author Padhie <develop@padhie.de>
  */
 $lang['menu']                  = 'Quickstats';
 $lang['btn_delete']            = 'Löschen';
@@ -33,3 +34,15 @@ $lang['write_fail']            = 'Konnte %s nicht schreiben. Bitte überprüfe d
 $lang['file_saved']            = '%s gespeichert.';
 $lang['no_unpack']             = 'Konnte %s nicht entpacken. Möglicherweise funktioniert es mit einem Archivierungs-Programm auf deinem System.';
 $lang['no_geoip_local']        = 'Die Option "geoip_local" muss aktiviert sein, wenn GeoLiteCity.dat in quickstats/GEOIP/ installiert werden soll.';
+$lang['click_to_view']         = 'Klicke zum anzeigen der Datei';
+$lang['country']               = 'Land';
+$lang['sel_country']           = 'Land auswählen';
+$lang['search_link']           = 'Suche:';
+$lang['year']                  = 'Year:';
+$lang['browsers']              = 'Beroser';
+$lang['countries']             = 'Länder:';
+$lang['platforms']             = 'Betriebsysteme';
+$lang['uniq_ip']               = 'Eindeutige IP-Adresse';
+$lang['ttl_uniq_ip']           = 'Absolut eindeutige IP-Adresse';
+$lang['pages_accessed']        = 'Anzahl der erreichbaren Seiten';
+$lang['ttl_countries']         = 'Gesamtanzahl der Länder';
