@@ -50,15 +50,13 @@ This serves a two-fold purpose: \\
 charts you may have created with the quickstats syntax plugin.
 
 ==== Execution Time ====
-If your query times out, you see a "timed out" message.  If your server is not set to safemode for PHP scripts, you can increase the maxiumum 
-execution time with the ''max_exec_time'' option in the quickstats section of the Configuration Manager.  This option is set by default to 
-60 seconds.  If your server is set to safemode and you have permission to make changes to php.ini, then you can reset the 
-''max_execution_time'' value in php.ini.   The value in php.ini usually defaults to 30 seconds.
+
+If your query times out, you see a "timed out" message. If your server is not set to safemode for PHP scripts, you can increase the maxiumum execution time with the ''max_exec_time'' option in the quickstats section of the Configuration Manager. This option is set by default to 60 seconds. If your server is set to safemode and you have permission to make changes to php.ini, then you can reset the ''max_execution_time'' value in php.ini. The value in php.ini usually defaults to 30 seconds.
+
+In the case of long searches, the timer icon may continue displaying after the timeout period has been exceeded, but the processing has actually stopped and the result will eventually display showing that the maximum timeout had been exceeded.
 
 ----
-**Notes**  \\
-1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\
-2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki.  When you request data about a page or 
-group of pages, the header for each page will indicate the number of times the page itself has been accessed. 
 
-
+**Notes** \\
+1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler.\\
+2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki. When you request data about a page or group of pages, the header for each page will indicate the number of times the page itself has been accessed.
