@@ -1,15 +1,18 @@
 <?php
 
 if(!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) .'/../../../../') . '/');
-require DOKU_INC . 'inc/io.php';
+
+require_once DOKU_INC . 'inc/init.php';
+require_once DOKU_INC . 'inc/io.php';
+
 require DOKU_INC . 'lib/plugins/quickstats/GEOIP/cc_arrays_dat.php';
 //display_post_data();
-global $UserAgentArray;
+global $UserAgentArray, $INPUT;
 global $PAGE_USERS_ARRAY;
 $UserAgentArray = false;
 $PAGE_USERS_ARRAY = false;
 if(isset($_REQUEST['qs_script_max_time'])) {
-    $script_max_time = $_REQUEST['qs_script_max_time'];
+    $script_max_time = $INPUT->int('qs_script_max_time');
 }
 else {
    $script_max_time = 60;
@@ -25,7 +28,7 @@ $priority = "";
 qs_formatQuery() ;
 echo "<div id='quickstats_admin_disp'>"; 
 if(isset($_POST['priority']) && $_POST['priority']) {
-    $priority = $_POST['priority'];
+    $priority = $INPUT->str('priority');
     if($priority == 'country' && isset($_POST['user_agent'])) {
         $priority = 'agent';
     }
@@ -33,12 +36,12 @@ if(isset($_POST['priority']) && $_POST['priority']) {
 
 switch ($priority) {
 case 'page':
-    $page = rawurldecode($_POST['page']);
+    $page = rawurldecode($INPUT->str('page'));
     $keys =array_keys($_POST);
     foreach($keys as $key) {
          if(strpos($key,'date') !== false) {
           $temp = array();  
-          $month = rawurldecode($_POST[$key]); 
+          $month = rawurldecode($INPUT->str($key)); 
           $temp =  qs_process_pages ($page,$month);
           qs_format_pages($temp, $month);
          }
@@ -454,6 +457,7 @@ function qs_format_pages($pages,$month) {
  }
 
 function qs_formatQuery() {
+    global $INPUT;
     $months = array("",'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
     $fields = array('country_name'=>'Country',  'user_agent'=>'User Agent',  'priority'=>'Priority',  'ip'=>'IP Address', 
                            'page'=>'&lt;Namespace:&gt;Page',  'date'=>'Month/Year' );
@@ -465,7 +469,7 @@ function qs_formatQuery() {
     $str = "";    
     foreach($fields as $field=>$label) {
         if(!isset($_POST[$field])) continue;
-        $value = $_POST[$field];
+        $value = rawurldecode($INPUT->str($field));
         switch($field) {      
             case 'date':
                 $str .= "<th align='right'>$label:&nbsp;</th><td>";      
