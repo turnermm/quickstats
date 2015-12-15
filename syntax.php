@@ -400,12 +400,12 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
        unset($this->ips['uniq']);
        $this->sort($this->ips);
      
-       $renderer->doc .= '<div class="quickstats ip">';
+    //  $renderer->doc .= '<div class="quickstats ip">';
        $renderer->doc .= '<span class="title">' .$this->getLang('uniq_ip') .'</span>';
        $total_accesses = $this->table($this->ips,$renderer,true,true,true);    
        $renderer->doc .= "<span class='total'>" .$this->getLang('ttl_accesses') . "$total_accesses</span></br>\n"; 
        $renderer->doc .= "<span class='total'>" .$this->getLang('ttl_uniq_ip') ."$uniq</span></br>\n";  
-       $renderer->doc .= "</div>\n";
+      // $renderer->doc .= "</div>\n";
     }  
     
     function pages_xhtml(&$renderer, $no_align=false) {         

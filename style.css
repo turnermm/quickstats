@@ -23,6 +23,8 @@ div.quickstats.ip {
     padding:2px;  
     clear:left;
     padding: 8px;  
+    max-height: 400px;
+    overflow: scroll;
     margin-left: 60px;  /* aligns with basics left alignment */
 }
 div.quickstats span.total {
