@@ -122,7 +122,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     * Handler to prepare matched data for the rendering process.
     *
     */
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler){
        global $ID;
         $this->helper->writeCache($ID);
         switch ($state) {
@@ -182,7 +182,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
    /**
     * Handle the actual output creation.    
     */
-    function render($mode, &$renderer, $data) {
+    function render($mode, Doku_Renderer $renderer, $data) {
      
         if($mode == 'xhtml'){
            
