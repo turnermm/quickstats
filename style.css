@@ -16,7 +16,7 @@ div.qs_noalign span.title
 {
 color: black;
 font-weight:bold;
-font-size: 125%;
+font-size: 90%;
 }
 
 div.quickstats.ip {
@@ -42,13 +42,12 @@ div.quickstats.basics { padding:2px; }
 
 /* partial settings for basic layout */
 div.browsers_basics {width: 150px;}
-div.pages_basics { width: 310px;  }
-
-div.pages_basics { margin-left: 245px;  margin-top: 14px;}
+div.pages_basics { width: 350px;  }
+div.pages_basics { margin-left: 265px; padding-left: 7px;  margin-top: 14px;}
 div.countries_basics { 
-  padding-right: 80px; 
+  padding-right: 15px;  
   margin-top: 14px;
- width: 280px;  
+  width: 280px;  
  }
 
 /* placeholders for individual css formatting */
