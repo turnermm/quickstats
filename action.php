@@ -97,6 +97,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this,
                                    'add_data');
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
+        $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this,'_ajax_call');
     }
     
     function isQSfile() {
@@ -106,6 +107,17 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
          }
          return true;
     }
+ function _ajax_call(Doku_Event $event, $param) {
+    if ($event->data !== 'quickstats') {
+        return;
+    }
+    global $ACT;
+    echo $this->ip_file . " \nACT=" . print_r($ACT,1);
+    
+    //no other ajax call handlers needed
+    $event->stopPropagation();
+    $event->preventDefault();
+   }
 
     function load_js(&$event, $param) {    
            global $ACT, $ID;
