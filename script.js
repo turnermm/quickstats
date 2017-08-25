@@ -305,18 +305,15 @@ function qs_agent_search() {
         'html'
         ); 
 }
+jQuery(document).ready(function() {
 
-jQuery(document).ready(function() { 
+           var params = 'call=quickstats&id=' + JSINFO['id'] + "&qs=" + location.search;
 jQuery.post(
     DOKU_BASE + 'lib/exe/ajax.php',
-    {
-        call: 'quickstats' 
-       
-    },
+                params,
     function(data) {
         alert(data);
-        // data is array you returned with action.php
-    }, 'html'
- //   'json'
+                },
+                'html'
 );
-});
+   });              
