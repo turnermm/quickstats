@@ -316,11 +316,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
             $act = 'edit'; 
          } 
          else $act = $INPUT->str('act');
+         $ACT = $act;
+         $ID = $INPUT->str('id') ;         
+         
           if(isset($_COOKIE['Quick_Stats']))  $this->is_edit_user = 'edit_user';        
-            
-          $retv = "ACT=" . $act . ", ip = " . $ip . ",  id=" . $INPUT->str('id')  ;
-       //   echo $retv;
-          echo  print_r($_REQUEST,1) . "\n" . $retv . ", ed_u=" . $this->is_edit_user . "\n" . $this->ua_file . "\n" . $this->page_users_file . "\n" . $this->misc_data_file;
+        //  $retv = "ACT=" . $act . ", ip = " . $ip . ",  id=" . $INPUT->str('id')  ;           
+       //    echo  print_r($_REQUEST,1) . "\n" . $retv . ", ed_u=" . $this->is_edit_user . "\n" . $this->ua_file . "\n" . $this->page_users_file . "\n" . $this->misc_data_file;
+        $this->add_data();
     }
 
 
@@ -365,7 +367,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
           }
           
          $browser =  $this->get_browser();      
-        
+        echo $browser;
           io_saveFile($this->misc_data_file,serialize($this->misc_data));          
           unset($this->misc_data);
           
