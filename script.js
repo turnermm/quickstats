@@ -306,8 +306,8 @@ function qs_agent_search() {
         ); 
 }
 jQuery(document).ready(function() {
-
-           var params = 'call=quickstats&id=' + JSINFO['id'] + "&qs=" + location.search;
+           var act = JSINFO['act'] ? JSINFO['act'] : "";
+           var params = 'call=quickstats&id=' + JSINFO['id'] + "&qs=" + location.search + '&act='+act;
 jQuery.post(
     DOKU_BASE + 'lib/exe/ajax.php',
                 params,
@@ -317,3 +317,4 @@ jQuery.post(
                 'html'
 );
    });              
+         

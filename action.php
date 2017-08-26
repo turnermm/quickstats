@@ -124,8 +124,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     function set_cookies(&$event, $param) {    
     
     global $ACT;
-    global $ID;
+    global $ID, $JSINFO;
     global $conf; 
+    
+    if(!empty($ACT) && !is_array($ACT) ) {
+        $JSINFO['act'] = $ACT;
+    }
+    else $JSINFO['act'] = "";
     $sidebar_ns = $this->getConf('hide_sidebar'); 
             
     if(!empty($sidebar_ns))  {
@@ -307,12 +312,15 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
          $event->preventDefault();
          $qs = $INPUT->str('qs'); 
          $do = $INPUT->str('do'); 
-         if(strpos($qs,'edit') !== false || $do == 'edit') $act = 'edit';
+         if(strpos($qs,'edit') !== false || $do == 'edit') {
+            $act = 'edit'; 
+         } 
+         else $act = $INPUT->str('act');
           if(isset($_COOKIE['Quick_Stats']))  $this->is_edit_user = 'edit_user';        
             
           $retv = "ACT=" . $act . ", ip = " . $ip . ",  id=" . $INPUT->str('id')  ;
        //   echo $retv;
-          echo '<pre>' . print_r($_REQUEST,1) . '</pre>' . $retv . ", ed_u=" . $this->is_edit_user;
+          echo  print_r($_REQUEST,1) . "\n" . $retv . ", ed_u=" . $this->is_edit_user . "\n" . $this->ua_file . "\n" . $this->page_users_file . "\n" . $this->misc_data_file;
     }
 
 
