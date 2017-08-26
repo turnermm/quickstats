@@ -96,7 +96,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'set_cookies');
        $controller->register_hook('DOKUWIKI_STARTED', 'AFTER', $this, 'search_queries');              
       $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this,'_ajax_handler');                         
-      //  $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this, 'add_data');
+      $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this, '_add__data');
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
     }
     
@@ -304,12 +304,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         return false;
      }
      
-     function _ajax_handler($event,$param) {         
+     function _ajax_handler(Doku_Event $event,$param) {         
         if ($event->data != 'quickstats') return;
         global $INPUT,$ACT,$ID, $INFO;
         $ip = $_SERVER['REMOTE_ADDR'];
          $event->stopPropagation();
          $event->preventDefault();
+         if(!$this->getConf('ajax')) return;
          $qs = $INPUT->str('qs'); 
          $do = $INPUT->str('do'); 
          if(strpos($qs,'edit') !== false || $do == 'edit') {
@@ -320,9 +321,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
          $ID = $INPUT->str('id') ;         
          
           if(isset($_COOKIE['Quick_Stats']))  $this->is_edit_user = 'edit_user';        
-        //  $retv = "ACT=" . $act . ", ip = " . $ip . ",  id=" . $INPUT->str('id')  ;           
-       //    echo  print_r($_REQUEST,1) . "\n" . $retv . ", ed_u=" . $this->is_edit_user . "\n" . $this->ua_file . "\n" . $this->page_users_file . "\n" . $this->misc_data_file;
-        $this->add_data();
+        $param = 'ajax';     
+        $this->add_data($event, $param);
+    }
+ 
+    function _add__data($event, $param) {     
+        if($this->getConf('ajax')) return;
+        $this->add_data($event, 'event');  
     }
 
 
@@ -331,7 +336,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
      *
      * @author  Myron Turner <turnermm02@shaw.ca>
      */
-    function add_data(&$event, $param) {
+    function add_data($event, $param) {
     global $ID;
     global $ACT;
    
@@ -367,7 +372,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
           }
           
          $browser =  $this->get_browser();      
-        echo $browser;
+        
           io_saveFile($this->misc_data_file,serialize($this->misc_data));          
           unset($this->misc_data);
           
