@@ -60,34 +60,7 @@ function qs_check_year(year) {
     return true;
 }
 
-function checkforJQuery() {
-
-  if(!window.jQuery) {
-     window.jQuery = {
-      ajax: function(obj) {
-         var s = new sack(obj.url); 
-         s.asynchronous = obj.async;
-         s.onCompletion = function() {
-        	if (s.responseStatus && s.responseStatus[0] == 200) {   
-                  obj.success(s.response);
-        	}
-         };
-         s.runAJAX(obj.data);
-     
-      },
-      post: function(url,params,callback,context) {
-         var s = new sack(url);
-         s.onCompletion = function() {
-        	if (s.responseStatus && s.responseStatus[0] == 200) {   
-                  callback(s.response);
-        	}
-         };
-         s.runAJAX(params);
-      }
-     };
-  }
-  
-}
+function checkforJQuery() {  }
 
 function onChangeQS(which) {   
   if(which.selectedIndex == 0)  {
@@ -241,7 +214,7 @@ function getExtendedData(f,DOKU_INCL) {
     params += date;
     
     
-    checkforJQuery();
+   
     var dom = document.getElementById('extended_data');
     set_timer(dom,false) ;
     jQuery.post(
@@ -258,7 +231,6 @@ function getExtendedData(f,DOKU_INCL) {
 
 function qs_country_search() {
 
-    checkforJQuery();
     var select = document.getElementById('country_names');
     
     var params = "";
@@ -289,7 +261,7 @@ function qs_country_search() {
 
 function qs_agent_search() {
 
-    checkforJQuery();
+   
     var select = document.getElementById('user_agent');
     
     var params = ""; 
@@ -333,3 +305,16 @@ function qs_agent_search() {
         'html'
         ); 
 }
+jQuery(document).ready(function() {
+           var act = JSINFO['act'] ? JSINFO['act'] : "";
+           var params = 'call=quickstats&id=' + JSINFO['id'] + "&qs=" + location.search + '&act='+act;
+jQuery.post(
+    DOKU_BASE + 'lib/exe/ajax.php',
+                params,
+    function(data) {
+                //   alert(data);
+                },
+                'html'
+);
+   });              
+         

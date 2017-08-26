@@ -12,5 +12,6 @@ $meta['xcl_name_val'] = array('string');
 $meta['max_exec_time']=array('string');
 $meta['rebuild_uip'] = array('onoff');
 $meta['hide_sidebar']=array('string');
+$meta['ajax']  = array('onoff');
 
 

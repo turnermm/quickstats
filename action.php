@@ -41,9 +41,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     private $dw_tokens; // query string names to omit from stats
     private $page_users_file;
     private $ipv6 = false;
+    private $id;
     
     function __construct() {
-    
+          global $ID;
          $ip = $_SERVER['REMOTE_ADDR'];         
          //$ip = "2001:982:acd6:1:4899:d135:226b:2e79";       
          //$ip = "2602:304:cec0:9b00:e96b:9c78:eb14:9fb";       
@@ -85,6 +86,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
             }
         }
         $this->helper = $this->loadHelper('quickstats', true); 
+        $this->id =$ID;
     }
         /**
      * Register its handlers with the DokuWiki's event controller
@@ -93,9 +95,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     
        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'set_cookies');
        $controller->register_hook('DOKUWIKI_STARTED', 'AFTER', $this, 'search_queries');              
-    
-        $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this,
-                                   'add_data');
+      $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this,'_ajax_handler');                         
+      $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this, '_add__data');
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
     }
     
@@ -123,8 +124,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     function set_cookies(&$event, $param) {    
     
     global $ACT;
-    global $ID;
+    global $ID, $JSINFO;
     global $conf; 
+    
+    if(!empty($ACT) && !is_array($ACT) ) {
+        $JSINFO['act'] = $ACT;
+    }
+    else $JSINFO['act'] = "";
     $sidebar_ns = $this->getConf('hide_sidebar'); 
             
     if(!empty($sidebar_ns))  {
@@ -298,12 +304,39 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         return false;
      }
      
+     function _ajax_handler(Doku_Event $event,$param) {         
+        if ($event->data != 'quickstats') return;
+        global $INPUT,$ACT,$ID, $INFO;
+        $ip = $_SERVER['REMOTE_ADDR'];
+         $event->stopPropagation();
+         $event->preventDefault();
+         if(!$this->getConf('ajax')) return;
+         $qs = $INPUT->str('qs'); 
+         $do = $INPUT->str('do'); 
+         if(strpos($qs,'edit') !== false || $do == 'edit') {
+            $act = 'edit'; 
+         } 
+         else $act = $INPUT->str('act');
+         $ACT = $act;
+         $ID = $INPUT->str('id') ;         
+         
+          if(isset($_COOKIE['Quick_Stats']))  $this->is_edit_user = 'edit_user';        
+        $param = 'ajax';     
+        $this->add_data($event, $param);
+    }
+ 
+    function _add__data($event, $param) {     
+        if($this->getConf('ajax')) return;
+        $this->add_data($event, 'event');  
+    }
+
+
     /**
      * adds new data to stats files  
      *
      * @author  Myron Turner <turnermm02@shaw.ca>
      */
-    function add_data(&$event, $param) {
+    function add_data($event, $param) {
     global $ID;
     global $ACT;
    
