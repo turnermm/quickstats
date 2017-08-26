@@ -1,7 +1,7 @@
 base    quickstats
 author  Myron Turner
 email   turnermm02@shaw.ca
-date    2017-08-21
+date    2017-08-26
 name    QuickStats Plugin
 desc    Non-sql-based web traffic statistics
 url     http://www.dokuwiki.org/plugin:quickstats
