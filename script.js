@@ -312,7 +312,7 @@ jQuery.post(
     DOKU_BASE + 'lib/exe/ajax.php',
                 params,
     function(data) {
-        alert(data);
+                //   alert(data);
                 },
                 'html'
 );
