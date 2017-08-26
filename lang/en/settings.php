@@ -12,4 +12,4 @@ $lang['xcl_name_val'] = 'Comma separated list of query string name/value pairs w
 $lang['max_exec_time'] = 'Maximum number of seconds for which to run queries in quickstats admin panel';
 $lang['rebuild_uip'] = 'Rebuild Unique IP array';
 $lang['hide_sidebar'] = "If the pages which display your statistics are partially cut off because of the space required for a side bar, and if the sidebar is set in the cofiguration manager, you may hide the sidebar. Place the pages which display the quickstats statistics in its own namespace; then enter the name of that  namespace here and the sidebar will be hidden while displaying your stats.  Avoid the namespace 'quickstats'.";
-$lang['ajax'] = "Delay final processing until after pages are loaded.  This may result in smoother page loading for some pages and templates.";
+$lang['ajax'] = "Delay final processing until after pages are loaded.  This may result in smoother, faster loading of pages and templates";
