@@ -131,6 +131,9 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $JSINFO['act'] = $ACT;
     }
     else $JSINFO['act'] = "";
+    
+    $ajax =$this->getConf('ajax');     
+    $JSINFO['ajax'] = $this->getConf('ajax') ? 'ajax' : 'event';
     $sidebar_ns = $this->getConf('hide_sidebar'); 
             
     if(!empty($sidebar_ns))  {

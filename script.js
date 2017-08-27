@@ -306,15 +306,17 @@ function qs_agent_search() {
         ); 
 }
 jQuery(document).ready(function() {
+         if(JSINFO['ajax'] == 'ajax') {
            var act = JSINFO['act'] ? JSINFO['act'] : "";
            var params = 'call=quickstats&id=' + JSINFO['id'] + "&qs=" + location.search + '&act='+act;
-jQuery.post(
-    DOKU_BASE + 'lib/exe/ajax.php',
-                params,
-    function(data) {
-                //   alert(data);
+          jQuery.post(
+               DOKU_BASE + 'lib/exe/ajax.php',
+               params,
+               function(data) {
+                   if(data)  alert(data);
                 },
                 'html'
-);
+            );
+         }      
    });              
          
