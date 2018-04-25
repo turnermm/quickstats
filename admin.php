@@ -181,7 +181,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
      */
     function html() {
       ptln('<div id="qs_general_intro">');
-      ptln( $this->locale_xhtml(general_intro));   
+      ptln( $this->locale_xhtml('general_intro'));   
       ptln('</div>');
       ptln('<button class="button" onclick=" toggle_panel(' . "'qs_cache_panel'" . ');">' . $this->getLang("btn_prune") . '</button>');
       ptln('&nbsp;&nbsp;<button class="button" onclick="toggle_panel(' . "'quick__stats'" . ');">' . $this->getLang("btn_queries") . '</button>');
@@ -196,7 +196,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
      
       ptln('<div ' . $qs_display . ' id="qs_cache_panel">');
       
-      ptln( $this->locale_xhtml(intro));   
+      ptln( $this->locale_xhtml('intro'));   
       ptln('<form action="'.wl($ID).'" method="post">');
       
       // output hidden values to ensure dokuwiki will return back to this plugin
@@ -220,7 +220,7 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
          /* Stats Panel */    
       $today = getdate();
       ptln('<div id="quick__stats" class="quick__stats">');
-      ptln('<div class="qs_query_intro" id="qs_query_intro">' . $this->locale_xhtml(query));
+      ptln('<div class="qs_query_intro" id="qs_query_intro">' . $this->locale_xhtml('query'));
       ptln('<button class="button" onclick="qs_close_panel(' . "'qs_query_intro'" . ');">' . $this->getLang('btn_close_info') . '</button>');
       ptln('</div>');   
        
