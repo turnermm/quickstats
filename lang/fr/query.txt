@@ -18,32 +18,34 @@ Si vous cherchez "wiki" dans les pages, cela retournera toutes les pages qui se 
   - ** Page:** nom complet ou partiel de page et retourne la liste de toutes les pages contentant la saisie dans leur nom.
 
 ==== Dates ====
-Dates are all confined to months within the same year. You can select multiple dates except for page priority. However, the page field can be included in a multi-date query where one of the other fields has priority.
+Les dates sont toutes confinées aux mois dans la même année. Vous pouvez sélectionner des dates multiples sauf pour la priorité de page. Cependant, le champ page peut être inclus dans une requête multidate où l'un des autres champs est prioritaire.
 
+==== Affichage ====
+Les requêtes afficheront das tableaux avec les colonnes suivantes pour chacun des mois que vous sélectionnez dans le menu déroulant des mois :
 
-==== Output ====
-Queries will result in tables with the following columns for each of the months you select from the drop-down menu of months:
+|<''IP''>|''Mois''|''Accès''|''Pages''|<''Pays''>|''Agent utilisateur''|''Termes recherchés''|''Catégories'|''noms des paramètres de requête''|''Valeur des paramètres de requête''|
 
-|<''IP''>|''Mois''|''Accesses''|''Pages''|<''Pays''>|''Agent utilisateur''|''Termes recherchés''|''Catégorie'|''Query String Names''|''Query String Values''|
+Lorsque vous interrogez une page, ces données seront affichées pour chaque adresse IP qui a accédé à la page. Cela peut parfois s'élever à des quantités considérables d'affichage, spécialement pour les adresses IP qui sont des robots d'indexation et ont accédé à de nombreuses pages sur votre wiki. La colonne page peut souvent avoir un grand nombre d'entrées. Par conséquent lorsque vous interrogez une page, vous avez l'option d'afficher un format ''bref'' avec les colonnes suivantes :
 
-When you query a page, this data will be displayed for every IP address that has accessed the page. This can sometimes amount to a considerable amount of output, especially for IP addresses that are spiders and have accessed many pages on your wiki. The page column can often have a great many entries. Therefore, when you query a page, you have the option of displaying a ''brief'' format with the following columns:
+|''Mois''|''Accès''|''Pays''|''Agent Utilisateur''|
 
-|''Month''|''Accesses''|''Country''|''User Agent''|
+Dans le cas de l'affichage pour les requêtes de pages, il y a deux résultats pour **accès**. Celui qui apparaît dans l'entête en haut de l'affichage se réfère au nombre d'accès à la page interrogée. le champ accès dans la table se réfère au nombre de fois qu'une adresse IP a accédé au site.
 
-In the case of output for page queries, there are two results for **accesses**. The one which appears in the header at the top of the output refers to the number of access for the page being queried. The accesses field in the table refers to the number of times the IP address has accessed the site.
+Les colonnes entre ''<'' et ''>'' n'apparaitront pas dans chaque table. La colonne ''Pays'' sera exclue des requêtes par pays. La colonne ''IP'' apparaîtra dans les tables avec priorité donnée à ''Agent Utilisateur'' et ''Pays''.
 
-The columns in angle brackets will not appear in every table. The ''Country'' column will be excluded from Country queries. The ''IP'' column will appear in tables with ''User Agent'' and ''Country'' priority.
+==== Menu fichier ====
 
-==== File Menu ====
+Il y a un menu déroulant des fichier qui utilisent actuellement la syntaxe //quickstats//. Vous pouvez cliquer dessus et les pages surgiront. Cela sert un but double :
 
-There is a drop-down menu of files which are currently using the quickstats syntax. You can click on these an the page will pop up. This serves a two-fold purpose: \\
-1. They give you a convenient means of checking names and IP's which you might want to use in your queries. \\
-2. They enable you to keep all your work with quickstats in the admin panel, giving you immediate access to any charts you may have created with the quickstats syntax plugin.
+  - elles vous donnent un moyen pratique de vérifier les noms et IP que vous pourriez vouloir utiliser dans vos requêtes
+  - Elles vous permettent de conserver tout votre travail avec //quickstats// dans le panneau d'administration, vous offrant un accès immédiat à tout graphe que vous pouvez avoir créé avec la syntaxe //quickstats//.
 
-==== Execution Time ====
-If your query times out, you see a "timed out" message. If your server is not set to safemode for PHP scripts, you can increase the maxiumum execution time with the ''max_exec_time'' option in the quickstats section of the Configuration Manager. This option is set by default to 60 seconds. If your server is set to safemode and you have permission to make changes to php.ini, then you can reset the ''max_execution_time'' value in php.ini. The value in php.ini usually defaults to 30 seconds.
+==== Temps d'Éxecution ====
+
+Si votre requête dépasse le délai d'attente, un message d'expiration de délai s'affichera. Si votre serveur n'utilise pas le //safemode// de PHP, vous pouvez augmenter la durée maximale d'exécution avec le paramètre ''max_exec_time'' dans la section //quickstats// du gestionnaire de configuration. Cette option est réglée par défaut sur 60 secondes. Si votre serveur est réglé sur //safemode// mais que vous avez la possibilité de faire des changements dans ''php.ini'', alors vous pouvez régler la valeur de ''max_execution_time'' dans ''php.ini''. La valeur dans ''php.ini'' est habituellement 30 secondes.
 
 ----
-**Notes** \\
-1. The User Agent will be a browser or the name of a spider, search engine robot, or crawler. \\
-2. The ''Accesses'' column always refers to the number of times the IP address has accessed pages on your wiki. When you request data about a page or group of pages, the header for each page will indicate the number of times the page itself has been accessed.
+**Notes**
+
+  - L'agent utilisateur sera le nom d'un navigateur ou d'un robot de moteur de recherche ou autre araignée.
+  - La colonne ''Accès'' indique toujours le nombre de fois qu'une adresse IP a accédé aux pages de votre wiki. Quand vous demandez des données à propos d'une page ou d'un groupe de page, l'entête pour chaque page indiquera le nombre de fois que la page elle même a été visitée.
