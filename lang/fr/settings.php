@@ -2,7 +2,7 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Schplurtz le Déboulonné <schplurtz@laposte.net>
  */
 $lang['excludes']              = 'Liste séparée par des virgules des adresses IP qui ne doivent pas être comptées dans les statistiques';
@@ -18,3 +18,5 @@ $lang['sorttable_ns']          = 'Liste séparée par des virgules des noms part
 $lang['xcl_name_val']          = 'Liste séparée par des virgules des paires nom/valeur à l\'interieur des requêtes web qui devraient être exclues des statistiques';
 $lang['max_exec_time']         = 'Durée maximum en secondes des requêtes dans le panneau d\'administration quickstats';
 $lang['rebuild_uip']           = 'Reconstruire le tableau des IP uniques';
+$lang['hide_sidebar']          = 'Si les pages qui affichent vos statistiques sont partiellement coupées à cause de l\'espace requis pour une barre latérale, et si la barre latérale est activée dans le gestionnaire de configuration, vous pouvez cacher la barre latérale. Places les pages de statistiques dans leur catégorie propre, puis entrez le nom de cette catégorie ici, et la barre latérale sera cachée lors de l\'affichage de vos statistiques. Évitez la catégorie «quickstats».';
+$lang['ajax']                  = 'Reporter le traitement final après la fin du chargement des pages. Cela pourrait aboutir à un chargement plus souple et rapide des pages et modèles.';
