@@ -13,5 +13,7 @@ $meta['max_exec_time']=array('string');
 $meta['rebuild_uip'] = array('onoff');
 $meta['hide_sidebar']=array('string');
 $meta['ajax']  = array('onoff');
+$meta['xcl_pages']  = array('string');
+
 
 
