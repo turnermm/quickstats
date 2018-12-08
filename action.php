@@ -346,7 +346,8 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     $xclpages = trim($this->getConf('xcl_pages'));
     $xclpages = str_replace(',','|',$xclpages);
     $xclpages = str_replace('::', ':.*?', $xclpages);    
-    $xclpages = preg_replace("/\s+/","",$xclpages);      
+    $xclpages = preg_replace("/\s+/","",$xclpages);     //remove any spaces
+    $xclpages = str_replace("|:","|",$xclpages);    //remove any  initial colons
     if(preg_match("/^" . $xclpages . "$/",$ID)) return;    
    
     if($this->is_edit_user) return;
