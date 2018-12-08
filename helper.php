@@ -119,7 +119,15 @@ class helper_plugin_quickstats extends Dokuwiki_Plugin {
             
             return false;
     }
-    
+    function excludedPages() {
+		$xclpages = trim($this->getConf('xcl_pages'));
+		if(empty($xclpages)) return "";
+		$xclpages = str_replace(',','|',$xclpages);
+		$xclpages = str_replace('::', ':.*?', $xclpages);    
+		$xclpages = preg_replace("/\s+/","",$xclpages);     //remove any spaces
+		$xclpages = str_replace("|:","|",$xclpages);    //remove any  initial colons
+		return $xclpages;
+	}
      function getCache() {
          return  $this->cache;
      }     
