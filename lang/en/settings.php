@@ -14,6 +14,6 @@ $lang['rebuild_uip'] = 'Rebuild Unique IP array';
 $lang['hide_sidebar'] = "If the pages which display your statistics are partially cut off because of the space required for a side bar, and if the sidebar is set in the cofiguration manager, you may hide the sidebar. Place the pages which display the quickstats statistics in its own namespace; then enter the name of that  namespace here and the sidebar will be hidden while displaying your stats.  Avoid the namespace 'quickstats'.";
 $lang['ajax'] = "Delay final processing until after pages are loaded.  This may result in smoother, faster loading of pages and templates";
 $lang['xcl_pages'] = "Comma separated list of pages and/or namespaces to be excluded from statistics. "
-                   . " For pages use the format <code>ns:pagename</code>. For namespaces use the format <code>ns:&nbsp;</code>. "
-                   . "In both cases  give the complete namespace path: <code>ns1:ns2:</code>, etc. Initial namespace ids do not have an initial colon: <code>ns:</code> "
-                   . "and not <code>:ns:</code>";
+                   . " For pages use the format <code>ns:pagename</code>. For namespaces use the format <code>ns::&nbsp;</code>. "
+                   . "In both cases  give the complete namespace path: <code>ns1:ns2:</code>, etc. Initial namespace ids and root page names do not have an initial colon: <code>ns::</code> "
+                   . "and not <code>:ns::</code>.  Similarly, <code>pagename</code>, and not <code>:pagename</code>";
