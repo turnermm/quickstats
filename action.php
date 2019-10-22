@@ -170,8 +170,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
        $elems = explode('&',html_entity_decode($_SERVER['QUERY_STRING'])) ;
       
         $data_found = false;
-        
-        if(is_array($elems) && count($elems) > 1) 
+        if($elems && count($elems)>1) 
         {
             $words = array();
             $temp = array();
