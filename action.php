@@ -10,6 +10,8 @@ if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('QUICK_STATS')) define ('QUICK_STATS',DOKU_PLUGIN . 'quickstats/');
 require_once DOKU_PLUGIN.'action.php';
 require_once QUICK_STATS . 'scripts/php-inet6_1.0.2/valid_v6.php';
+require_once QUICK_STATS .'GEOIP/vendor/autoload.php';
+use GeoIp2\Database\Reader;
 /* for backward compatiblity */
 if(!function_exists('utf8_strtolower')) {  
 require_once(DOKU_INC.'inc/common.php'); 
@@ -42,9 +44,11 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     private $page_users_file;
     private $ipv6 = false;
     private $id;
+    private $geocity2 = true;
     
     function __construct() {
-          global $ID;
+         global $ID,$INPUT;
+         $this->id = $INPUT->str('id');
          $ip = $_SERVER['REMOTE_ADDR'];         
          //$ip = "2001:982:acd6:1:4899:d135:226b:2e79";       
          //$ip = "2602:304:cec0:9b00:e96b:9c78:eb14:9fb";       
@@ -86,7 +90,29 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
             }
         }
         $this->helper = $this->loadHelper('quickstats', true); 
-        $this->id =$ID;
+        
+    }
+	function test_geocity2() {
+        global $INFO;
+        $test = false;
+        $err = "";
+        
+        try {
+                  $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
+                   if($test) {
+                        $record = $reader->city('138.201.137.132');
+                        msg($record->country->isoCode); // 'DE'
+                        msg($record->country->name); // 'Germany'
+                        $ip ="2001:982:acd6:1:4899:d135:226b:2e79";
+                        $record = $reader->city($ip);
+                        msg($record->country->isoCode); // 'NL'
+                        msg($record->country->name); // 'Netherlands'      
+                 }  
+                } catch (Exception $e) {
+                    $this->geocity2 = false;
+                    $err = $e->getMessage();                 
+               }
+               if($INFO['isadmin'] && $err) msg($err,2);
     }
         /**
      * Register its handlers with the DokuWiki's event controller
@@ -126,6 +152,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     global $ACT;
     global $ID, $JSINFO;
     global $conf; 
+    $this->test_geocity2();
     
     if(!empty($ACT) && !is_array($ACT) ) {
         $JSINFO['act'] = $ACT;
@@ -489,6 +516,15 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     function get_country($ip=null) {
   
         if(!$ip) return null;        
+           
+        if($this->geocity2) {        
+           $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
+           if($reader) {                 
+                $record = $reader->city($ip);                         
+                return (array('code'=>$record->country->isoCode,'name'=>$record->country->name));
+            }      
+        }
+
         if($this->ipv6) {
             $ip = $this->ipv6;
             $db =  'GeoIPv6.dat';
@@ -512,7 +548,6 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         }
        
         if($this->ipv6) {
-            // msg(print_r(array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ), true));
              return (array('code'=>geoip_country_code_by_addr_v6($giCity, $ip),'name'=>geoip_country_name_by_addr_v6($giCity, $ip) ));
         }
         else  $record = GeoIP_record_by_addr($giCity, $ip);     
