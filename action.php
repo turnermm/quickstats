@@ -96,7 +96,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         global $INFO;
         $test = false;
         $err = "";
-        
+
         try {
                   $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
                    if($test) {
@@ -484,11 +484,11 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     
    function get_browser() {
    
-    $db= QUICK_STATS . 'db/php_browscap.ini';
+    $db= QUICK_STATS . 'db/lite_php_browscap.ini'; 
     $browser=get_browser_local(null,true,$db);
     
     if(!isset($browser['browser'])) return;
-
+    // msg($browser['browser']);
     $this->set_browser_value($browser['browser']);    
         
     if(!isset($browser['platform'])) return;    
@@ -518,13 +518,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         if(!$ip) return null;        
       //  $ip = '138.201.137.132';
        $test = false;
-        if($this->geocity2) {        
+        if($this->geocity2) {
            $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
           try {
-           if($reader) {                 
-                $record = $reader->city($ip);                         
-                return (array('code'=>$record->country->isoCode,'name'=>$record->country->name));
-            }      
+               if($reader) {              
+                    $record = $reader->city($ip);      
+                    return (array('code'=>$record->country->isoCode,'name'=>$record->country->name));
+                 } 
               } catch (Exception $e) {
                      if($test) msg($e->getMessage());                 
               }            
