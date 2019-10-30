@@ -516,13 +516,18 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     function get_country($ip=null) {
   
         if(!$ip) return null;        
-           
+      //  $ip = '138.201.137.132';
+       $test = false;
         if($this->geocity2) {        
            $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
+          try {
            if($reader) {                 
                 $record = $reader->city($ip);                         
                 return (array('code'=>$record->country->isoCode,'name'=>$record->country->name));
             }      
+              } catch (Exception $e) {
+                     if($test) msg($e->getMessage());                 
+              }            
         }
 
         if($this->ipv6) {
