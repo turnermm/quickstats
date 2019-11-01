@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 
 if(!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) .'/../../../../') . '/');
 if(!defined('NOSESSION')) define('NOSESSION',true);
+ //define ('TEMPDIR', DOKU_INC . 'data/tmp/');
 require_once(DOKU_INC.'inc/init.php');
 require_once(DOKU_INC.'inc/io.php');
 # use dokuwiki\HTTP\DokuHTTPClient;
@@ -51,46 +52,41 @@ class qs_geoliteCity {
          gzclose($gz);     
     }
 
-      function  qs_say(){
+
+        
+     function qs_unpoack() {
+        $ro = ini_get('phar.readonly');
+        echo $ro . "\n";
+        if($ro) ini_set('phar.readonly','0');
+        $files = scandir($this->tempdir);
+       // print_r($files); exit;
+        foreach ($files as $file) {
+              echo $this->tempdir."/$file\n";
+              if (preg_match("#GeoLite2-City.tar.gz#", $file,$matches)) { 
+              $file = $this->tempdir."/$file";
+               $p = new PharData($file);
+               $p->decompress(); // creates /path/to/my.tar
+               $tar = str_replace('.gz', "", $file);       
+                echo $tar . "\n";
+                try {
+                     $phar = new PharData($tar);
+                     $phar->extractTo($this->tempdir.'/tmp'); // extract all files
+                } catch (Exception $e) {
+                    echo $e->getMessage() . "\n";
+                }
+            }
+       }
+    }
+     
+     function  qs_say(){
             $args = func_get_args();
             echo vsprintf(array_shift($args)."\n",$args);        
             ob_flush();
-        }
-        
-    function qs_unpack() {
-    $ro = ini_get('phar.readonly');
-    echo $ro . "\n";
-    if($ro) ini_set('phar.readonly','0');
-
-    $files = scandir('.');
-    foreach ($files as $file) {
-        if (preg_match("#(GeoLite2-City_\d+)\.tar.gz#", $file,$matches)) { 
-           $p = new PharData($file);
-           $p->decompress(); // creates /path/to/my.tar
-            $tar = str_replace('.gz', "", $file); 
-        
-            try {
-                 $phar = new PharData($tar);
-                 $phar->extractTo('./tmp'); // extract all files
-            } catch (Exception $e) {
-                echo $e->getMessage() . "\n";
-            }
-            if($matches [1]) {
-                $dir = './tmp/' . $matches [1] . '/';
-                $geodir = scandir('./tmp/' . $matches [1] );
-                foreach($geodir  as $entry) {
-                    if(preg_match("#\.mmdb$#",$entry)) {
-                       echo $dir . $entry . "\n";
-                    }
-                }
-            }
-        }
-    }  
-    }
+        }  
 }
 
 $geoLite = new qs_geoliteCity();
 $geoLite->get_GeoLiteCity();
-  
+ $geoLite->qs_unpoack() ;
     
 
