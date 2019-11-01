@@ -1,6 +1,6 @@
 <?php
 
-if(!defined('GeoLite2_DIR')) define('GeoLite2_DIR', realpath(dirname(__FILE__) ) . '/GeoLite2-City/');
+if(!defined('GeoLite2_DIR')) define('GeoLite2_DIR', realpath(dirname(__FILE__) ) . '/'); //  '/GeoLite2-City/');
 echo GeoLite2_DIR . "\n";  exit;
 global $City_dnld_dir;
 function listdir($start_dir='.', $found=false) {

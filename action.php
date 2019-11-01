@@ -485,6 +485,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
    function get_browser() {
    
     $db= QUICK_STATS . 'db/lite_php_browscap.ini'; 
+    if(!file_exists($db)) {
+        $db = QUICK_STATS . 'db/php_browscap.ini'; 
+    }
+    
     $browser=get_browser_local(null,true,$db);
     
     if(!isset($browser['browser'])) return;
