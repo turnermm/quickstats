@@ -23,8 +23,8 @@ class qs_geoliteCity {
         @set_time_limit(120);  
      
         $helper = plugin_load('helper', 'quickstats');       
-      //   $url = "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz";
-        $url = "http://epicurus.bz/devel/_media/geolite2-city_20191015.tar.gz";        
+         $url = "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz";
+     //   $url = "http://epicurus.bz/devel/_media/geolite2-city_20191015.tar.gz";        
         $gzfile = $this->tempdir  .  '/GeoLite2-City.tar.gz';    
         
         $http = new DokuHTTPClient();
@@ -108,10 +108,24 @@ class qs_geoliteCity {
                   echo $this->tempdir . '/' . 'tmp/'. $tmpfile . " is NOT a directory\n";                                
               }
           }      
+      }
+        rmdir($geo_dir_name);
+    }   
+    function cleanup() {
+        $to_cleanup = scandir($this->tempdir);
+        print_r($to_cleanup);
+        foreach($to_cleanup as $file) {
+            $del = $this->tempdir . '/' . $file;
+            if(!is_dir($del) && preg_match("/GeoLite2-City/i",$file)) {
+              unlink($del);    
+            }
+            else if($file == 'tmp') {
+                rmdir($this->tempdir . '/' .'tmp');
+            }
+        }
     }
-    rmdir($geo_dir_name);
-}   
-     function  qs_say(){
+    
+    function  qs_say(){
             $args = func_get_args();
             echo vsprintf(array_shift($args)."\n",$args);        
             ob_flush();
@@ -122,5 +136,5 @@ $geoLite = new qs_geoliteCity();
 $geoLite->get_GeoLiteCity();
 $geoLite->qs_unpack() ;
 $geoLite->process_gcity();
-    
+$geoLite->cleanup();    
 
