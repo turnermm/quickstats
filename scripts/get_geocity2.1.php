@@ -4,6 +4,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if(!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) .'/../../../../') . '/');
+if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
+define ('MMDB', DOKU_PLUGIN .'quickstats/GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
 require_once(DOKU_INC.'inc/init.php');
 require_once(DOKU_INC.'inc/io.php');
 if(!defined('NOSESSION')) define('NOSESSION',true);
@@ -59,18 +61,18 @@ class qs_geoliteCity {
         
      function qs_unpack() {
         $ro = ini_get('phar.readonly');
-        echo $ro . "\n";
+       // echo $ro . "\n";
         if($ro) ini_set('phar.readonly','0');
         $files = scandir($this->tempdir);
       
         foreach ($files as $file) {
-              echo $this->tempdir."/$file\n";
+           //   echo $this->tempdir."/$file\n";
               if (preg_match("#GeoLite2-City.tar.gz#", $file,$matches)) { 
               $file = $this->tempdir."/$file";
                $p = new PharData($file);
                $p->decompress(); // creates /path/to/my.tar
                $tar = str_replace('.gz', "", $file);       
-                echo $tar . "\n";
+            //    echo $tar . "\n";
                 try {
                      $phar = new PharData($tar);
                      $phar->extractTo($this->tempdir.'/tmp'); // extract all files
@@ -88,14 +90,14 @@ class qs_geoliteCity {
           if(preg_match("#(?i)GeoLite2-City_\d+#",$tmpfile) ) {           
               if(is_dir($this->tempdir . '/' . 'tmp/'. $tmpfile)) {                  
                   $geo_dir_name =  $this->tempdir . '/' . 'tmp/'. $tmpfile;
-                  echo "$geo_dir_name is a geocity directory\n";
+               //   echo "$geo_dir_name is a geocity directory\n";
                   $geo_dir = scandir($this->tempdir . '/' . 'tmp/'. $tmpfile);                
-                  echo "Directory name: $geo_dir_name\n";              
+                 // echo "Directory name: $geo_dir_name\n";              
                   foreach($geo_dir as $gfile) {
                       if(!is_dir($this->tempdir . '/' . 'tmp/'. $gfile)) {                          
                           if(preg_match("/\.mmdb$/",$gfile)) {                           
-                              echo "renaming " . $geo_dir_name. "/$gfile" ."\nTo: " . $this->tempdir . '/' . $gfile ."\n";
-                             rename($geo_dir_name. "/$gfile" , $this->tempdir . '/' . $gfile ) ;
+                              echo "renaming " . $geo_dir_name. "/$gfile" ."\nTo: " . MMDB ."\n";
+                              rename($geo_dir_name. "/$gfile",MMDB);
                              continue;
                           }    
                            $discard = "$geo_dir_name/$gfile";
@@ -113,7 +115,7 @@ class qs_geoliteCity {
     }   
     function cleanup() {
         $to_cleanup = scandir($this->tempdir);
-        print_r($to_cleanup);
+     //   print_r($to_cleanup);
         foreach($to_cleanup as $file) {
             $del = $this->tempdir . '/' . $file;
             if(!is_dir($del) && preg_match("/GeoLite2-City/i",$file)) {
