@@ -297,7 +297,7 @@ function qs_agent_search() {
         set_timer(dom,true);        
        
         jQuery.post(
-        DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity.php',
+        DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity2.1.php',
         params,
         function (data) {                        
            dom.innerHTML ='<pre>' +data +'</pre>';           
