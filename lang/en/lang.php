@@ -60,3 +60,4 @@ $lang['accesses'] = 'Accesses';
 $lang['pages_accessed'] =   'Number of pages accessed:&nbsp;';
 $lang['ttl_countries'] =  'Total number of countries:&nbsp;';
 $lang['ttl_accesses'] ='Total accesses:&nbsp;';
+$lang['no_browser_db'] = 'No browscap database found in  the db directory';
