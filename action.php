@@ -45,6 +45,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
     private $ipv6 = false;
     private $id;
     private $geocity2 = true;
+    private $db_check;
     
     function __construct() {
          global $ID,$INPUT;
@@ -74,7 +75,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $this->qs_file = metaFN($ns . 'qs_data' , '.ser');  
         $this->page_users_file = metaFN($ns . 'page_users' , '.ser');  
         $this->page_totals_file = metaFN($ns_prefix . 'page_totals' , '.ser');  
-        
+        $this ->db_check = metaFN($ns_prefix . 'db_warning' , 'txt');  
+        if(!file_exists($this ->db_check)) {
+             io_saveFile($this ->db_check,0); 
+        }
         $this->year_month = $today['mon'] . '_'  .$today['year'];
         
         if( preg_match('/WINNT/i',  PHP_OS) ) {    
@@ -111,7 +115,13 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
                 } catch (Exception $e) {
                     $this->geocity2 = false;
                     $err = $e->getMessage();                 
+                    $checked = io_readFile($this ->db_check,false);              
+                    if($checked <= 3) {
+                        io_saveFile($this ->db_check,($checked+1));                     
+                        $err .= "<br />Go to the quickstats admin page and click the <b>" . $this->getLang('btn_download') . " </b> Button";                        
                }
+               }
+               
                if($INFO['isadmin'] && $err) msg($err,2);
     }
         /**
@@ -492,7 +502,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $db = QUICK_STATS . 'db/php_browscap.ini'; 
     }
     if(!file_exists($db)) {
-           msg($this->getLang(no_browser_db),1);
+           msg($this->getLang('no_browser_db'),1);
    }   
     
     $browser=get_browser_local(null,true,$db);
