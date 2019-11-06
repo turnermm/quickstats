@@ -14,6 +14,6 @@ $meta['rebuild_uip'] = array('onoff');
 $meta['hide_sidebar']=array('string');
 $meta['ajax']  = array('onoff');
 $meta['xcl_pages']  = array('string');
-
+$meta['hide_db_warning'] = array('onoff');
 
 

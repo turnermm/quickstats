@@ -75,7 +75,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $this->qs_file = metaFN($ns . 'qs_data' , '.ser');  
         $this->page_users_file = metaFN($ns . 'page_users' , '.ser');  
         $this->page_totals_file = metaFN($ns_prefix . 'page_totals' , '.ser');  
-        $this ->db_check = metaFN($ns_prefix . 'db_warning' , 'txt');  
+        $this ->db_check = metaFN($ns_prefix . 'db_warning' , '.txt');  
         if(!file_exists($this ->db_check)) {
              io_saveFile($this ->db_check,0); 
         }
@@ -102,38 +102,38 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         $err = "";
 
         try {
-                  $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
-                   if($test) {
-                        $record = $reader->city('138.201.137.132');
-                        msg($record->country->isoCode); // 'DE'
-                        msg($record->country->name); // 'Germany'
-                        $ip ="2001:982:acd6:1:4899:d135:226b:2e79";
-                        $record = $reader->city($ip);
-                        msg($record->country->isoCode); // 'NL'
-                        msg($record->country->name); // 'Netherlands'      
-                 }  
-                } catch (Exception $e) {
-                    $this->geocity2 = false;
-                    $err = $e->getMessage();                 
-                    $checked = io_readFile($this ->db_check,false);              
-                    if($checked <= 3) {
-                        io_saveFile($this ->db_check,($checked+1));                     
-                        $err .= "<br />Go to the quickstats admin page and click the <b>" . $this->getLang('btn_download') . " </b> Button";                        
-               }
-               }
-               
-               if($INFO['isadmin'] && $err) msg($err,2);
+		  $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
+		    if($test) {
+				$record = $reader->city('138.201.137.132');
+				msg($record->country->isoCode); // 'DE'
+				msg($record->country->name); // 'Germany'
+				$ip ="2001:982:acd6:1:4899:d135:226b:2e79";
+				$record = $reader->city($ip);
+				msg($record->country->isoCode); // 'NL'
+				msg($record->country->name); // 'Netherlands'      
+		    }  
+		 } catch (Exception $e) {
+			$this->geocity2 = false;
+			$err = $e->getMessage(); 
+			$checked = io_readFile($this ->db_check,false); 			
+			if($checked <= 6){
+				io_saveFile($this ->db_check,($checked+1));                     
+				$err .= $this->getLang('missing_mmdb_warning');				           
+			}	
+	    }
+		
+        if($this->getConf('hide_db_warning'))return;     
+        if($INFO['isadmin'] && $err) msg($err,2);
     }
         /**
      * Register its handlers with the DokuWiki's event controller
      */
-    function register(Doku_Event_Handler $controller) {
-    
+    function register(Doku_Event_Handler $controller) {    
        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'set_cookies');
        $controller->register_hook('DOKUWIKI_STARTED', 'AFTER', $this, 'search_queries');              
-      $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this,'_ajax_handler');                         
-      $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this, '_add__data');
-        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
+       $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this,'_ajax_handler');                         
+       $controller->register_hook('DOKUWIKI_DONE', 'BEFORE', $this, '_add__data');
+       $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'load_js');                                   
     }
     
     function isQSfile() {
