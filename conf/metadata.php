@@ -15,5 +15,6 @@ $meta['hide_sidebar']=array('string');
 $meta['ajax']  = array('onoff');
 $meta['xcl_pages']  = array('string');
 $meta['hide_db_warning'] = array('onoff');
+$meta['by_pass_mmdb']  = array('onoff');
 
 

@@ -15,4 +15,5 @@ $conf['sidebar'] ="";
 $conf['ajax']  = 1;
 $conf['xcl_pages'] = "";
 $conf['hide_db_warning'] = 0;
+$conf['by_pass_mmdb']  = 0; 
 

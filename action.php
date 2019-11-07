@@ -100,6 +100,10 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
         global $INFO;
         $test = false;
         $err = "";
+        if($this->getConf('by_pass_mmdb')) {
+            $this->geocity2 = false;
+            return;
+        }
 
         try {
 		  $reader = new Reader(QUICK_STATS .'GEOIP/vendor/GeoLite2-City/GeoLite2-City.mmdb');
@@ -549,16 +553,20 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
               }            
         }
 
+        if($this->getConf('geoplugin')) {        
+            $country_data = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip=' .$ip));        
+            return (array('code'=>$country_data['geoplugin_countryCode'],'name'=>$country_data['geoplugin_countryName']));
+        }
+        
+        if($this->getConf('by_pass_mmdb')) {
+              return array();
+        }
+        
         if($this->ipv6) {
             $ip = $this->ipv6;
             $db =  'GeoIPv6.dat';
          }        
          else $db = 'GeoLiteCity.dat';
-        
-        if($this->getConf('geoplugin')) {        
-            $country_data = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip=' .$ip));        
-            return (array('code'=>$country_data['geoplugin_countryCode'],'name'=>$country_data['geoplugin_countryName']));
-        }
         
         if($this->getConf('geoip_local')) {
              if(!file_exists (QUICK_STATS. 'GEOIP/' . $db)) { return array();}
