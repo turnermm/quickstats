@@ -17,5 +17,4 @@ $lang['xcl_pages'] = "Comma separated list of pages and/or namespaces to be excl
                    . " For pages use the format <code>ns:pagename</code>. For namespaces use the format <code>ns::&nbsp;</code>. "
                    . "In both cases  give the complete namespace path: <code>ns1:ns2:</code>, etc. Initial namespace ids and root page names do not have an initial colon: <code>ns::</code> "
                    . "and not <code>:ns::</code>.  Similarly, <code>pagename</code>, and not <code>:pagename</code>";
-$lang['hide_db_warning'] = "Hide missing GeoLite2-City.mmdb warning";
 $lang['by_pass_mmdb'] = 'By-pass GeoLite2-City. In this case the web-based geoplugin will be the default geo-positioning tool.';

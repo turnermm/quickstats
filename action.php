@@ -126,7 +126,7 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
 			}	
 	    }
 		
-        if($this->getConf('hide_db_warning'))return;     
+       // if($this->getConf('hide_db_warning'))return;     
         if($INFO['isadmin'] && $err) msg($err,2);
     }
         /**
