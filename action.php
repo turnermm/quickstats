@@ -558,10 +558,6 @@ class action_plugin_quickstats extends DokuWiki_Action_Plugin {
             return (array('code'=>$country_data['geoplugin_countryCode'],'name'=>$country_data['geoplugin_countryName']));
         }
         
-        if($this->getConf('by_pass_mmdb')) {
-              return array();
-        }
-        
         if($this->ipv6) {
             $ip = $this->ipv6;
             $db =  'GeoIPv6.dat';
