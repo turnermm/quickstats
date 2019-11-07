@@ -188,8 +188,8 @@ class admin_plugin_quickstats extends DokuWiki_Admin_Plugin {
       ptln('&nbsp;&nbsp;<button class="button" onclick="toggle_panel(' . "'quick__stats'" . ');">' . $this->getLang("btn_queries") . '</button>');
       ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_open_info(' . "'qs_query_intro'" . ');">' . $this->getLang("btn_qinfo") . '</button>');
       ptln('&nbsp;&nbsp;<button class="button" id="qs_query_info_button"  onclick="qs_download_GeoLite(\'' . $this->getConf('geoip_local')  . '\');" title = "download Maxmind Database">' . $this->getLang('btn_download') . '</button>');           
-      if($INFO['client'] == 'tower' && preg_match("/turnermm/", $INFO['userinfo']['mail']))  {
-         ptln('&nbsp;&nbsp;DB TEST <input type="checkbox" checked id="gc2_test">' ); ptln ($INFO['client']);
+      if($INFO['client'] == 'tower' && preg_match("/turnermm0(2|3)/", $INFO['userinfo']['mail']))  {
+         ptln('&nbsp;&nbsp;DB TEST <input type="checkbox"  id="gc2_test">' ); ptln ($INFO['client']); 
       }
       /* Cache Pruning Panel */
       if(isset($this->deletions) || isset($this->to_confirm)) {
