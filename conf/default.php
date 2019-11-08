@@ -14,4 +14,5 @@ $conf['rebuild_uip'] =0;
 $conf['sidebar'] ="";
 $conf['ajax']  = 1;
 $conf['xcl_pages'] = "";
+$conf['by_pass_mmdb']  = 0; 
 

@@ -1,0 +1,7 @@
+curl -sS https://getcomposer.org/installer | php
+php composer.phar require geoip2/geoip2:~2.0
+create vendor/GeoLite2-City directory
+download mmb database into vendor/GeoLite2-City
+  
+https://git-lfs.github.com
+   

@@ -100,6 +100,7 @@ function set_timer(dom,immediate_display) {
    qs_seconds++;
    if(qs_seconds < 8) return;
    var dom = document.getElementById("qs_throbber_div");
+   if(!dom) return;
    if(dom.style.display=='none' || dom.style.display=='') dom.style.display='block';
    
    var dom = document.getElementById("qs_throbber_tm");
@@ -293,11 +294,15 @@ function qs_agent_search() {
   function qs_download_GeoLite(geoip_local)  {
         var params="&geoip_local=" + geoip_local;
         var dom = document.getElementById('download_results');     
+        var test = document.getElementById('gc2_test');    
+        if(test && test.checked)  {
+           params += '&test=test';
+        }
         qs_seconds=0;       
         set_timer(dom,true);        
        
         jQuery.post(
-        DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity.php',
+        DOKU_BASE  + 'lib/plugins/quickstats/scripts/get_geocity2.php',
         params,
         function (data) {                        
            dom.innerHTML ='<pre>' +data +'</pre>';           
