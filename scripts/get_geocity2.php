@@ -42,8 +42,9 @@ class qs_geoliteCity {
     function get_GeoLiteCity() {
         @set_time_limit(120);     
        
-         $url = "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz";
-        if($this->testgLCity2) {        
+         $url = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=J7if1Q83hu4tiUVS&suffix=tar.gz";
+		 // "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz";
+                 if($this->testgLCity2) {        
             $url = "http://epicurus.bz/GeoLite2-City.tar.gz";	         
          //   $url = "https://mturner.org/userfiles/GeoLite2-City.tar.gz";	         
            $this->qs_say("testing  %s", $url);
@@ -52,7 +53,7 @@ class qs_geoliteCity {
         $gzfile = $this->tempdir  .  '/GeoLite2-City.tar.gz';    
         
         $http = new DokuHTTPClient();
-        $http->max_bodysize = 32777216;
+        $http->max_bodysize = 36777216;
         $http->timeout = 120; 
         $http->keep_alive = false; 
 
