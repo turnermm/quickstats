@@ -129,6 +129,9 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
           case DOKU_LEXER_SPECIAL :                     
             $match =  trim(substr($match,13,-2));            
             if($match) {
+                if($match == "total") {
+                     return array('total',"","");
+                }
                 $depth = false;
                 if(strpos($match,';;') !== false) {
                       list($match,$depth) = explode(';;',$match);                
@@ -187,6 +190,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
         if($mode == 'xhtml'){
            
            list($which, $date_str,$depth) = $data;
+           if($which == 'total') {
+               $renderer->doc .= "<span class = 'quick-total'>" . $this->getTotal() ."</span>";
+               return true;
+           }
            $this->row_depth('all');
            if($depth) {
                $this->row_depth($depth);
@@ -512,6 +519,19 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
          
         
     } 
+    
+    function getTotal() {
+       $meta_path = $this->helper->metaFilePath(true) ;     
+       $page_totals = unserialize(io_readFile($meta_path .  'page_totals.ser'));
+       $page_accessesTotal = 0;
+       if(!$page_totals) $page_totals = array();
+       if(!empty($page_totals)) {           
+           foreach($page_totals as $ttl) {
+              $page_accessesTotal+=$ttl;            
+           }  
+       }   
+       return $page_accessesTotal;    
+    }    
     
     function get_subversions($a,$b) {
         $tmp = array();
