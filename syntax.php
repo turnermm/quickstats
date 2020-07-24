@@ -345,7 +345,7 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
             return;
          }
         require_once("GEOIP/geoipcity.inc");
-        if($this->getConf('geoip_local')) {
+        if($this->getConf('geoip_local') && file_exists(QUICK_STATS. 'GEOIP/GeoLiteCity.dat')) {            
              $this->giCity = geoip_open(QUICK_STATS. 'GEOIP/GeoLiteCity.dat',GEOIP_STANDARD);        
         }
         else {
