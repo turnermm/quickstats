@@ -239,6 +239,10 @@ class syntax_plugin_quickstats extends DokuWiki_Syntax_Plugin {
     
 
     function sort(&$array) {
+        if(!isset($array) {
+            $array = array();
+            return;
+        }   
         uasort($array, 'QuickStatsCmp');
     }   
 
