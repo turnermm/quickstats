@@ -15,10 +15,10 @@ class qs_geoliteCity {
 	private $helper;
     private $testgLCity2 = false;
     function __construct () {
-            global $conf,$argv;          
+           global $conf,$argv,$INPUT;          
            $this->helper = plugin_load('helper', 'quickstats');   
-            
-            if(!empty($argv[1]) || $_REQUEST['test'] == 'test')  { 
+           $test_t = $INPUT->str('test');
+           if(!empty($argv[1]) || $test_t)  { 
                 if($argv && $argv[0]) {
                      echo 'argv = ' . $argv[0]  . "\n"; 
                 }  
