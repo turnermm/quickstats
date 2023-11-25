@@ -61,4 +61,4 @@ $lang['pages_accessed'] =   'Number of pages accessed:&nbsp;';
 $lang['ttl_countries'] =  'Total number of countries:&nbsp;';
 $lang['ttl_accesses'] ='Total accesses:&nbsp;';
 $lang['no_browser_db'] = 'No browscap database found in  the db directory';
-$lang['missing_mmdb_warning'] = "<br />To install GeoLite2-City.mmdb, go to the quickstats admin page and click the <b>" . $lang['btn_download'] . " </b> Button";
+$lang['missing_mmdb_warning'] = "<br />To install GeoLite2-City.mmdb, go to the quickstats admin page and click the <b>Download DB</b> Button";
